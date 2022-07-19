@@ -12,12 +12,12 @@ CREATE TABLE users (
 );
 
 CREATE TABLE audio (
-    audio_id SERIAL PRIMARY KEY,
+    audio_id INT PRIMARY KEY,
     title VARCHAR,
     artist VARCHAR,
     album VARCHAR,
+    album_cover TEXT,
     audio_key TEXT,
-    used BOOLEAN DEFAULT false
 );
 
 CREATE TABLE effects (
