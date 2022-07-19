@@ -1,8 +1,12 @@
 import { useState, useEffect, useRef } from "react";
+
 import MixCard from "./MixCard.js";
-import "../../Styles/mixes.css";
+
 import { defaultfx } from "../../settings/defaultfx.js";
+import { secondsTillMidnight } from "../../utils/countdown.js";
+
 import artDB from "../../Actions/art.js";
+import "../../Styles/mixes.css";
 
 const API = process.env.REACT_APP_API_URL;
 
@@ -29,6 +33,7 @@ export default function MixesCard() {
     const [fx, setFx] = useState(() => defaultfx);
     const [effects, setEffects] = useState([]);
     const [volume, setVolume] = useState(0.5);
+    const [countdown, setCountdown] = useState();
 
     //states for vote tracking and updating
     // const [availableVotes, setAvailableVotes] = useState(0);
@@ -281,6 +286,16 @@ export default function MixesCard() {
         }, 50);
     };
 
+    // countdown to next song timer
+    const countdownTimer = setInterval(() => {
+        const secondsLeft = secondsTillMidnight();
+        const hoursLeft = Math.floor(secondsLeft / 60 / 60);
+        const minsLeft = Math.floor(secondsLeft / 60 % 60);
+        const secsLeft = Math.floor(secondsLeft - (hoursLeft * 60 * 60) - (minsLeft * 60));
+        console.log(hoursLeft, minsLeft, secsLeft);
+        
+    }, 1500);
+
     const handleSeek = (e) => {
         seekOffset.current = Number(e.target.value);
         seekTimeStamp.current = ctx.current.currentTime;
@@ -386,13 +401,15 @@ export default function MixesCard() {
                     }`}
                 </div>
                 <div id="playPause">
-                    {!loading && <button onClick={handlePlayPause}>
-                        {playPause ? (
-                            <i className="fa-solid fa-pause"></i>
-                        ) : (
-                            <i className="fa-solid fa-play"></i>
-                        )}
-                    </button>}
+                    {!loading && (
+                        <button onClick={handlePlayPause}>
+                            {playPause ? (
+                                <i className="fa-solid fa-pause"></i>
+                            ) : (
+                                <i className="fa-solid fa-play"></i>
+                            )}
+                        </button>
+                    )}
                 </div>
                 <div id="seekbar">
                     <div id="transportSeekBarContainer">
