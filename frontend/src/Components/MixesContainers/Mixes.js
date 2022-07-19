@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 import MixCard from "./MixCard.js";
 
@@ -41,6 +41,7 @@ export default function MixesCard() {
 
     //Refs for time display
     const timer = useRef();
+    const countdownTimer = useRef();
     const timerStart = useRef();
     const timerOffset = useRef();
     const loadStart = useRef();
@@ -267,6 +268,7 @@ export default function MixesCard() {
     //handles start and stop of timer
     const startTimer = () => {
         timerStart.current = Date.now();
+
         timer.current = setInterval(() => {
             let cTime =
                 seekOffset.current > 0
@@ -287,14 +289,22 @@ export default function MixesCard() {
     };
 
     // countdown to next song timer
-    const countdownTimer = setInterval(() => {
-        const secondsLeft = secondsTillMidnight();
-        const hoursLeft = Math.floor(secondsLeft / 60 / 60);
-        const minsLeft = Math.floor(secondsLeft / 60 % 60);
-        const secsLeft = Math.floor(secondsLeft - (hoursLeft * 60 * 60) - (minsLeft * 60));
-        console.log(hoursLeft, minsLeft, secsLeft);
-        
-    }, 1500);
+    useEffect(() => {
+        if (!countdownTimer.current) {
+            countdownTimer.current = setInterval(() => {
+                const secondsLeft = secondsTillMidnight();
+                const hoursLeft = Math.floor(secondsLeft / 60 / 60);
+                const minsLeft = Math.floor((secondsLeft / 60) % 60);
+                const secsLeft = Math.floor(
+                    secondsLeft - hoursLeft * 60 * 60 - minsLeft * 60
+                );
+
+                setCountdown(`${hoursLeft}:${minsLeft < 10 ? `0${minsLeft}` : `${minsLeft}`}:${secsLeft < 10 ? `0${secsLeft}` : `${secsLeft}`}`)
+
+                console.log(hoursLeft, minsLeft, secsLeft);
+            }, 500);
+        }
+    }, []);
 
     const handleSeek = (e) => {
         seekOffset.current = Number(e.target.value);
@@ -426,6 +436,7 @@ export default function MixesCard() {
                     </div>
                 </div>
                 <div id="availableVotes">Votes Left: {user.avaliablevotes}</div>
+                <div id="countdown">New Mixle In: {countdown}</div>
             </div>
             <div className={"music-card-container"}>
                 {effects.map((effect, index) => (
