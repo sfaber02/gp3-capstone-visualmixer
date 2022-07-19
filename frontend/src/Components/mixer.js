@@ -295,20 +295,22 @@ const Mixer = (props) => {
      */
     const startTimer = () => {
         timerStart.current = Date.now();
-        timer.current = setInterval(() => {
-            setTime((prev) => {
-                return {
-                    ...prev,
-                    current:
-                        seekOffset.current > 0
-                            ? seekOffset.current +
-                              (ctx.current.currentTime - seekTimeStamp.current)
-                            : ctx.current.currentTime -
-                              (timerStart.current - loadStart.current) / 1000 +
-                              seekOffset.current,
-                };
-            });
-        }, 50);
+        if (!timer.current) {
+            timer.current = setInterval(() => {
+                setTime((prev) => {
+                    return {
+                        ...prev,
+                        current:
+                            seekOffset.current > 0
+                                ? seekOffset.current +
+                                  (ctx.current.currentTime - seekTimeStamp.current)
+                                : ctx.current.currentTime -
+                                  (timerStart.current - loadStart.current) / 1000 +
+                                  seekOffset.current,
+                    };
+                });
+            }, 50);
+        }
     };
 
     /**
@@ -325,6 +327,7 @@ const Mixer = (props) => {
      */
     const handlePlayPause = () => {
         if (playState.state === "stopped") {
+            console.log("1");
             track.current.start(ctx.current.currentTime);
             startTimer();
             setPlayState({ state: "playing" });
@@ -508,13 +511,3 @@ const Mixer = (props) => {
 
 export { Mixer };
 
-/*
-
-
-                Math.floor(time.duration / 60),
-                (time.duration % 60).toFixed(2) < 10
-                    ? `0${(time.duration % 60).toFixed(2)}`
-                    : (time.duration % 60).toFixed(2)
-            
-
-            */

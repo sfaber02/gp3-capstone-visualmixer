@@ -301,7 +301,6 @@ export default function MixesCard() {
 
                 setCountdown(`${hoursLeft}:${minsLeft < 10 ? `0${minsLeft}` : `${minsLeft}`}:${secsLeft < 10 ? `0${secsLeft}` : `${secsLeft}`}`)
 
-                console.log(hoursLeft, minsLeft, secsLeft);
             }, 500);
         }
     }, []);
