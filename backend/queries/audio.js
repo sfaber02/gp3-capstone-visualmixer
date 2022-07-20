@@ -26,7 +26,6 @@ const getAAudio = async (id) => {
 
 // UPDATE A SONG
 const updateAudio = async (track, id) => {
-    console.log(track.totalVotes, track.used, id);
     try {
         const updatedAudio = await db.one(
             "UPDATE audio SET totalVotes=$1, used=$2 WHERE audio_id=$3 RETURNING *",
@@ -38,8 +37,29 @@ const updateAudio = async (track, id) => {
     }
 };
 
+// ADD A SONG
+const createAudio = async (track) => {
+    try {
+        const newTrack = await db.one(
+            "INSERT INTO audio (deezer_id, title, artist, album, album_cover, audio_key) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *",
+            [
+                track.deezerId,
+                track.title,
+                track.artist,
+                track.album,
+                track.cover,
+                track.audioKey,
+            ]
+        );
+        return newTrack;
+    } catch (error) {
+        return err;
+    }
+};
+
 module.exports = {
     getAllAudio,
     updateAudio,
     getAAudio,
+    createAudio,
 };

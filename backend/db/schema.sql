@@ -12,12 +12,13 @@ CREATE TABLE users (
 );
 
 CREATE TABLE audio (
-    audio_id INT PRIMARY KEY,
+    audio_id SERIAL PRIMARY KEY,
+    deezer_id INT,
     title VARCHAR,
     artist VARCHAR,
     album VARCHAR,
     album_cover TEXT,
-    audio_key TEXT,
+    audio_key TEXT
 );
 
 CREATE TABLE effects (

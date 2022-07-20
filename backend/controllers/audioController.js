@@ -1,7 +1,23 @@
 // DEPENDENCIES
 const express = require("express");
 const audio = express.Router();
-const { getAllAudio, updateAudio, getAAudio } = require("../queries/audio");
+const {
+    getAllAudio,
+    updateAudio,
+    getAAudio,
+    createAudio,
+} = require("../queries/audio");
+
+// GET TODAYS SONG
+audio.get("/today", async (req, res) => {
+    try {
+        const allAudio = await getAllAudio();
+        const today = allAudio[allAudio.length - 1];
+        res.status(200).json(today);
+    } catch (error) {
+        res.status(404).json({ error: err });
+    }
+});
 
 // GET ONE SONG
 audio.get("/:id", async (req, res) => {
@@ -31,6 +47,17 @@ audio.put("/:id", async (req, res) => {
         const updatedAudio = await updateAudio(req.body, id);
         res.status(200).json(updatedAudio);
     } catch (err) {
+        res.status(404).json({ error: err });
+    }
+});
+
+// ADD A SONG
+audio.post("/", async (req, res) => {
+    try {
+        const { track } = req.body;
+        const newAudio = await createAudio(track);
+        res.status(200).json(newAudio);
+    } catch (error) {
         res.status(404).json({ error: err });
     }
 });
