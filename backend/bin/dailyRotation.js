@@ -13,7 +13,7 @@ const getPlaylistData = async (id) => {
 
 // GET DB AUDIO DATA
 const getDBAudioData = async () => {
-    let response = await fetch("http://localhost:3333/audio");
+    let response = await fetch("https://mixle-be.herokuapp.com/audio");
     let apiData = await response.json();
     return apiData.map((item) => {
         return item.deezer_id;
@@ -34,7 +34,10 @@ const sendAudioData = async (track) => {
         redirect: "follow",
     };
 
-    let post = await fetch("http://localhost:3333/audio", requestOptions);
+    let post = await fetch(
+        "https://mixle-be.herokuapp.com/audio",
+        requestOptions
+    );
 };
 
 // DEEZER API --> DELETE AUDIO FROM PLAYLIST
@@ -50,6 +53,23 @@ const removeFromPlaylist = async (id) => {
 
     let deletedTacl = await fetch(
         `https://api.deezer.com/playlist/${PLAYLIST}/tracks?access_token=${ACCESS_TOKEN}&songs=${id}`,
+        requestOptions
+    );
+};
+
+// RESET USERS VOTES
+const resetUserVotes = async () => {
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    let requestOptions = {
+        method: "PATCH",
+        headers: myHeaders,
+        redirect: "follow",
+    };
+
+    let patch = await fetch(
+        "https://mixle-be.herokuapp.com/user/reset",
         requestOptions
     );
 };
@@ -79,6 +99,7 @@ const postNewTrack = async () => {
 
     let todaysTrack = await sendAudioData(track);
     let deleted = await removeFromPlaylist(track.deezerId);
+    let reset = await resetUserVotes();
 };
 
 postNewTrack();

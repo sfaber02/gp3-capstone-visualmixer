@@ -12,6 +12,7 @@ const {
     updateUser,
     getUserById,
     updateUserVotes,
+    resetVotes,
 } = require("../queries/users.js");
 
 // CONFIGURATION
@@ -128,6 +129,15 @@ user.delete("/:id", async (req, res) => {
         res.status(200).json(deletedUser);
     } catch (err) {
         res.status(404).json({ error: "User was not found" });
+    }
+});
+
+// RESET VOTES
+user.patch("/reset", async (req, res) => {
+    try {
+        const reset = await resetVotes();
+    } catch (error) {
+        res.status(404).json({ error: "unable to reset votes" });
     }
 });
 

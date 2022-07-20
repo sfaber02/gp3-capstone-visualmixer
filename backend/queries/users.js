@@ -77,17 +77,13 @@ const updateUserVotes = async (votes, user_id) => {
     try {
         const updatedUser = await db.one(
             "UPDATE users SET avaliableVotes=$1 WHERE user_id=$2 RETURNING avaliableVotes;",
-            [
-                votes,
-                user_id
-            ]
+            [votes, user_id]
         );
         return updatedUser;
     } catch (err) {
         return err;
     }
 };
-
 
 // DELETE A USER
 const deleteUser = async (id) => {
@@ -102,6 +98,14 @@ const deleteUser = async (id) => {
     }
 };
 
+const resetVotes = async () => {
+    try {
+        const reset = await db.any("UPDATE users SET avaliablevotes = 3");
+    } catch (error) {
+        return error;
+    }
+};
+
 module.exports = {
     doesUserExist,
     addUser,
@@ -110,4 +114,5 @@ module.exports = {
     updateUser,
     getUserById,
     updateUserVotes,
+    resetVotes,
 };
