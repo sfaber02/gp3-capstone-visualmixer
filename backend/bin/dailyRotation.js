@@ -1,19 +1,13 @@
 // DEPENDENCIES
-
 const { ACCESS_TOKEN, PLAYLIST } = process.env;
 
 // GET PLAYLIST DATA FROM DEEZER
 const getPlaylistData = async (id) => {
-    // let response = await
-    fetch(`https://api.deezer.com/playlist/${id}?access_token=${ACCESS_TOKEN}`)
-        .then((response) => {
-            response.json();
-        })
-        .then((apiData) => {
-            return apiData.apiData.tracks.data;
-        });
-    // let apiData = await response.json();
-    // return apiData.tracks.data;
+    let response = await fetch(
+        `https://api.deezer.com/playlist/${id}?access_token=${ACCESS_TOKEN}`
+    );
+    let apiData = await response.json();
+    return apiData.tracks.data;
 };
 
 // GET DB AUDIO DATA
