@@ -31,7 +31,7 @@ const Mixer = (props) => {
     const [loading, setLoading] = useState(true);
     const [fx, setFx] = useState(defaultfx);
     const [volume, setVolume] = useState(0.5);
-    const [todaysTrack, setTodaysTrack] = useState({});
+    const [todaysTrack, setTodaysTrack] = useState();
 
     //Refs for time display
     const timer = useRef();
@@ -84,20 +84,21 @@ const Mixer = (props) => {
     }, []);
 
     // GET TODAYS TRACK METADATA
-    useEffect(() => {
-        const getTodaysTrackData = async () => {
-            try {
-                let response = await fetch(
-                    "https://mixle-be.herokuapp.com/audio/today"
-                );
-                let track = await response.json();
-                return track;
-            } catch (error) {
-                return error;
-            }
-        };
-        setTodaysTrack(getTodaysTrackData());
-    });
+    // useEffect(() => {
+    //     const getTodaysTrackData = async () => {
+    //         try {
+    //             let response = await fetch(
+    //                 "https://mixle-be.herokuapp.com/audio/today"
+    //             );
+    //             let track = await response.json();
+    //             console.log(track);
+    //             return track;
+    //         } catch (error) {
+    //             return error;
+    //         }
+    //     };
+    //     setTodaysTrack(getTodaysTrackData());
+    // }, []);
 
     //trigger song fetch after a user interaction has occurred
     useEffect(() => {
@@ -141,22 +142,34 @@ const Mixer = (props) => {
             //
 
             //Fetch Song from Server and decode audio for playback
-            fetch("")
+
+            fetch("https://mixle-be.herokuapp.com/audio/today")
+                .then((response) => response.json())
                 .then((data) => {
-                    // console.log(data);
-                    return data.arrayBuffer();
+                    setTodaysTrack(data)
+                    return data;
                 })
-                .then((arrayBuffer) => {
-                    // console.log(arrayBuffer);
-                    return ctx.current.decodeAudioData(arrayBuffer);
+                .then((todayTrack) => {
+                    fetch(todayTrack.audio_key)
+                        .then((data) => {
+                            console.log(data);
+                            return data.arrayBuffer();
+                        })
+                        .then((arrayBuffer) => {
+                            console.log(arrayBuffer);
+                            return ctx.current.decodeAudioData(arrayBuffer);
+                        })
+                        .then((decodedAudio) => {
+                            timerOffset.current =
+                                (Date.now() - loadStart.current) / 1000;
+                            console.log(timerOffset.current);
+                            createTrackNode(decodedAudio);
+                        })
+                        .catch((err) => console.log(err));
+
                 })
-                .then((decodedAudio) => {
-                    timerOffset.current =
-                        (Date.now() - loadStart.current) / 1000;
-                    // console.log(timerOffset.current);
-                    createTrackNode(decodedAudio);
-                })
-                .catch((err) => console.log(err));
+                .catch(err => console.log(err));
+
         }
     }, [props.showSplash]);
 
@@ -177,6 +190,7 @@ const Mixer = (props) => {
             current: 0,
             duration: track.current.buffer.duration,
         });
+        console.log("1");
         setLoading(false);
 
         connectNodes();
@@ -303,7 +317,9 @@ const Mixer = (props) => {
     const setMasterVolume = (e) => setVolume(e.target.value);
 
     useEffect(() => {
-        masterOutNode.current.gain.value = Number(volume);
+        if (todaysTrack) {
+            masterOutNode.current.gain.value = Number(volume);
+        }
     }, [volume]);
 
     /**
@@ -408,13 +424,13 @@ const Mixer = (props) => {
                 const data = {
                     effects: JSON.stringify(fx),
                     user_id: user,
-                    audio_id: 5,
+                    audio_id: todaysTrack.audio_id,
                 };
 
                 let method;
 
                 const existResponse = await fetch(
-                    `${API}/effects/exist/5/${user}`,
+                    `${API}/effects/exist/${todaysTrack.audio_id}/${user}`,
                     {
                         method: "GET",
                         headers: {
