@@ -31,6 +31,7 @@ const Mixer = (props) => {
     const [loading, setLoading] = useState(true);
     const [fx, setFx] = useState(defaultfx);
     const [volume, setVolume] = useState(0.5);
+    const [todaysTrack, setTodaysTrack] = useState({});
 
     //Refs for time display
     const timer = useRef();
@@ -82,6 +83,22 @@ const Mixer = (props) => {
         }
     }, []);
 
+    // GET TODAYS TRACK METADATA
+    useEffect(() => {
+        const getTodaysTrackData = async () => {
+            try {
+                let response = await fetch(
+                    "https://mixle-be.herokuapp.com/audio/today"
+                );
+                let track = await response.json();
+                return track;
+            } catch (error) {
+                return error;
+            }
+        };
+        setTodaysTrack(getTodaysTrackData());
+    });
+
     //trigger song fetch after a user interaction has occurred
     useEffect(() => {
         if (!props.showSplash) {
@@ -121,10 +138,10 @@ const Mixer = (props) => {
             // Create Master Out Node
             masterOutNode.current = ctx.current.createGain();
 
+            //
+
             //Fetch Song from Server and decode audio for playback
-            fetch(
-                "https://www.shawnfaber.com/audio/Rezz,%20deadmau5%20-%20Hypnocurrency.flac"
-            )
+            fetch("")
                 .then((data) => {
                     // console.log(data);
                     return data.arrayBuffer();
@@ -253,7 +270,7 @@ const Mixer = (props) => {
      * @param {object} e
      */
     const handleSetFx = (e) => {
-        let key = e.target.value.split('');
+        let key = e.target.value.split("");
         setFx((prev) => {
             if (e.target.id.split(".").length === 3) {
                 return {
@@ -283,8 +300,7 @@ const Mixer = (props) => {
      * changes volumes of masterOutNode which is the last node in the FX chain
      * @param {object} e
      */
-    const setMasterVolume = e => setVolume(e.target.value);
-
+    const setMasterVolume = (e) => setVolume(e.target.value);
 
     useEffect(() => {
         masterOutNode.current.gain.value = Number(volume);
@@ -303,9 +319,11 @@ const Mixer = (props) => {
                         current:
                             seekOffset.current > 0
                                 ? seekOffset.current +
-                                  (ctx.current.currentTime - seekTimeStamp.current)
+                                  (ctx.current.currentTime -
+                                      seekTimeStamp.current)
                                 : ctx.current.currentTime -
-                                  (timerStart.current - loadStart.current) / 1000 +
+                                  (timerStart.current - loadStart.current) /
+                                      1000 +
                                   seekOffset.current,
                     };
                 });
@@ -337,7 +355,7 @@ const Mixer = (props) => {
             ctx.current.resume();
             setPlayState({ state: "playing" });
         }
-        setPlayPause(prev => !prev);
+        setPlayPause((prev) => !prev);
     };
 
     /**
@@ -354,7 +372,7 @@ const Mixer = (props) => {
             try {
                 track.current.stop();
             } catch (err) {
-                console.log(err)
+                console.log(err);
             }
             createTrackNode(decodedAudio.current);
             track.current.start(0.01, e.target.value);
@@ -384,7 +402,7 @@ const Mixer = (props) => {
      */
     const handleSaveClick = async () => {
         let user = JSON.parse(localStorage.getItem("user_id"));
-        console.log (user);
+        console.log(user);
         if (user) {
             try {
                 const data = {
@@ -511,4 +529,3 @@ const Mixer = (props) => {
 };
 
 export { Mixer };
-
