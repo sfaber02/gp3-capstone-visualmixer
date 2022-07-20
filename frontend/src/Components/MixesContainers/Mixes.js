@@ -1,8 +1,12 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+
 import MixCard from "./MixCard.js";
-import "../../Styles/mixes.css";
+
 import { defaultfx } from "../../settings/defaultfx.js";
+import { secondsTillMidnight } from "../../utils/countdown.js";
+
 import artDB from "../../Actions/art.js";
+import "../../Styles/mixes.css";
 
 const API = process.env.REACT_APP_API_URL;
 
@@ -29,6 +33,7 @@ export default function MixesCard() {
     const [fx, setFx] = useState(() => defaultfx);
     const [effects, setEffects] = useState([]);
     const [volume, setVolume] = useState(0.5);
+    const [countdown, setCountdown] = useState();
 
     //states for vote tracking and updating
     // const [availableVotes, setAvailableVotes] = useState(0);
@@ -36,6 +41,7 @@ export default function MixesCard() {
 
     //Refs for time display
     const timer = useRef();
+    const countdownTimer = useRef();
     const timerStart = useRef();
     const timerOffset = useRef();
     const loadStart = useRef();
@@ -259,9 +265,39 @@ export default function MixesCard() {
         setPlayPause((prev) => !prev);
     };
 
+    const handleSeek = (e) => {
+        seekOffset.current = Number(e.target.value);
+        seekTimeStamp.current = ctx.current.currentTime;
+        // console.log(e.target.value);
+        if (playState.state === "playing") {
+            // wrapped this stop command in a try/catch because it was erroring out occasionally
+            try {
+                track.current.stop();
+            } catch (err) {
+                console.log(err);
+            }
+            createTrackNode(decodedAudio.current);
+            track.current.start(0.01, e.target.value);
+            //Set play speed
+            track.current.playbackRate.value = fx.speed.rate;
+            track.current.detune.value = fx.speed.detune;
+        } else if (playState.state === "stopped") {
+            track.current.start(0, e.target.value);
+            startTimer();
+            setPlayState({ state: "playing" });
+            setPlayPause(true);
+        } else if (playState.state === "paused") {
+            track.current.stop();
+            createTrackNode(decodedAudio.current);
+            track.current.start(0, e.target.value);
+            ctx.current.suspend();
+        }
+    };
+
     //handles start and stop of timer
     const startTimer = () => {
         timerStart.current = Date.now();
+
         timer.current = setInterval(() => {
             let cTime =
                 seekOffset.current > 0
@@ -278,35 +314,24 @@ export default function MixesCard() {
                     current: cTime,
                 };
             });
-        }, 50);
+        }, 1000);
     };
 
-    const handleSeek = (e) => {
-        seekOffset.current = Number(e.target.value);
-        seekTimeStamp.current = ctx.current.currentTime;
-        // console.log(e.target.value);
-        if (playState.state === "playing") {
-            // console.log("1");
-            track.current.stop();
-            createTrackNode(decodedAudio.current);
-            track.current.start(0.01, e.target.value);
-            //Set play speed
-            track.current.playbackRate.value = fx.speed.rate;
-            track.current.detune.value = fx.speed.detune;
-        } else if (playState.state === "stopped") {
-            // console.log("2");
-            track.current.start(0, e.target.value);
-            startTimer();
-            setPlayState({ state: "playing" });
-            setPlayPause(true);
-        } else if (playState.state === "paused") {
-            // console.log("3");
-            track.current.stop();
-            createTrackNode(decodedAudio.current);
-            track.current.start(0, e.target.value);
-            ctx.current.suspend();
+    // countdown to next song timer
+    useEffect(() => {
+        if (!countdownTimer.current) {
+            countdownTimer.current = setInterval(() => {
+                const secondsLeft = secondsTillMidnight();
+                const hoursLeft = Math.floor(secondsLeft / 60 / 60);
+                const minsLeft = Math.floor((secondsLeft / 60) % 60);
+                const secsLeft = Math.floor(
+                    secondsLeft - hoursLeft * 60 * 60 - minsLeft * 60
+                );
+                setCountdown(`${hoursLeft}:${minsLeft < 10 ? `0${minsLeft}` : `${minsLeft}`}:${secsLeft < 10 ? `0${secsLeft}` : `${secsLeft}`}`)
+            }, 1000);
         }
-    };
+    }, []);
+
 
     const handleUserChange = (user) => {
         //   console.log(user);
@@ -386,13 +411,15 @@ export default function MixesCard() {
                     }`}
                 </div>
                 <div id="playPause">
-                    {!loading && <button onClick={handlePlayPause}>
-                        {playPause ? (
-                            <i className="fa-solid fa-pause"></i>
-                        ) : (
-                            <i className="fa-solid fa-play"></i>
-                        )}
-                    </button>}
+                    {!loading && (
+                        <button onClick={handlePlayPause}>
+                            {playPause ? (
+                                <i className="fa-solid fa-pause"></i>
+                            ) : (
+                                <i className="fa-solid fa-play"></i>
+                            )}
+                        </button>
+                    )}
                 </div>
                 <div id="seekbar">
                     <div id="transportSeekBarContainer">
@@ -408,7 +435,10 @@ export default function MixesCard() {
                         />
                     </div>
                 </div>
-                <div id="availableVotes">Votes Left: {user.avaliablevotes}</div>
+                <div id="vote-time">
+                    <div id="availableVotes">Votes Left: {user.avaliablevotes}</div>
+                    <div id="countdown">New Mixle In: {countdown}</div>
+                </div>
             </div>
             <div className={"music-card-container"}>
                 {effects.map((effect, index) => (
