@@ -2,10 +2,10 @@
 require("dotenv").config();
 const { ACCESS_TOKEN, PLAYLIST } = process.env;
 
-// GET PLAYLIST DATA
+// GET PLAYLIST DATA FROM DEEZER
 const getPlaylistData = async (id) => {
     let response = await fetch(
-        `https://api.deezer.com/playlist/${id}?access_token=frFWCzAvVbxJ9C8E2G5EvEKmHrik3eGFQbVW8ACvMmtaDmQPTw`
+        `https://api.deezer.com/playlist/${id}?access_token=${ACCESS_TOKEN}`
     );
     let apiData = await response.json();
     return apiData.tracks.data;
@@ -49,14 +49,14 @@ const removeFromPlaylist = async (id) => {
     };
 
     let deletedTacl = await fetch(
-        `https://api.deezer.com/playlist/10539515422/tracks?access_token=frFWCzAvVbxJ9C8E2G5EvEKmHrik3eGFQbVW8ACvMmtaDmQPTw&songs=${id}`,
+        `https://api.deezer.com/playlist/${PLAYLIST}/tracks?access_token=${ACCESS_TOKEN}&songs=${id}`,
         requestOptions
     );
 };
 
 // COMPARE AND FIND A TRACK NOT IN DB
 const postNewTrack = async () => {
-    const playlistData = await getPlaylistData(10539515422);
+    const playlistData = await getPlaylistData(PLAYLIST);
     const mixleData = await getDBAudioData();
     let newTrack;
 
@@ -66,6 +66,7 @@ const postNewTrack = async () => {
             break;
         }
     }
+    // DEEZER TOP 100
 
     const track = {
         deezerId: newTrack.id,
@@ -76,8 +77,8 @@ const postNewTrack = async () => {
         audioKey: newTrack.preview,
     };
 
-    let todaysTack = await sendAudioData(track);
-    let deleted = await removeFromPlaylist(todaysTack.deezerId);
+    let todaysTrack = await sendAudioData(track);
+    let deleted = await removeFromPlaylist(track.deezerId);
 };
 
 postNewTrack();

@@ -6,14 +6,14 @@ const {
     updateAudio,
     getAAudio,
     createAudio,
+    todaysTrack,
 } = require("../queries/audio");
 
 // GET TODAYS SONG
 audio.get("/today", async (req, res) => {
     try {
-        const allAudio = await getAllAudio();
-        const today = allAudio[allAudio.length - 1];
-        res.status(200).json(today);
+        const todaysAudio = await todaysTrack();
+        res.status(200).json(todaysAudio);
     } catch (error) {
         res.status(404).json({ error: err });
     }

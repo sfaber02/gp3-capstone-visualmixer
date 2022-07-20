@@ -57,9 +57,22 @@ const createAudio = async (track) => {
     }
 };
 
+// TODAYS TRACK
+const todaysTrack = async () => {
+    try {
+        const todaysTune = await db.one(
+            "SELECT * FROM audio ORDER BY audio_id DESC LIMIT 1"
+        );
+        return todaysTune;
+    } catch (error) {
+        return error;
+    }
+};
+
 module.exports = {
     getAllAudio,
     updateAudio,
     getAAudio,
     createAudio,
+    todaysTrack,
 };
