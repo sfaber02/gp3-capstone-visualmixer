@@ -1,5 +1,5 @@
 // DEPENDENCIES
-require("dotenv").config();
+
 const { ACCESS_TOKEN, PLAYLIST } = process.env;
 
 // GET PLAYLIST DATA FROM DEEZER
