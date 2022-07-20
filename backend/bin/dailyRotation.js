@@ -1,3 +1,5 @@
+import fetch from "node-fetch";
+
 // DEPENDENCIES
 const { ACCESS_TOKEN, PLAYLIST } = process.env;
 
