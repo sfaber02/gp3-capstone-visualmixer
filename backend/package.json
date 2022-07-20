@@ -20,5 +20,6 @@
     "jsonwebtoken": "^8.5.1",
     "node-fetch": "^3.2.9",
     "pg-promise": "^10.11.1"
-  }
+  },
+  "type": "module"
 }
