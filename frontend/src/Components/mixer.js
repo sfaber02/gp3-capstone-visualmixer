@@ -17,7 +17,7 @@ const API = process.env.REACT_APP_API_URL;
 
 const Mixer = (props) => {
     const navigate = useNavigate();
-
+    const todaysTrack = props.todaysTrack;
     /**
      * play/pause - boolean state for play/pause toggling
      * playstate - object state for tracking the current play state (e.g. 'playing', 'paused')
@@ -31,7 +31,6 @@ const Mixer = (props) => {
     const [loading, setLoading] = useState(true);
     const [fx, setFx] = useState(defaultfx);
     const [volume, setVolume] = useState(0.5);
-    const [todaysTrack, setTodaysTrack] = useState();
 
     //Refs for time display
     const timer = useRef();
@@ -143,33 +142,22 @@ const Mixer = (props) => {
 
             //Fetch Song from Server and decode audio for playback
 
-            fetch("https://mixle-be.herokuapp.com/audio/today")
-                .then((response) => response.json())
+            fetch(todaysTrack.audio_key)
                 .then((data) => {
-                    setTodaysTrack(data)
-                    return data;
+                    console.log(data);
+                    return data.arrayBuffer();
                 })
-                .then((todayTrack) => {
-                    fetch(todayTrack.audio_key)
-                        .then((data) => {
-                            console.log(data);
-                            return data.arrayBuffer();
-                        })
-                        .then((arrayBuffer) => {
-                            console.log(arrayBuffer);
-                            return ctx.current.decodeAudioData(arrayBuffer);
-                        })
-                        .then((decodedAudio) => {
-                            timerOffset.current =
-                                (Date.now() - loadStart.current) / 1000;
-                            console.log(timerOffset.current);
-                            createTrackNode(decodedAudio);
-                        })
-                        .catch((err) => console.log(err));
-
+                .then((arrayBuffer) => {
+                    console.log(arrayBuffer);
+                    return ctx.current.decodeAudioData(arrayBuffer);
                 })
-                .catch(err => console.log(err));
-
+                .then((decodedAudio) => {
+                    timerOffset.current =
+                        (Date.now() - loadStart.current) / 1000;
+                    console.log(timerOffset.current);
+                    createTrackNode(decodedAudio);
+                })
+                .catch((err) => console.log(err));
         }
     }, [props.showSplash]);
 

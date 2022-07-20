@@ -16,12 +16,20 @@ function App() {
         username: JSON.parse(localStorage.getItem("username")),
         user_id: JSON.parse(localStorage.getItem("user_id")),
     });
+    const [todaysTrack, setTodaysTrack] = useState();
 
     useEffect(() => {
         setUserDetails({
             username: JSON.parse(localStorage.getItem("username")),
             user_id: JSON.parse(localStorage.getItem("user_id")),
         });
+    }, []);
+
+    useEffect(() => {
+         fetch("https://mixle-be.herokuapp.com/audio/today")
+             .then((response) => response.json())
+             .then(data => setTodaysTrack(data))
+            .catch(err => console.log(err));
     }, []);
 
     return (
@@ -33,8 +41,15 @@ function App() {
             />
             <AboutPopUp trigger={popupBtn} setTrigger={setPopupBtn} />
             <Routes>
-                <Route exact path="/" element={<MixerWrapper />} />
-                <Route path="/audio" element={<MixesCard />} />
+                <Route
+                    exact
+                    path="/"
+                    element={<MixerWrapper todaysTrack={todaysTrack} />}
+                />
+                <Route
+                    path="/audio"
+                    element={<MixesCard todaysTrack={todaysTrack} />}
+                />
                 <Route
                     path="/register"
                     element={

@@ -20,7 +20,7 @@ while (randomArray.length < artDB.length) {
     }
 }
 
-export default function MixesCard() {
+export default function MixesCard({ todaysTrack }) {
     /**
      * play/pause - boolean state for play/pause toggling
      * playstate - object state for tracking the current play state (e.g. 'playing', 'paused')
@@ -85,86 +85,92 @@ export default function MixesCard() {
      * FETCH USERS VOTES
      */
     useEffect(() => {
-        //FETCH ALL MIXES FOR SONG ID
-        fetch(`${API}/effects/allusers/5`)
-            .then((res) => {
-                return res.json();
-            })
-            .then((data) => {
-                // console.log(data);
-                setEffects(data);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-
-        //IF USER IS LOGGED IN FETCH USER INFO AND SET AVAILABLE VOTES
-        let user = JSON.parse(localStorage.getItem("user_id"));
-        if (user) {
-            var requestOptions = {
-                method: "GET",
-                redirect: "follow",
-            };
-
-            fetch(`${API}/user/${user}`, requestOptions)
-                .then((response) => response.json())
-                .then((result) => {
-                    setUser(result);
+        if (todaysTrack) {
+            //FETCH ALL MIXES FOR SONG ID
+            fetch(`${API}/effects/allusers/${todaysTrack.audio_id}`)
+                .then((res) => {
+                    return res.json();
                 })
-                .catch((error) => console.log("error", error));
+                .then((data) => {
+                    // console.log(data);
+                    setEffects(data);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+
+            //IF USER IS LOGGED IN FETCH USER INFO AND SET AVAILABLE VOTES
+            let user = JSON.parse(localStorage.getItem("user_id"));
+            if (user) {
+                var requestOptions = {
+                    method: "GET",
+                    redirect: "follow",
+                };
+
+                fetch(`${API}/user/${user}`, requestOptions)
+                    .then((response) => response.json())
+                    .then((result) => {
+                        setUser(result);
+                    })
+                    .catch((error) => console.log("error", error));
+            }
+
+            //Create audio context
+            ctx.current = new (window.AudioContext ||
+                window.webkitAudioContext)();
+
+            loadStart.current = Date.now();
+
+            //Create Delay Nodes
+            delayNode.current = ctx.current.createDelay();
+            feedbackNode.current = ctx.current.createGain();
+            dryNode.current = ctx.current.createGain();
+            wetNode.current = ctx.current.createGain();
+            delayOutNode.current = ctx.current.createGain();
+
+            // //Create Analyser Node
+            analyserNode.current = ctx.current.createAnalyser();
+
+            // //Create Filter Nodes
+            band1.current = ctx.current.createBiquadFilter();
+            band2.current = ctx.current.createBiquadFilter();
+            band3.current = ctx.current.createBiquadFilter();
+            band4.current = ctx.current.createBiquadFilter();
+            band5.current = ctx.current.createBiquadFilter();
+
+            // Changing default filters
+            band1.current.type = "lowshelf";
+            band2.current.type = "peaking";
+            band3.current.type = "peaking";
+            band4.current.type = "peaking";
+            band5.current.type = "highshelf";
+
+            // //Create Compressor Node
+            compressorNode.current = ctx.current.createDynamicsCompressor();
+
+            // Create Master Out Node
+            masterOutNode.current = ctx.current.createGain();
+
+            //Fetch Song from Server and decode audio for playback
+
+            fetch(todaysTrack.audio_key)
+                .then((data) => {
+                    console.log(data);
+                    return data.arrayBuffer();
+                })
+                .then((arrayBuffer) => {
+                    console.log(arrayBuffer);
+                    return ctx.current.decodeAudioData(arrayBuffer);
+                })
+                .then((decodedAudio) => {
+                    timerOffset.current =
+                        (Date.now() - loadStart.current) / 1000;
+                    console.log(timerOffset.current);
+                    createTrackNode(decodedAudio);
+                })
+                .catch((err) => console.log(err));
         }
-
-        //Create audio context
-        ctx.current = new (window.AudioContext || window.webkitAudioContext)();
-
-        loadStart.current = Date.now();
-
-        //Create Delay Nodes
-        delayNode.current = ctx.current.createDelay();
-        feedbackNode.current = ctx.current.createGain();
-        dryNode.current = ctx.current.createGain();
-        wetNode.current = ctx.current.createGain();
-        delayOutNode.current = ctx.current.createGain();
-
-        // //Create Analyser Node
-        analyserNode.current = ctx.current.createAnalyser();
-
-        // //Create Filter Nodes
-        band1.current = ctx.current.createBiquadFilter();
-        band2.current = ctx.current.createBiquadFilter();
-        band3.current = ctx.current.createBiquadFilter();
-        band4.current = ctx.current.createBiquadFilter();
-        band5.current = ctx.current.createBiquadFilter();
-
-        // Changing default filters
-        band1.current.type = "lowshelf";
-        band2.current.type = "peaking";
-        band3.current.type = "peaking";
-        band4.current.type = "peaking";
-        band5.current.type = "highshelf";
-
-        // //Create Compressor Node
-        compressorNode.current = ctx.current.createDynamicsCompressor();
-
-        // Create Master Out Node
-        masterOutNode.current = ctx.current.createGain();
-
-        //Fetch Song from Server and decode audio for playback
-        fetch(
-            "https://www.shawnfaber.com/audio/Rezz,%20deadmau5%20-%20Hypnocurrency.flac"
-        )
-            .then((data) => {
-                return data.arrayBuffer();
-            })
-            .then((arrayBuffer) => {
-                return ctx.current.decodeAudioData(arrayBuffer);
-            })
-            .then((decodedAudio) => {
-                timerOffset.current = (Date.now() - loadStart.current) / 1000;
-                createTrackNode(decodedAudio);
-            })
-            .catch((err) => console.log(err));
-    }, []);
+    }, [todaysTrack]);
 
     /**
      * Creates a track node from decoded audio
@@ -327,11 +333,14 @@ export default function MixesCard() {
                 const secsLeft = Math.floor(
                     secondsLeft - hoursLeft * 60 * 60 - minsLeft * 60
                 );
-                setCountdown(`${hoursLeft}:${minsLeft < 10 ? `0${minsLeft}` : `${minsLeft}`}:${secsLeft < 10 ? `0${secsLeft}` : `${secsLeft}`}`)
+                setCountdown(
+                    `${hoursLeft}:${
+                        minsLeft < 10 ? `0${minsLeft}` : `${minsLeft}`
+                    }:${secsLeft < 10 ? `0${secsLeft}` : `${secsLeft}`}`
+                );
             }, 1000);
         }
     }, []);
-
 
     const handleUserChange = (user) => {
         //   console.log(user);
@@ -354,7 +363,9 @@ export default function MixesCard() {
     };
 
     useEffect(() => {
-        masterOutNode.current.gain.value = Number(volume);
+        if (todaysTrack) {
+            masterOutNode.current.gain.value = Number(volume);
+        }
     }, [volume]);
 
     const subtractVote = () => {
@@ -436,7 +447,9 @@ export default function MixesCard() {
                     </div>
                 </div>
                 <div id="vote-time">
-                    <div id="availableVotes">Votes Left: {user.avaliablevotes}</div>
+                    <div id="availableVotes">
+                        Votes Left: {user.avaliablevotes}
+                    </div>
                     <div id="countdown">New Mixle In: {countdown}</div>
                 </div>
             </div>
