@@ -41,7 +41,8 @@
         grid-row: 1 / 2;
     }
 
-    #availableVotes {
+    #vote-time {
+        /* border: 1px solid white; */
         grid-column: 3 / 4;
         grid-row: 2 / 4;
         text-align: center;

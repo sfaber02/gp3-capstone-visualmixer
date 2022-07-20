@@ -327,7 +327,6 @@ const Mixer = (props) => {
      */
     const handlePlayPause = () => {
         if (playState.state === "stopped") {
-            console.log("1");
             track.current.start(ctx.current.currentTime);
             startTimer();
             setPlayState({ state: "playing" });
@@ -351,21 +350,23 @@ const Mixer = (props) => {
         seekTimeStamp.current = ctx.current.currentTime;
         // console.log(e.target.value);
         if (playState.state === "playing") {
-            console.log("1");
-            track.current.stop();
+            // wrapped this stop command in a try/catch because it was erroring out occasionally
+            try {
+                track.current.stop();
+            } catch (err) {
+                console.log(err)
+            }
             createTrackNode(decodedAudio.current);
             track.current.start(0.01, e.target.value);
             //Set play speed
             track.current.playbackRate.value = fx.speed.rate;
             track.current.detune.value = fx.speed.detune;
         } else if (playState.state === "stopped") {
-            console.log("2");
             track.current.start(0, e.target.value);
             startTimer();
             setPlayState({ state: "playing" });
             setPlayPause(true);
         } else if (playState.state === "paused") {
-            console.log("3");
             track.current.stop();
             createTrackNode(decodedAudio.current);
             track.current.start(0, e.target.value);

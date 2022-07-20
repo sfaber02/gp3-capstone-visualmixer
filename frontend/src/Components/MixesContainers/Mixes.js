@@ -265,6 +265,35 @@ export default function MixesCard() {
         setPlayPause((prev) => !prev);
     };
 
+    const handleSeek = (e) => {
+        seekOffset.current = Number(e.target.value);
+        seekTimeStamp.current = ctx.current.currentTime;
+        // console.log(e.target.value);
+        if (playState.state === "playing") {
+            // wrapped this stop command in a try/catch because it was erroring out occasionally
+            try {
+                track.current.stop();
+            } catch (err) {
+                console.log(err);
+            }
+            createTrackNode(decodedAudio.current);
+            track.current.start(0.01, e.target.value);
+            //Set play speed
+            track.current.playbackRate.value = fx.speed.rate;
+            track.current.detune.value = fx.speed.detune;
+        } else if (playState.state === "stopped") {
+            track.current.start(0, e.target.value);
+            startTimer();
+            setPlayState({ state: "playing" });
+            setPlayPause(true);
+        } else if (playState.state === "paused") {
+            track.current.stop();
+            createTrackNode(decodedAudio.current);
+            track.current.start(0, e.target.value);
+            ctx.current.suspend();
+        }
+    };
+
     //handles start and stop of timer
     const startTimer = () => {
         timerStart.current = Date.now();
@@ -285,7 +314,7 @@ export default function MixesCard() {
                     current: cTime,
                 };
             });
-        }, 50);
+        }, 1000);
     };
 
     // countdown to next song timer
@@ -298,39 +327,11 @@ export default function MixesCard() {
                 const secsLeft = Math.floor(
                     secondsLeft - hoursLeft * 60 * 60 - minsLeft * 60
                 );
-
                 setCountdown(`${hoursLeft}:${minsLeft < 10 ? `0${minsLeft}` : `${minsLeft}`}:${secsLeft < 10 ? `0${secsLeft}` : `${secsLeft}`}`)
-
-            }, 500);
+            }, 1000);
         }
     }, []);
 
-    const handleSeek = (e) => {
-        seekOffset.current = Number(e.target.value);
-        seekTimeStamp.current = ctx.current.currentTime;
-        // console.log(e.target.value);
-        if (playState.state === "playing") {
-            // console.log("1");
-            track.current.stop();
-            createTrackNode(decodedAudio.current);
-            track.current.start(0.01, e.target.value);
-            //Set play speed
-            track.current.playbackRate.value = fx.speed.rate;
-            track.current.detune.value = fx.speed.detune;
-        } else if (playState.state === "stopped") {
-            // console.log("2");
-            track.current.start(0, e.target.value);
-            startTimer();
-            setPlayState({ state: "playing" });
-            setPlayPause(true);
-        } else if (playState.state === "paused") {
-            // console.log("3");
-            track.current.stop();
-            createTrackNode(decodedAudio.current);
-            track.current.start(0, e.target.value);
-            ctx.current.suspend();
-        }
-    };
 
     const handleUserChange = (user) => {
         //   console.log(user);
@@ -434,8 +435,10 @@ export default function MixesCard() {
                         />
                     </div>
                 </div>
-                <div id="availableVotes">Votes Left: {user.avaliablevotes}</div>
-                <div id="countdown">New Mixle In: {countdown}</div>
+                <div id="vote-time">
+                    <div id="availableVotes">Votes Left: {user.avaliablevotes}</div>
+                    <div id="countdown">New Mixle In: {countdown}</div>
+                </div>
             </div>
             <div className={"music-card-container"}>
                 {effects.map((effect, index) => (
