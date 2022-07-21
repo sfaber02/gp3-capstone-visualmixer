@@ -136,6 +136,7 @@ user.delete("/:id", async (req, res) => {
 user.patch("/reset", async (req, res) => {
     try {
         const reset = await resetVotes();
+        res.status(200).json({ success: "completed" });
     } catch (error) {
         res.status(404).json({ error: "unable to reset votes" });
     }
