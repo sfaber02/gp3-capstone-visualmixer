@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+const fetch = require("node-fetch");
 
 // DEPENDENCIES
 const { ACCESS_TOKEN, PLAYLIST } = process.env;
