@@ -44,6 +44,16 @@ user.post("/register", async (req, res) => {
     }
 });
 
+// RESET VOTES
+user.get("/reset", async (req, res) => {
+    try {
+        const reset = await resetVotes();
+        res.status(200).json({ success: "completed" });
+    } catch (error) {
+        res.status(404).json({ error: "unable to reset votes" });
+    }
+});
+
 //GET USER INFO
 user.get("/:id", async (req, res) => {
     const id = req.params;
@@ -129,16 +139,6 @@ user.delete("/:id", async (req, res) => {
         res.status(200).json(deletedUser);
     } catch (err) {
         res.status(404).json({ error: "User was not found" });
-    }
-});
-
-// RESET VOTES
-user.patch("/reset", async (req, res) => {
-    try {
-        const reset = await resetVotes();
-        res.status(200).json({ success: "completed" });
-    } catch (error) {
-        res.status(404).json({ error: "unable to reset votes" });
     }
 });
 

@@ -67,7 +67,7 @@ const removeFromPlaylist = async (id) => {
 // RESET USERS VOTES
 const resetUserVotes = async () => {
     try {
-        let patch = await axios.patch(
+        let patch = await axios.get(
             "https://mixle-be.herokuapp.com/user/reset"
         );
     } catch (error) {

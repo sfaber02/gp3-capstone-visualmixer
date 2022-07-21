@@ -100,7 +100,7 @@ const deleteUser = async (id) => {
 
 const resetVotes = async () => {
     try {
-        const reset = await db.any("UPDATE users SET avaliablevotes = 3");
+        const reset = await db.query("UPDATE users SET avaliablevotes = 3");
     } catch (error) {
         return error;
     }
