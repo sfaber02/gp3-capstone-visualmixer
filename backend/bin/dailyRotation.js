@@ -1,5 +1,5 @@
 // DEPENDENCIES
-require("dotenv").config();
+// require("dotenv").config();
 const axios = require("axios");
 const { ACCESS_TOKEN, PLAYLIST } = process.env;
 
