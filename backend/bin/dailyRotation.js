@@ -2,7 +2,6 @@
 require("dotenv").config();
 const axios = require("axios");
 const { ACCESS_TOKEN, PLAYLIST } = process.env;
-console.log(ACCESS_TOKEN, PLAYLIST);
 
 // GET PLAYLIST DATA FROM DEEZER
 const getPlaylistData = async (id) => {
@@ -80,9 +79,8 @@ const resetUserVotes = async () => {
 // COMPARE AND FIND A TRACK NOT IN DB
 const postNewTrack = async () => {
     const playlistData = await getPlaylistData(PLAYLIST);
-    console.log(playlistData);
     const mixleData = await getDBAudioData();
-    console.log(mixleData);
+
     let newTrack;
 
     for (let song of playlistData) {
