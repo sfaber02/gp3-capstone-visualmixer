@@ -101,7 +101,7 @@ const Mixer = (props) => {
 
     //trigger song fetch after a user interaction has occurred
     useEffect(() => {
-        if (!props.showSplash) {
+        if (!props.showSplash && todaysTrack.audio_key) {
             //Create audio context
             ctx.current = new (window.AudioContext ||
                 window.webkitAudioContext)();
@@ -144,22 +144,19 @@ const Mixer = (props) => {
 
             fetch(todaysTrack.audio_key)
                 .then((data) => {
-                    console.log(data);
                     return data.arrayBuffer();
                 })
                 .then((arrayBuffer) => {
-                    console.log(arrayBuffer);
                     return ctx.current.decodeAudioData(arrayBuffer);
                 })
                 .then((decodedAudio) => {
                     timerOffset.current =
                         (Date.now() - loadStart.current) / 1000;
-                    console.log(timerOffset.current);
                     createTrackNode(decodedAudio);
                 })
                 .catch((err) => console.log(err));
         }
-    }, [props.showSplash]);
+    }, [props.showSplash, todaysTrack]);
 
     /**
      * Creates a track node from decoded audio

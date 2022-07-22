@@ -17,6 +17,7 @@ function App() {
         user_id: JSON.parse(localStorage.getItem("user_id")),
     });
     const [todaysTrack, setTodaysTrack] = useState();
+    
 
     useEffect(() => {
         setUserDetails({
