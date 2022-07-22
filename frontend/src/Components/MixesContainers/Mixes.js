@@ -155,11 +155,9 @@ export default function MixesCard({ todaysTrack }) {
 
             fetch(todaysTrack.audio_key)
                 .then((data) => {
-                    console.log(data);
                     return data.arrayBuffer();
                 })
                 .then((arrayBuffer) => {
-                    console.log(arrayBuffer);
                     return ctx.current.decodeAudioData(arrayBuffer);
                 })
                 .then((decodedAudio) => {

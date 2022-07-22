@@ -175,7 +175,6 @@ const Mixer = (props) => {
             current: 0,
             duration: track.current.buffer.duration,
         });
-        console.log("1");
         setLoading(false);
 
         connectNodes();
@@ -403,7 +402,6 @@ const Mixer = (props) => {
      */
     const handleSaveClick = async () => {
         let user = JSON.parse(localStorage.getItem("user_id"));
-        console.log(user);
         if (user) {
             try {
                 const data = {
