@@ -7,7 +7,7 @@ import SignUp from "./Components/Nav&Login/signUp";
 import { MixerWrapper } from "./Components/mixersplashwrapper.js";
 import Login from "./Components/Nav&Login/login";
 import NavBar from "./Components/Nav&Login/navBar";
-import MixesCard from "./Components/MixesContainers/Mixes";
+import { Mixes } from "./Components/Mixes/Mixes";
 import AboutPopUp from "./Components/Nav&Login/AboutPopUp";
 
 function App() {
@@ -17,7 +17,6 @@ function App() {
         user_id: JSON.parse(localStorage.getItem("user_id")),
     });
     const [todaysTrack, setTodaysTrack] = useState();
-    
 
     useEffect(() => {
         setUserDetails({
@@ -27,10 +26,10 @@ function App() {
     }, []);
 
     useEffect(() => {
-         fetch("https://mixle-be.herokuapp.com/audio/today")
-             .then((response) => response.json())
-             .then(data => setTodaysTrack(data))
-            .catch(err => console.log(err));
+        fetch("https://mixle-be.herokuapp.com/audio/today")
+            .then((response) => response.json())
+            .then((data) => setTodaysTrack(data))
+            .catch((err) => console.log(err));
     }, []);
 
     return (
@@ -49,7 +48,7 @@ function App() {
                 />
                 <Route
                     path="/audio"
-                    element={<MixesCard todaysTrack={todaysTrack} />}
+                    element={<Mixes todaysTrack={todaysTrack} />}
                 />
                 <Route
                     path="/register"

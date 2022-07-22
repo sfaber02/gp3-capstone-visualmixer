@@ -12,5 +12,6 @@ May the best mix win!
 
 ### Bugs
 - dyanmic css for mixer page
-- 
-- 
+
+### ToDo
+- refactor mixer / mixes page
