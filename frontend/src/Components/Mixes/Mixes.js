@@ -20,7 +20,7 @@ while (randomArray.length < artDB.length) {
     }
 }
 
-export default function MixesCard({ todaysTrack }) {
+const Mixes = ({ todaysTrack }) => {
     /**
      * play/pause - boolean state for play/pause toggling
      * playstate - object state for tracking the current play state (e.g. 'playing', 'paused')
@@ -465,4 +465,6 @@ export default function MixesCard({ todaysTrack }) {
             </div>
         </div>
     );
-}
+};
+
+export { Mixes };
