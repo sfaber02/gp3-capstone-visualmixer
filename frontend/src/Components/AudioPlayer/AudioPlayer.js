@@ -3,8 +3,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { defaultfx } from "../../settings/defaultfx";
 
 import { Mixer } from "../Mixer/mixer";
+import { Mixes } from "../Mixes/Mixes";
 
-const AudioPlayer = ({ showSplash, todaysTrack }) => {
+const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
     /**
      * play/pause - boolean state for play/pause toggling
      * playstate - object state for tracking the current play state (e.g. 'playing', 'paused')
@@ -307,21 +308,36 @@ const AudioPlayer = ({ showSplash, todaysTrack }) => {
 
     return (
         <>
-            <Mixer
-                setFx={setFx}
-                setVolume={setVolume}
-                volume={volume}
-                fx={fx}
-                playState={playState}
-                track={track}
-                loading={loading}
-                analyserNode={analyserNode}
-                time={time}
-                handleSeek={handleSeek}
-                handlePlayPause={handlePlayPause}
-                playPause={playPause}
-                todaysTrack={todaysTrack}
-            />
+            {!mixes ? (
+                <Mixer
+                    setFx={setFx}
+                    setVolume={setVolume}
+                    volume={volume}
+                    fx={fx}
+                    playState={playState}
+                    track={track}
+                    loading={loading}
+                    analyserNode={analyserNode}
+                    time={time}
+                    handleSeek={handleSeek}
+                    handlePlayPause={handlePlayPause}
+                    playPause={playPause}
+                    todaysTrack={todaysTrack}
+                />
+            ) : (
+                <Mixes
+                    setFx={setFx}
+                    fx={fx}
+                    setVolume={setVolume}
+                    volume={volume}
+                    time={time}
+                    loading={loading}
+                    handlePlayPause={handlePlayPause}
+                    playPause={playPause}
+                    handleSeek={handleSeek}
+                    todaysTrack={todaysTrack}
+                />
+            )}
         </>
     );
 };

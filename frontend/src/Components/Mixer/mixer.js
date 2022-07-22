@@ -93,6 +93,7 @@ const Mixer = ({
      */
     const handleSaveClick = async () => {
         let user = JSON.parse(localStorage.getItem("user_id"));
+        console.log(user);
         if (user) {
             try {
                 const data = {
@@ -100,7 +101,7 @@ const Mixer = ({
                     user_id: user,
                     audio_id: todaysTrack.audio_id,
                 };
-
+                console.log(data);
                 let method;
 
                 const existResponse = await fetch(

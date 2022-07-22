@@ -16,7 +16,7 @@ const MixerWrapper = ({ todaysTrack }) => {
           {showSplash ? (
               <SplashPage handleStartClick={handleStartClick} />
           ) : (
-              <AudioPlayer showSplash={showSplash} todaysTrack={todaysTrack} />
+              <AudioPlayer showSplash={showSplash} todaysTrack={todaysTrack} mixes={false} />
           )}
       </>
   );
