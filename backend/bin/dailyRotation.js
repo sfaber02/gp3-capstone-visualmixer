@@ -1,83 +1,86 @@
 // DEPENDENCIES
 require("dotenv").config();
+const axios = require("axios");
 const { ACCESS_TOKEN, PLAYLIST } = process.env;
 
 // GET PLAYLIST DATA FROM DEEZER
 const getPlaylistData = async (id) => {
-    let response = await fetch(
-        `https://api.deezer.com/playlist/${id}?access_token=${ACCESS_TOKEN}`
-    );
-    let apiData = await response.json();
-    return apiData.tracks.data;
+    try {
+        let response = await axios.get(
+            `https://api.deezer.com/playlist/${id}?access_token=${ACCESS_TOKEN}`
+        );
+        let data = await response.data;
+        return data.tracks.data;
+    } catch (error) {
+        console.log("getPlaylistData");
+        return error;
+    }
 };
 
 // GET DB AUDIO DATA
 const getDBAudioData = async () => {
-    let response = await fetch("https://mixle-be.herokuapp.com/audio");
-    let apiData = await response.json();
-    return apiData.map((item) => {
-        return item.deezer_id;
-    });
+    try {
+        let response = await axios.get("https://mixle-be.herokuapp.com/audio");
+        let data = await response.data;
+        return data.map((item) => {
+            return item.deezer_id;
+        });
+    } catch (error) {
+        console.log("getDBAudioData");
+        return error;
+    }
 };
 
 // POST TO DB
 const sendAudioData = async (track) => {
-    let myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+    try {
+        let data = JSON.stringify({ track });
 
-    let raw = JSON.stringify({ track });
+        let config = {
+            method: "post",
+            url: "https://mixle-be.herokuapp.com/audio",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            data: data,
+        };
 
-    let requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-    };
-
-    let post = await fetch(
-        "https://mixle-be.herokuapp.com/audio",
-        requestOptions
-    );
+        let post = await axios(config);
+    } catch (error) {
+        console.log("sendAudioData");
+        return error;
+    }
 };
 
 // DEEZER API --> DELETE AUDIO FROM PLAYLIST
 const removeFromPlaylist = async (id) => {
-    let myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    let requestOptions = {
-        method: "DELETE",
-        headers: myHeaders,
-        redirect: "follow",
-    };
-
-    let deletedTacl = await fetch(
-        `https://api.deezer.com/playlist/${PLAYLIST}/tracks?access_token=${ACCESS_TOKEN}&songs=${id}`,
-        requestOptions
-    );
+    try {
+        let deletedTrack = await axios.delete(
+            `https://api.deezer.com/playlist/${PLAYLIST}/tracks?access_token=${ACCESS_TOKEN}&songs=${id}`
+        );
+    } catch (error) {
+        console.log("removeFromPlaylist");
+        return error;
+    }
 };
 
 // RESET USERS VOTES
 const resetUserVotes = async () => {
-    let myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    let requestOptions = {
-        method: "PATCH",
-        headers: myHeaders,
-        redirect: "follow",
-    };
-
-    let patch = await fetch(
-        "https://mixle-be.herokuapp.com/user/reset",
-        requestOptions
-    );
+    try {
+        let patch = await axios.get(
+            "https://mixle-be.herokuapp.com/user/reset"
+        );
+    } catch (error) {
+        console.log("resetUserVotes");
+        return error;
+    }
 };
 
 // COMPARE AND FIND A TRACK NOT IN DB
 const postNewTrack = async () => {
     const playlistData = await getPlaylistData(PLAYLIST);
     const mixleData = await getDBAudioData();
+
     let newTrack;
 
     for (let song of playlistData) {
