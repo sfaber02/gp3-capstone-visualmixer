@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Mixer } from "./Mixer/mixer.js";
+import { AudioPlayer } from "./AudioPlayer/AudioPlayer.js";
 import { SplashPage } from "./splashpage.js";
 
 /**
@@ -16,7 +16,7 @@ const MixerWrapper = ({ todaysTrack }) => {
           {showSplash ? (
               <SplashPage handleStartClick={handleStartClick} />
           ) : (
-              <Mixer showSplash={showSplash} todaysTrack={todaysTrack} />
+              <AudioPlayer showSplash={showSplash} todaysTrack={todaysTrack} />
           )}
       </>
   );
