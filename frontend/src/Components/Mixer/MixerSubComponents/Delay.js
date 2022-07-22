@@ -1,5 +1,5 @@
 import React from "react";
-import "../../Styles/mixerSubComponentStyles/delay.css";
+import "../../../Styles/mixerSubComponentStyles/delay.css";
 
 /**
  * Delay component of mixer

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Mixer } from "./mixer.js";
+import { Mixer } from "./Mixer/mixer.js";
 import { SplashPage } from "./splashpage.js";
 
 /**

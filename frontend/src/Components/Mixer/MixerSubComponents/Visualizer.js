@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import "../../Styles/mixerSubComponentStyles/visualizer.css"
+import "../../../Styles/mixerSubComponentStyles/visualizer.css"
 
 /**
  * Renders music visualizer based on audio data from analyser node

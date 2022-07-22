@@ -1,5 +1,5 @@
 import React from "react";
-import "../../Styles/mixerSubComponentStyles/eq.css";
+import "../../../Styles/mixerSubComponentStyles/eq.css";
 
 /**
  * EQ component of mixer

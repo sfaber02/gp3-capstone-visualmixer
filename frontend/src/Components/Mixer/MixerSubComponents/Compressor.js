@@ -1,5 +1,5 @@
 import React from "react";
-import "../../Styles/mixerSubComponentStyles/compressor.css";
+import "../../../Styles/mixerSubComponentStyles/compressor.css";
 
 /**
  * Compressor component of mixer
