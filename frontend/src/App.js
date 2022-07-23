@@ -40,35 +40,37 @@ function App() {
                 setTrigger={setPopupBtn}
             />
             <AboutPopUp trigger={popupBtn} setTrigger={setPopupBtn} />
-            <Routes>
-                <Route
-                    exact
-                    path="/"
-                    element={<MixerWrapper todaysTrack={todaysTrack} />}
-                />
-                <Route
-                    path="/audio"
-                    element={<Mixes todaysTrack={todaysTrack} />}
-                />
-                <Route
-                    path="/register"
-                    element={
-                        <SignUp
-                            userDetails={userDetails}
-                            setUserDetails={setUserDetails}
-                        />
-                    }
-                />
-                <Route
-                    path="/login"
-                    element={
-                        <Login
-                            userDetails={userDetails}
-                            setUserDetails={setUserDetails}
-                        />
-                    }
-                />
-            </Routes>
+            {todaysTrack && (
+                <Routes>
+                    <Route
+                        exact
+                        path="/"
+                        element={<MixerWrapper todaysTrack={todaysTrack} />}
+                    />
+                    <Route
+                        path="/audio"
+                        element={<Mixes todaysTrack={todaysTrack} />}
+                    />
+                    <Route
+                        path="/register"
+                        element={
+                            <SignUp
+                                userDetails={userDetails}
+                                setUserDetails={setUserDetails}
+                            />
+                        }
+                    />
+                    <Route
+                        path="/login"
+                        element={
+                            <Login
+                                userDetails={userDetails}
+                                setUserDetails={setUserDetails}
+                            />
+                        }
+                    />
+                </Routes>
+            )}
         </main>
     );
 }
