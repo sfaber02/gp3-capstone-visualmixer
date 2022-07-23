@@ -8,7 +8,6 @@ import { MixerWrapper } from "./Components/mixersplashwrapper.js";
 import { AudioPlayer } from "./Components/AudioPlayer/AudioPlayer";
 import Login from "./Components/Nav&Login/login";
 import NavBar from "./Components/Nav&Login/navBar";
-import { Mixes } from "./Components/Mixes/Mixes";
 import AboutPopUp from "./Components/Nav&Login/AboutPopUp";
 
 function App() {

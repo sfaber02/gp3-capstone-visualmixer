@@ -61,6 +61,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
     //trigger song fetch after a user interaction has occurred
     useEffect(() => {
         if (!showSplash && todaysTrack.audio_key) {
+            
             //Create audio context
             ctx.current = new (window.AudioContext ||
                 window.webkitAudioContext)();

@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { defaultfx } from "../../settings/defaultfx";
 
 import "../../Styles/mixer.css";
 import "../../Styles/mixerSubComponentStyles/transport.css";
@@ -17,9 +16,9 @@ const API = process.env.REACT_APP_API_URL;
 
 const Mixer = ({
     setFx,
+    fx,
     setVolume,
     volume,
-    fx,
     playState,
     track,
     loading,
@@ -52,24 +51,28 @@ const Mixer = ({
      * @param {object} e
      */
     const handleSetFx = (e) => {
+        const effect = e.target.id.split('.')[0];
+        const param = e.target.id.split('.')[1];
+        const eqParam = e.target.id.split('.').length > 2 ? e.target.id.split('.')[2] : null;
+
         setFx((prev) => {
-            if (e.target.id.split(".").length === 3) {
+            if (eqParam) {
                 return {
                     ...prev,
-                    [e.target.id.split(".")[0]]: {
-                        ...prev[e.target.id.split(".")[0]],
-                        [e.target.id.split(".")[1]]: {
-                            ...prev.eq[e.target.id.split(".")[1]],
-                            [e.target.id.split(".")[2]]: e.target.value,
+                    [effect]: {
+                        ...prev[effect],
+                        [param]: {
+                            ...prev.eq[param],
+                            [eqParam]: e.target.value,
                         },
                     },
                 };
             } else {
                 return {
                     ...prev,
-                    [e.target.id.split(".")[0]]: {
-                        ...prev[e.target.id.split(".")[0]],
-                        [e.target.id.split(".")[1]]: e.target.value,
+                    [effect]: {
+                        ...prev[effect],
+                        [param]: e.target.value,
                     },
                 };
             }
