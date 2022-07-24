@@ -127,7 +127,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
         //intialize time state, set loading state
         setTime({
             current: 0,
-            duration: track.current.buffer.duration,
+            duration: track.current.buffer.duration / fx.speed.rate,
         });
         setLoading(false);
 
@@ -179,7 +179,8 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
 
     /**
      * Updates settings of audio nodes when FX state changes
-     * FX state will change from user inputs OR if there are fx in local storage from a save mix/no user scenario
+     * FX state will change from user inputs OR if there are fx 
+     * in local storage from a save mix/no user scenario
      */
     useEffect(() => {
         if (!loading) {
@@ -212,6 +213,18 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
             compressorNode.current.release.value = fx.compressor.release;
         }
     }, [loading, fx]);
+
+    // updates duration when play rate is changed
+    useEffect(() => {
+        if (track.current) {
+            setTime((prev) => {
+                return {
+                    ...prev,
+                    duration: track.current.buffer.duration / fx.speed.rate,
+                };
+            });
+        }
+    }, [fx.speed.rate]);
 
     /**
      * Creates an interval function to update the timer if song is playing
@@ -271,7 +284,8 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
             `seekOffset = ${seekOffset.current}\n
             seekTimeStamp = ${seekTimeStamp.current}\n
             playSpeed = ${fx.speed.rate}\n
-            duration = ${track.current.buffer.duration}`
+            duration = ${track.current.buffer.duration}\n
+            e = ${e}`
         );
 
         if (playState.state === "playing") {
@@ -282,11 +296,13 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
                 console.log(err);
             }
             createTrackNode(decodedAudio.current);
-            track.current.start(0.01, e.target.value);
-            //Set play speed
+            track.current.start(0.01, seekOffset.current);
+            
+            //reset play speed
             track.current.playbackRate.value = fx.speed.rate;
+        
         } else if (playState.state === "stopped") {
-            track.current.start(0, e.target.value);
+            track.current.start(0, seekOffset.current);
             startTimer();
             setPlayState({ state: "playing" });
             setPlayPause(true);
@@ -322,6 +338,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
                     handlePlayPause={handlePlayPause}
                     playPause={playPause}
                     todaysTrack={todaysTrack}
+                    ctx={ctx}
                 />
             ) : (
                 <Mixes

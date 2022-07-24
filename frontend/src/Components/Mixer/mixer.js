@@ -24,11 +24,12 @@ const Mixer = ({
     loading,
     analyserNode,
     time,
-    setTime, 
+    setTime,
     handleSeek,
     handlePlayPause,
     playPause,
-    todaysTrack
+    todaysTrack,
+    ctx
 }) => {
     const navigate = useNavigate();
 
@@ -44,17 +45,7 @@ const Mixer = ({
         }
     }, []);
 
-    useEffect(() => {
-        if (track.current) {
-            setTime(prev => {
-                return ({
-                    ...prev,
-                    duration: track.current.buffer.duration / fx.speed.rate
-                })
-            })
-        }
-    }, [fx.speed.rate]);
-
+    
     /**
      * handles onChange event from all inputs in the mixer
      * dyanmically determines key based on <input> tags id property
@@ -63,9 +54,12 @@ const Mixer = ({
      * @param {object} e
      */
     const handleSetFx = (e) => {
-        const effect = e.target.id.split('.')[0];
-        const param = e.target.id.split('.')[1];
-        const eqParam = e.target.id.split('.').length > 2 ? e.target.id.split('.')[2] : null;
+        const effect = e.target.id.split(".")[0];
+        const param = e.target.id.split(".")[1];
+        const eqParam =
+            e.target.id.split(".").length > 2
+                ? e.target.id.split(".")[2]
+                : null;
 
         setFx((prev) => {
             if (eqParam) {
@@ -89,7 +83,7 @@ const Mixer = ({
                 };
             }
         });
-    }; 
+    };
 
     /**
      * handles onChange event from master volume slider in transport controls
@@ -166,9 +160,13 @@ const Mixer = ({
             {loading ? (
                 <Loading />
             ) : (
-                // AFTER SONG FETCH DISPLAY MIXER / VISUALIZER 
+                // AFTER SONG FETCH DISPLAY MIXER / VISUALIZER
                 <div id="mainMixerContainer">
-                    <Visualizer analyserNode={analyserNode.current} />
+                    {/* <Visualizer analyserNode={analyserNode.current} /> */}
+                    <div>{`time.current = ${time.current}`}</div>
+                    <div>{`time.duration = ${time.duration}`}</div>
+                    <div>{`ctx.current.currentTime = ${ctx.current.currentTime}`}</div>
+
                     <div id="transportContainer">
                         <div id="transportVolumeContainer">
                             <label htmlFor="volume">Volume</label>
@@ -201,7 +199,7 @@ const Mixer = ({
                                 id="seekBar"
                                 type="range"
                                 min="0"
-                                max={time.duration / fx.speed.rate}
+                                max={time.duration}
                                 step="1"
                                 value={time.current}
                                 onChange={handleSeek}
