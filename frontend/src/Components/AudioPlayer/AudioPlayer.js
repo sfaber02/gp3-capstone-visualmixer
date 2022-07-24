@@ -61,7 +61,6 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
     //trigger song fetch after a user interaction has occurred
     useEffect(() => {
         if (!showSplash && todaysTrack.audio_key) {
-            
             //Create audio context
             ctx.current = new (window.AudioContext ||
                 window.webkitAudioContext)();
@@ -265,9 +264,16 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
      * @param {object} e
      */
     const handleSeek = (e) => {
-        seekOffset.current = Number(e.target.value);
+        seekOffset.current = Number(e.target.value) * fx.speed.rate;
         seekTimeStamp.current = ctx.current.currentTime;
-        
+
+        console.log(
+            `seekOffset = ${seekOffset.current}\n
+            seekTimeStamp = ${seekTimeStamp.current}\n
+            playSpeed = ${fx.speed.rate}\n
+            duration = ${track.current.buffer.duration}`
+        );
+
         if (playState.state === "playing") {
             // wrapped this stop command in a try/catch because it was erroring out occasionally
             try {
@@ -279,7 +285,6 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
             track.current.start(0.01, e.target.value);
             //Set play speed
             track.current.playbackRate.value = fx.speed.rate;
-            track.current.detune.value = fx.speed.detune;
         } else if (playState.state === "stopped") {
             track.current.start(0, e.target.value);
             startTimer();
