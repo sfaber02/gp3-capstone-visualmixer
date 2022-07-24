@@ -241,13 +241,6 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
     };
 
     /**
-     * Stops timer by clearing interval
-     */
-    const stopTimer = () => {
-        clearInterval(timer.current);
-    };
-
-    /**
      * handles onClick event from Play/Pause button
      * refers to playState state to determine what actions needs to happen
      * also updates PlayPause state to flip play button icon between play/pause
@@ -275,7 +268,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
     const handleSeek = (e) => {
         seekOffset.current = Number(e.target.value);
         seekTimeStamp.current = ctx.current.currentTime;
-        // console.log(e.target.value);
+        
         if (playState.state === "playing") {
             // wrapped this stop command in a try/catch because it was erroring out occasionally
             try {
@@ -319,6 +312,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
                     track={track}
                     loading={loading}
                     analyserNode={analyserNode}
+                    setTime={setTime}
                     time={time}
                     handleSeek={handleSeek}
                     handlePlayPause={handlePlayPause}

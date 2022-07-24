@@ -23,7 +23,8 @@ const Mixer = ({
     track,
     loading,
     analyserNode,
-    time, 
+    time,
+    setTime, 
     handleSeek,
     handlePlayPause,
     playPause,
@@ -33,7 +34,7 @@ const Mixer = ({
 
     /**
      * On page load checks if there are FX settings stored in local storage.
-     * This is used in the case that a user has created mix without an account or being logged in.
+     * This is used in the case that a user has created a mix without an account or being logged in.
      */
     useEffect(() => {
         const storedFx = JSON.parse(localStorage.getItem("temp_fx"));
@@ -42,6 +43,17 @@ const Mixer = ({
             localStorage.setItem("temp_fx", null);
         }
     }, []);
+
+    useEffect(() => {
+        if (track.current) {
+            setTime(prev => {
+                return ({
+                    ...prev,
+                    duration: track.current.buffer.duration / fx.speed.rate
+                })
+            })
+        }
+    }, [fx.speed.rate]);
 
     /**
      * handles onChange event from all inputs in the mixer
@@ -77,12 +89,12 @@ const Mixer = ({
                 };
             }
         });
-    };
+    }; 
 
     /**
      * handles onChange event from master volume slider in transport controls
      * changes volumes of masterOutNode which is the last node in the FX chain
-     * @param {object} e
+     * @param {object} e event object
      */
     const setMasterVolume = (e) => setVolume(e.target.value);
 
@@ -137,7 +149,7 @@ const Mixer = ({
                     JSON.stringify(content.user_id)
                 );
                 if (playState.state === "playing") track.current.stop();
-                return navigate("/audio");
+                navigate("/audio");
             } catch (error) {
                 console.log(error);
             }
@@ -150,9 +162,11 @@ const Mixer = ({
 
     return (
         <>
+            {/* DISPLAY LOADING PAGE UNTIL FETCH IS COMPLETE */}
             {loading ? (
                 <Loading />
             ) : (
+                // AFTER SONG FETCH DISPLAY MIXER / VISUALIZER 
                 <div id="mainMixerContainer">
                     <Visualizer analyserNode={analyserNode.current} />
                     <div id="transportContainer">
