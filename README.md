@@ -15,3 +15,7 @@ May the best mix win!
 
 ### ToDo
 - refactor mixer / mixes page
+    - fix timer
+    - make playback loop
+    - re style using react bootstrap
+    - 

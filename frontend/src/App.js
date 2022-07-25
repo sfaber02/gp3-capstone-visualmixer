@@ -5,9 +5,9 @@ import { useState, useEffect } from "react";
 // COMPONENTS
 import SignUp from "./Components/Nav&Login/signUp";
 import { MixerWrapper } from "./Components/mixersplashwrapper.js";
+import { AudioPlayer } from "./Components/AudioPlayer/AudioPlayer";
 import Login from "./Components/Nav&Login/login";
 import NavBar from "./Components/Nav&Login/navBar";
-import { Mixes } from "./Components/Mixes/Mixes";
 import AboutPopUp from "./Components/Nav&Login/AboutPopUp";
 
 function App() {
@@ -16,7 +16,8 @@ function App() {
         username: JSON.parse(localStorage.getItem("username")),
         user_id: JSON.parse(localStorage.getItem("user_id")),
     });
-    const [todaysTrack, setTodaysTrack] = useState();
+    const [todaysTrack, setTodaysTrack] = useState('buttes');
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         setUserDetails({
@@ -28,7 +29,10 @@ function App() {
     useEffect(() => {
         fetch("https://mixle-be.herokuapp.com/audio/today")
             .then((response) => response.json())
-            .then((data) => setTodaysTrack(data))
+            .then((data) => {
+                setTodaysTrack(data);
+                setLoading(false);
+            })
             .catch((err) => console.log(err));
     }, []);
 
@@ -40,7 +44,7 @@ function App() {
                 setTrigger={setPopupBtn}
             />
             <AboutPopUp trigger={popupBtn} setTrigger={setPopupBtn} />
-            {todaysTrack && (
+            {!loading && (
                 <Routes>
                     <Route
                         exact
@@ -49,7 +53,12 @@ function App() {
                     />
                     <Route
                         path="/audio"
-                        element={<Mixes todaysTrack={todaysTrack} />}
+                        element={
+                            <AudioPlayer
+                                todaysTrack={todaysTrack}
+                                mixes={true}
+                            />
+                        }
                     />
                     <Route
                         path="/register"
