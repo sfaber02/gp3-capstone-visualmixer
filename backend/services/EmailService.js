@@ -22,7 +22,7 @@ const sendConfirmationEmail = async (newUser) => {
             process.env.SECRET_KEY
         );
 
-    let sender = "hcyqnhevwdgzfwhlxl@nthrl.com";
+    let sender = "egqprgjqwydfwmofnr@kvhrs.com";
     const url = `http://localhost:3000/verify/${token}`;
     let mailOptions = {
         from: sender,

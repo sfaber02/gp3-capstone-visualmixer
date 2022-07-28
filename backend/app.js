@@ -20,11 +20,11 @@ app.get("/", (req, res) => res.status(200).send("Welcome to Mixle backend!"));
 //     // getting the string
 //     const { uniqueString } = req.params;
 //     // check is there is anyone with this string
-//     const user = await getUser.findOne({ uniqueString: uniqueString });
-//     if(user){
+//     const newUser = await getUser.findOne({ uniqueString: uniqueString });
+//     if(newUser){
 //         // if there is anyone, mark them verified
-//         user.isValid = true;
-//         await user.save();
+//         newUser.isValid = true;
+//         await newUser.save();
 //         // redirect to the home or anywhere else
 //         res.redirect("/");
 //     }else{

@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 // const { sendConfirmationEmail } = require("../services/EmailService.js");
 const nodemailer = require("nodemailer");
 const nodemailerSendgrid = require("nodemailer-sendgrid");
+// const sgMail = require("@sendgrid/mail");
 
 const {
     doesUserExist,
@@ -16,8 +17,6 @@ const {
     getUserById,
     updateUserVotes,
 } = require("../queries/users.js");
-
-// const { randomString } = require("../bin/randomString.js");
 
 // CONFIGURATION
 const user = express.Router();
@@ -38,51 +37,38 @@ user.post("/register", async (req, res) => {
         
         try {
             const newUser = await addUser(username, email, hashPassword);
-            
-            // const token = jwt.sign(
-            //     { id: newUser.user_id },
-            //     process.env.SECRET_KEY
-            // );
-
+        
             const sendConfirmationEmail = async (newUser) => {
-                const transporter = nodemailer.createTransport(
-                    nodemailerSendgrid({
-                        apiKey: process.env.SENDGRID_API_KEY
-                    })
-                    //     {
-                //     service: "SendGrid",
-                //     port: 587,
-                //     auth: {
-                //         user: "hectorilarraza1414@gmail.com",
-                //         pass: process.env.SENDGRID_API_KEY
-                //     }
-                // }
+
+                let transporter = nodemailer.createTransport({
+                    host: 'smtp.sendgrid.net',
+                    port: 587,
+                    auth: {
+                        user: "apikey",
+                        pass: process.env.SENDGRID_API_KEY
+                    }
+                 })
+
+                 const token = await jwt.sign(
+                    { id: newUser.user_id },
+                    process.env.SECRET_KEY
                 );
 
-                const token = await jwt.sign(
-                        { id: newUser.user_id },
-                        process.env.SECRET_KEY
-                    );
-
-                let sender = "hcyqnhevwdgzfwhlxl@nthrl.com";
+                let sender = "hectorilarraza1414@gmail.com";
                 const url = `http://localhost:3000/verify/${token}`;
-                let mailOptions = {
-                    from: sender,
-                    to: `${newUser.username} <${newUser.email}>`,
-                    subject: "Email Confirmation",
-                    html: `Press <a href=${url}> here </a> to verify your email. Thanks`
-                };
+                 transporter.sendMail({
+                     to: `${newUser.username} <${newUser.email}>`, // recipient email
+                     from: `Mixle Support <${sender}>`, // verified sender email
+                     subject: "Email Confirmation", // Subject line
+                     html: `Press <a href=${url}> here </a> to verify your email. Thanks`, // html body
+                   }, function(error, info){
+                     if (error) {
+                       console.log(error);
+                     } else {
+                       console.log('Email sent: ' + info.response);
+                     }
+                   });
 
-                transporter.sendMail(mailOptions, function(err, res) {
-                    if(err){
-                        console.log(err);
-                        res.status(400).json({
-                            error: err,
-                        });
-                    }else{
-                        res.status(200).send("Message sent");
-                    }   
-                });
             }
 
             console.log(sendConfirmationEmail(newUser)); 
@@ -187,3 +173,4 @@ user.delete("/:id", async (req, res) => {
 });
 
 module.exports = user;
+
