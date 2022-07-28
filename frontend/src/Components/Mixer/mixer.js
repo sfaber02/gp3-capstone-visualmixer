@@ -202,6 +202,7 @@ const Mixer = ({
                                 max={time.duration}
                                 step="1"
                                 value={time.current}
+                                // onMouseUp={handleSeek}
                                 onChange={handleSeek}
                             />
                         </div>

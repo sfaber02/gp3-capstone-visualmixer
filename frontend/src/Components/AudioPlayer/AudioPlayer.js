@@ -98,8 +98,6 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
             // Create Master Out Node
             masterOutNode.current = ctx.current.createGain();
 
-            //
-
             //Fetch Song from Server and decode audio for playback
             fetch(todaysTrack.audio_key)
                 .then((data) => data.arrayBuffer())
@@ -122,9 +120,11 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
         track.current.buffer = decodedAudio.current;
 
         //intialize time state, set loading state
-        setTime({
-            current: 0,
-            duration: track.current.buffer.duration / fx.speed.rate,
+        setTime((prev) => {
+            return {
+                ...prev,
+                duration: track.current.buffer.duration / fx.speed.rate,
+            };
         });
         setLoading(false);
 
@@ -230,12 +230,11 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
         if (!timer.current) {
             timerStart.current = Date.now();
             timer.current = setInterval(() => {
+                console.log();
                 setTime((prev) => {
                     return {
                         ...prev,
-                        current:
-                            (Date.now() - timerStart.current) / 1000 +
-                            timerStop.current,
+                        current: (Date.now() - timerStart.current) / 1000 + timerStop.current,
                     };
                 });
             }, 50);
@@ -257,8 +256,8 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
      */
     const handlePlayPause = () => {
         if (playState.state === "stopped") {
-            track.current.start();
             startTimer();
+            track.current.start();
             setPlayState({ state: "playing" });
         } else if (playState.state === "playing") {
             stopTimer();
@@ -278,41 +277,43 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
      * @param {object} e
      */
     const handleSeek = (e) => {
-        seekOffset.current = Number(e.target.value) * fx.speed.rate;
-        seekTimeStamp.current = ctx.current.currentTime;
+        seekOffset.current = Number(e.target.value)  // * fx.speed.rate;
+        // seekTimeStamp.current =
 
         console.log(
             `seekOffset = ${seekOffset.current}\n
-            seekTimeStamp = ${seekTimeStamp.current}\n
             playSpeed = ${fx.speed.rate}\n
             duration = ${track.current.buffer.duration}\n
-            e = ${e}`
+            timerStart = ${timerStart.current}\n
+            timerStop = ${timerStop.current}\n`
         );
 
-        // if (playState.state === "playing") {
-        //     // wrapped this stop command in a try/catch because it was erroring out occasionally
-        //     try {
-        //         track.current.stop();
-        //     } catch (err) {
-        //         console.log(err);
-        //     }
-        //     createTrackNode(decodedAudio.current);
-        //     track.current.start(0.01, seekOffset.current);
+        if (playState.state === "playing") {
+            // wrapped this stop command in a try/catch because it was erroring out occasionally
+            try {
+                track.current.stop();
+            } catch (err) {
+                console.log(err);
+            }
+            createTrackNode(decodedAudio.current);
+            track.current.start(0, seekOffset.current);
+            setTime((prev) => {
+                return { ...prev, current: seekOffset.current };
+            });
 
-        //     //reset play speed
-        //     track.current.playbackRate.value = fx.speed.rate;
-
-        // } else if (playState.state === "stopped") {
-        //     track.current.start(0, seekOffset.current);
-        //     startTimer();
-        //     setPlayState({ state: "playing" });
-        //     setPlayPause(true);
-        // } else if (playState.state === "paused") {
-        //     track.current.stop();
-        //     createTrackNode(decodedAudio.current);
-        //     track.current.start(0, e.target.value);
-        //     ctx.current.suspend();
-        // }
+            //reset play speed
+            track.current.playbackRate.value = fx.speed.rate;
+        } else if (playState.state === "stopped") {
+            track.current.start(0, seekOffset.current);
+            startTimer();
+            setPlayState({ state: "playing" });
+            setPlayPause(true);
+        } else if (playState.state === "paused") {
+            track.current.stop();
+            createTrackNode(decodedAudio.current);
+            track.current.start(0, e.target.value);
+            ctx.current.suspend();
+        }
     };
 
     useEffect(() => {
