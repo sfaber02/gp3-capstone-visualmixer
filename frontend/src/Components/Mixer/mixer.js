@@ -204,6 +204,7 @@ const Mixer = ({
                                 value={time.current}
                                 // onMouseUp={handleSeek}
                                 onChange={handleSeek}
+                                
                             />
                         </div>
                     </div>

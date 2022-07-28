@@ -27,7 +27,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
     const timerOffset = useRef();
     const loadStart = useRef();
     const seekOffset = useRef(0);
-    const seekTimeStamp = useRef(0);
+    const newSeek = useRef(false);
 
     //Refs for audio node and decoded audio array
     const track = useRef();
@@ -230,11 +230,18 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
         if (!timer.current) {
             timerStart.current = Date.now();
             timer.current = setInterval(() => {
+                if (newSeek.current) {
+                    timerStart.current =  Date.now();
+                    newSeek.current =  false;
+                }
                 console.log();
                 setTime((prev) => {
                     return {
                         ...prev,
-                        current: (Date.now() - timerStart.current) / 1000 + timerStop.current,
+                        current:
+                            (Date.now() - timerStart.current) / 1000 +
+                            timerStop.current +
+                            seekOffset.current,
                     };
                 });
             }, 50);
@@ -277,8 +284,8 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
      * @param {object} e
      */
     const handleSeek = (e) => {
-        seekOffset.current = Number(e.target.value)  // * fx.speed.rate;
-        // seekTimeStamp.current =
+        seekOffset.current = Number(e.target.value); // * fx.speed.rate;
+        newSeek.current = true;
 
         console.log(
             `seekOffset = ${seekOffset.current}\n
