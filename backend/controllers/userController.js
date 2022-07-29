@@ -28,8 +28,10 @@ user.post("/register", async (req, res) => {
             });
             return;
         }
+        // HASH PASSWORD
         const hashPassword = await bcrypt.hash(password, 10);
         try {
+            // CREATE NEW USER
             const user = await addUser(username, email, hashPassword);
             const token = jwt.sign(
                 { id: user.user_id },

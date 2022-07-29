@@ -1,32 +1,32 @@
 const db = require("../db/dbConfig.js");
 
-// VALIDATE USER EMAIL
-const doesUserExist = async (email) => {
+// GET USER BY EMAIL
+const getUserByEmail = async (email) => {
     try {
-        const exists = await db.query(
-            `SELECT EXISTS (SELECT 1 FROM users WHERE email=$1)`,
-            [email]
-        );
-        return exists[0].exists;
-    } catch (err) {
-        return error;
-    }
-};
-
-// SELECT SPECIFIC USER
-const getUser = async (email) => {
-    try {
-        const newUser = await db.one(
+        const user = await db.one(
             "SELECT * FROM users WHERE email = $1",
             email
         );
-        return newUser;
+        return user;
     } catch (error) {
         return error;
     }
 };
 
-// GET USER ROW BY USER ID
+// GET USER BY USERNAME
+const getUserByUserName = async (username) => {
+    try {
+        const user = await db.one(
+            "SELECT * FROM users WHERE username= $1",
+            username
+        );
+        return user;
+    } catch (error) {
+        return error;
+    }
+};
+
+// GET USER BY USER_ID
 const getUserById = async (id) => {
     try {
         const newUserId = await db.one(
@@ -52,7 +52,7 @@ const addUser = async (name, email, password) => {
     }
 };
 
-// UPDATE USER
+// UPDATE A USER
 const updateUser = async (user, password) => {
     try {
         const updatedUser = await db.one(
@@ -98,6 +98,7 @@ const deleteUser = async (id) => {
     }
 };
 
+// RESET USER VOTES
 const resetVotes = async () => {
     try {
         const reset = await db.query("UPDATE users SET avaliablevotes = 3");
@@ -107,12 +108,12 @@ const resetVotes = async () => {
 };
 
 module.exports = {
-    doesUserExist,
     addUser,
     deleteUser,
-    getUser,
     updateUser,
     getUserById,
     updateUserVotes,
     resetVotes,
+    getUserByEmail,
+    getUserByUserName,
 };
