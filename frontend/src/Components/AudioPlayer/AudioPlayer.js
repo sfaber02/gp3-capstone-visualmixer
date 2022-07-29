@@ -231,14 +231,11 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
                     timerStart.current =  Date.now();
                     newSeek.current =  false;
                 }
-                console.log();
                 setTime((prev) => {
                     return {
                         ...prev,
                         current:
-                            (Date.now() - timerStart.current) / 1000 +
-                            timerStop.current +
-                            seekOffset.current,
+                            ((Date.now() - timerStart.current) / 1000 + (timerStop.current + seekOffset.current))
                     };
                 });
             }, 50);
@@ -281,7 +278,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
      * @param {object} e
      */
     const handleSeek = (e) => {
-        seekOffset.current = Number(e.target.value); // * fx.speed.rate;
+        seekOffset.current = Number(e.target.value);
         newSeek.current = true;
 
         console.log(
@@ -300,7 +297,8 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
                 console.log(err);
             }
             createTrackNode(decodedAudio.current);
-            track.current.start(0, seekOffset.current);
+            track.current.start(0, seekOffset.current * fx.speed.rate);
+            console.log(`playing from ${seekOffset.current * fx.speed.rate}`);
             setTime((prev) => {
                 return { ...prev, current: seekOffset.current };
             });
