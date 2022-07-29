@@ -182,7 +182,7 @@ const Mixer = ({
                                 onChange={setMasterVolume}
                             />
                         </div>
-                        <Time time={time} />
+                        <Time time={time} id="transportTimeContainer"/>
                         <div id="transportSeekBarContainer">
                             <input
                                 className="transportSlider"

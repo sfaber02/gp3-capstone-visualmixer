@@ -1,8 +1,8 @@
 import React from 'react'
 
-export const Time = ({time}) => {
+export const Time = ({time, id}) => {
   return (
-      <div id="transportTimeContainer">
+      <div id={id}>
           {/*PRETTIER keeps multilining the first .toFixed()! */}
           {/* prettier-ignore */}
           <p>{`${Math.floor(time.current / 60)}:${(time.current % 60).toFixed(0) < 10 ? 
