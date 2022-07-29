@@ -186,7 +186,8 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
         if (!loading) {
             //Set play speed
             track.current.playbackRate.value = fx.speed.rate;
-
+            track.current.detune.value = fx.speed.detune;
+            
             //Set Delay settings
             delayNode.current.delayTime.value = fx.delay.time;
             feedbackNode.current.gain.value = fx.delay.feedback;
