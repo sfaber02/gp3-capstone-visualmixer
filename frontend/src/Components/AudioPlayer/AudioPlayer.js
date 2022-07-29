@@ -24,8 +24,6 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
     const timer = useRef();
     const timerStart = useRef();
     const timerStop = useRef(0);
-    const timerOffset = useRef();
-    const loadStart = useRef();
     const seekOffset = useRef(0);
     const newSeek = useRef(false);
 
@@ -65,8 +63,6 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
             //Create audio context
             ctx.current = new (window.AudioContext ||
                 window.webkitAudioContext)();
-
-            loadStart.current = Date.now();
 
             //Create Delay Nodes
             delayNode.current = ctx.current.createDelay();

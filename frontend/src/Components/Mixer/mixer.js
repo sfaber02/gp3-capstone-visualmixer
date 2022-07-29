@@ -6,6 +6,7 @@ import "../../Styles/mixerSubComponentStyles/transport.css";
 
 //MIXER SUB COMPONENTS
 import { Visualizer } from "./MixerSubComponents/Visualizer";
+import { Time } from "./MixerSubComponents/Time";
 import { Delay } from "./MixerSubComponents/Delay";
 import { PlaySpeed } from "./MixerSubComponents/PlaySpeed";
 import { Compressor } from "./MixerSubComponents/Compressor";
@@ -181,18 +182,7 @@ const Mixer = ({
                                 onChange={setMasterVolume}
                             />
                         </div>
-                        <div id="transportTimeContainer">
-                            {/*PRETTIER keeps multilining the first .toFixed()! */}
-                            {/* prettier-ignore */}
-                            <p>{`${Math.floor(time.current / 60)}:${(time.current % 60).toFixed(0) < 10 ? 
-                                `0${(time.current % 60).toFixed(0)}`: 
-                                (time.current % 60).toFixed(0)}`} / 
-                            {`${Math.floor(time.duration / 60)}:
-                            ${(time.duration % 60).toFixed(0) < 10 ? 
-                                `0${(time.duration % 60).toFixed(0)}`: 
-                                (time.duration % 60).toFixed(0)}`}
-                            </p>
-                        </div>
+                        <Time time={time} />
                         <div id="transportSeekBarContainer">
                             <input
                                 className="transportSlider"
