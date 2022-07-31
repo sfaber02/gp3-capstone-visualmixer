@@ -6,6 +6,7 @@ import "../../Styles/mixerSubComponentStyles/transport.css";
 
 //MIXER SUB COMPONENTS
 import { Visualizer } from "./MixerSubComponents/Visualizer";
+import { Time } from "./MixerSubComponents/Time";
 import { Delay } from "./MixerSubComponents/Delay";
 import { PlaySpeed } from "./MixerSubComponents/PlaySpeed";
 import { Compressor } from "./MixerSubComponents/Compressor";
@@ -24,12 +25,10 @@ const Mixer = ({
     loading,
     analyserNode,
     time,
-    setTime,
     handleSeek,
     handlePlayPause,
     playPause,
     todaysTrack,
-    ctx
 }) => {
     const navigate = useNavigate();
 
@@ -162,11 +161,8 @@ const Mixer = ({
             ) : (
                 // AFTER SONG FETCH DISPLAY MIXER / VISUALIZER
                 <div id="mainMixerContainer">
-                    {/* <Visualizer analyserNode={analyserNode.current} /> */}
-                    <div>{`time.current = ${time.current}`}</div>
-                    <div>{`time.duration = ${time.duration}`}</div>
-                    <div>{`ctx.current.currentTime = ${ctx.current.currentTime}`}</div>
-
+                    <Visualizer analyserNode={analyserNode.current} />
+                
                     <div id="transportContainer">
                         <div id="transportVolumeContainer">
                             <label htmlFor="volume">Volume</label>
@@ -181,18 +177,7 @@ const Mixer = ({
                                 onChange={setMasterVolume}
                             />
                         </div>
-                        <div id="transportTimeContainer">
-                            {/*PRETTIER keeps multilining the first .toFixed()! */}
-                            {/* prettier-ignore */}
-                            <p>{`${Math.floor(time.current / 60)}:${(time.current % 60).toFixed(0) < 10 ? 
-                                `0${(time.current % 60).toFixed(0)}`: 
-                                (time.current % 60).toFixed(0)}`} / 
-                            {`${Math.floor(time.duration / 60)}:
-                            ${(time.duration % 60).toFixed(0) < 10 ? 
-                                `0${(time.duration % 60).toFixed(0)}`: 
-                                (time.duration % 60).toFixed(0)}`}
-                            </p>
-                        </div>
+                        <Time time={time} id="transportTimeContainer"/>
                         <div id="transportSeekBarContainer">
                             <input
                                 className="transportSlider"
