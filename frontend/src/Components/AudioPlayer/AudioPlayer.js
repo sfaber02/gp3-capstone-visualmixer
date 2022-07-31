@@ -208,6 +208,13 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
         }
     }, [loading, fx]);
 
+    // controls master volume
+    useEffect(() => {
+        if (todaysTrack) {
+            masterOutNode.current.gain.value = Number(volume);
+        }
+    }, [volume]);
+
     // stops and starts the timer when speed is changed to prevent stale variables in interval
     useEffect(() => {
         if (timer.current) {
@@ -215,6 +222,39 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
             startTimer();
         }
     }, [fx.speed.rate]);
+
+    /**
+     * Creates an interval function to update the timer if song is playing
+     */
+    const startTimer = () => {
+        if (!timer.current) {
+            timerStart.current = Date.now();
+            timer.current = setInterval(() => {
+                if (newSeek.current) {
+                    timerStart.current = Date.now();
+                    newSeek.current = false;
+                }
+                setTime((prev) => {
+                    return {
+                        ...prev,
+                        current:
+                            ((Date.now() - timerStart.current) / 1000) *
+                                fx.speed.rate +
+                            (timerStop.current + offset.current),
+                    };
+                });
+            }, 100);
+        }
+    };
+
+    //stops timer and clears interval
+    const stopTimer = () => {
+        if (timer.current) {
+            offset.current = time.current;
+            clearInterval(timer.current);
+            timer.current = null;
+        }
+    };
 
     // checks if track has ended, if so start it over
     useEffect(() => {
@@ -229,40 +269,11 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
                 createTrackNode(decodedAudio.current);
                 offset.current = 0;
                 track.current.start();
+                track.current.playbackRate.value = fx.speed.rate;
                 startTimer();
             }
         }
     }, [time.current]);
-
-    /**
-     * Creates an interval function to update the timer if song is playing
-     */
-    const startTimer = () => {
-        if (!timer.current) {
-            timerStart.current = Date.now();
-            timer.current = setInterval(() => {
-                if (newSeek.current) {
-                    timerStart.current =  Date.now();
-                    newSeek.current =  false;
-                }
-                setTime((prev) => {
-                    return {
-                        ...prev,
-                        current:
-                            ((Date.now() - timerStart.current) / 1000 * fx.speed.rate + (timerStop.current + offset.current)),
-                    };
-                });
-            }, 100);
-        }
-    };
-
-    const stopTimer = () => {
-        if (timer.current) {
-            offset.current = time.current;
-            clearInterval(timer.current);
-            timer.current = null;
-        }
-    };
 
     /**
      * handles onClick event from Play/Pause button
@@ -292,20 +303,12 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
      * @param {object} e
      */
     const handleSeek = (e) => {
-        offset.current = Number(e.target.value); 
+        // grab desired seek time from range slider and set seek flag
+        offset.current = Number(e.target.value);
         newSeek.current = true;
-
-        console.log(
-            `offset = ${offset.current}\n
-            playSpeed = ${fx.speed.rate}\n
-            duration = ${track.current.buffer.duration}\n
-            timerStart = ${timerStart.current}\n
-            timerStop = ${timerStop.current}\n`
-        );
 
         if (playState.state === "playing") {
             // wrapped this stop command in a try/catch because it was erroring out occasionally
-            console.log("1");
             try {
                 track.current.stop();
             } catch (err) {
@@ -313,7 +316,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
             }
             createTrackNode(decodedAudio.current);
             track.current.start(0, offset.current);
-           
+
             //reset play speed
             track.current.playbackRate.value = fx.speed.rate;
         } else if (playState.state === "stopped") {
@@ -329,12 +332,6 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
         }
     };
 
-    useEffect(() => {
-        if (todaysTrack) {
-            masterOutNode.current.gain.value = Number(volume);
-        }
-    }, [volume]);
-
     return (
         <>
             {!mixes ? (
@@ -347,15 +344,11 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
                     track={track}
                     loading={loading}
                     analyserNode={analyserNode}
-                    setTime={setTime}
                     time={time}
                     handleSeek={handleSeek}
                     handlePlayPause={handlePlayPause}
                     playPause={playPause}
                     todaysTrack={todaysTrack}
-                    ctx={ctx}
-                    offset={offset}
-                    timerStart={timerStart}
                 />
             ) : (
                 <Mixes

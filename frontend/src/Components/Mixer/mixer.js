@@ -25,14 +25,10 @@ const Mixer = ({
     loading,
     analyserNode,
     time,
-    setTime,
     handleSeek,
     handlePlayPause,
     playPause,
     todaysTrack,
-    ctx, 
-    offset,
-    timerStart
 }) => {
     const navigate = useNavigate();
 
@@ -165,11 +161,8 @@ const Mixer = ({
             ) : (
                 // AFTER SONG FETCH DISPLAY MIXER / VISUALIZER
                 <div id="mainMixerContainer">
-                    {/* <Visualizer analyserNode={analyserNode.current} /> */}
-                    <div>{`time.current = ${time.current}`}</div>
-                    <div>{`seekoffset = ${offset.current} timerstart = ${timerStart.current}`}</div>
-                    <div>{`fx.speed.rate = ${fx.speed.rate}`}</div>
-
+                    <Visualizer analyserNode={analyserNode.current} />
+                
                     <div id="transportContainer">
                         <div id="transportVolumeContainer">
                             <label htmlFor="volume">Volume</label>
