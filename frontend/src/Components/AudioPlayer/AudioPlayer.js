@@ -217,22 +217,22 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
     }, [fx.speed.rate]);
 
     // checks if track has ended, if so start it over
-    // useEffect(() => {
-    //     if (track.current) {
-    //         if (timer.current > track.current.buffer.duration) {
-    //             console.log("1");
-    //             stopTimer();
-    //             try {
-    //                 track.current.stop();
-    //             } catch (err) {
-    //                 console.log(err);
-    //             }
-    //             createTrackNode(decodedAudio.current);
-    //             offset.current = 0;
-    //             track.current.start();
-    //         }
-    //     }
-    // }, [timer.current]);
+    useEffect(() => {
+        if (track.current) {
+            if (time.current > track.current.buffer.duration) {
+                stopTimer();
+                try {
+                    track.current.stop();
+                } catch (err) {
+                    console.log(err);
+                }
+                createTrackNode(decodedAudio.current);
+                offset.current = 0;
+                track.current.start();
+                startTimer();
+            }
+        }
+    }, [time.current]);
 
     /**
      * Creates an interval function to update the timer if song is playing
@@ -252,7 +252,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
                             ((Date.now() - timerStart.current) / 1000 * fx.speed.rate + (timerStop.current + offset.current)),
                     };
                 });
-            }, 50);
+            }, 100);
         }
     };
 
