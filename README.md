@@ -8,7 +8,7 @@ May the best mix win!
 
 
 ### Future Features
-
+- mash up mode
 
 ### Bugs
 - dyanmic css for mixer page
@@ -18,4 +18,4 @@ May the best mix win!
     - fix timer
     - make playback loop
     - re style using react bootstrap
-    - 
+    - add tooltips to mixer elements
