@@ -199,7 +199,7 @@ const Mixes = ({
                     <div id="availableVotes">
                         Votes Left: {user.avaliablevotes}
                     </div>
-                    <div id="countdown">New Mixle In: {countdown}</div>
+                    {/* <div id="countdown">New Mixle In: {countdown}</div> */}
                 </div>
             </div>
             <div className={"music-card-container"}>
