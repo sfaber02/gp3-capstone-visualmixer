@@ -221,7 +221,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
             stopTimer();
             startTimer();
         }
-    }, [fx.speed.rate]);
+    }, [fx.speed.rate, fx.speed.detune]);
 
     /**
      * Creates an interval function to update the timer if song is playing
@@ -239,7 +239,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
                         ...prev,
                         current:
                             ((Date.now() - timerStart.current) / 1000) *
-                                fx.speed.rate +
+                                (fx.speed.rate * (2 ** (fx.speed.detune / 100 / 12))) +
                             (timerStop.current + offset.current),
                     };
                 });
@@ -269,7 +269,11 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
                 createTrackNode(decodedAudio.current);
                 offset.current = 0;
                 track.current.start();
+
+                //reset play /detune
                 track.current.playbackRate.value = fx.speed.rate;
+                track.current.detune.value = fx.speed.detune;
+
                 startTimer();
             }
         }
@@ -319,6 +323,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
 
             //reset play speed
             track.current.playbackRate.value = fx.speed.rate;
+            track.current.detune.value = fx.speed.detune;
         } else if (playState.state === "stopped") {
             track.current.start(0, offset.current);
             startTimer();
