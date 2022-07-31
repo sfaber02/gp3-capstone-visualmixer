@@ -211,12 +211,12 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
     // updates duration when play rate is changed
     useEffect(() => {
         if (track.current) {
-            setTime((prev) => {
-                return {
-                    ...prev,
-                    duration: track.current.buffer.duration / fx.speed.rate,
-                };
-            });
+            // setTime((prev) => {
+            //     return {
+            //         ...prev,
+            //         duration: track.current.buffer.duration,
+            //     };
+            // });
         }
         if (timer.current) {
             stopTimer();
@@ -231,7 +231,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
         if (!timer.current) {
             timerStart.current = Date.now();
             timer.current = setInterval(() => {
-                console.log(seekOffset);
+                console.log(fx.speed.rate);
                 if (newSeek.current) {
                     timerStart.current =  Date.now();
                     newSeek.current =  false;
@@ -240,7 +240,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
                     return {
                         ...prev,
                         current:
-                            ((Date.now() - timerStart.current) / 1000 + (timerStop.current + seekOffset.current)) / fx.speed.rate, //WHY
+                            ((Date.now() - timerStart.current) / 1000 * fx.speed.rate + (timerStop.current + seekOffset.current)),
                     };
                 });
             }, 50);
