@@ -23,7 +23,6 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
     //Refs for time display
     const timer = useRef();
     const timerStart = useRef();
-    const timerStop = useRef(0);
     const offset = useRef(0);
     const newSeek = useRef(false);
 
@@ -240,7 +239,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
                         current:
                             ((Date.now() - timerStart.current) / 1000) *
                                 (fx.speed.rate * (2 ** (fx.speed.detune / 100 / 12))) +
-                            (timerStop.current + offset.current),
+                            offset.current,
                     };
                 });
             }, 100);
