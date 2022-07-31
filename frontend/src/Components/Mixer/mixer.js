@@ -165,8 +165,8 @@ const Mixer = ({
                 <div id="mainMixerContainer">
                     {/* <Visualizer analyserNode={analyserNode.current} /> */}
                     <div>{`time.current = ${time.current}`}</div>
-                    <div>{`time.duration = ${time.duration}`}</div>
                     <div>{`ctx.current.currentTime = ${ctx.current.currentTime}`}</div>
+                    <div>{`fx.speed.rate = ${fx.speed.rate}`}</div>
 
                     <div id="transportContainer">
                         <div id="transportVolumeContainer">

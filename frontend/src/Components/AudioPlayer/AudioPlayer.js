@@ -218,6 +218,10 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
                 };
             });
         }
+        if (timer.current) {
+            stopTimer();
+            startTimer();
+        }
     }, [fx.speed.rate]);
 
     /**
@@ -227,6 +231,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
         if (!timer.current) {
             timerStart.current = Date.now();
             timer.current = setInterval(() => {
+                console.log(seekOffset);
                 if (newSeek.current) {
                     timerStart.current =  Date.now();
                     newSeek.current =  false;
@@ -235,7 +240,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
                     return {
                         ...prev,
                         current:
-                            ((Date.now() - timerStart.current) / 1000 + (timerStop.current + seekOffset.current))
+                            ((Date.now() - timerStart.current) / 1000 + (timerStop.current + seekOffset.current)) / fx.speed.rate, //WHY
                     };
                 });
             }, 50);
@@ -278,7 +283,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
      * @param {object} e
      */
     const handleSeek = (e) => {
-        seekOffset.current = Number(e.target.value);
+        seekOffset.current = Number(e.target.value); 
         newSeek.current = true;
 
         console.log(
@@ -327,6 +332,9 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
     return (
         <>
             {!mixes ? (
+                <>
+                <div>{fx.speed.rate}</div>
+                
                 <Mixer
                     setFx={setFx}
                     setVolume={setVolume}
@@ -344,6 +352,8 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
                     todaysTrack={todaysTrack}
                     ctx={ctx}
                 />
+                
+                </>
             ) : (
                 <Mixes
                     setFx={setFx}
