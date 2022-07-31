@@ -30,7 +30,9 @@ const Mixer = ({
     handlePlayPause,
     playPause,
     todaysTrack,
-    ctx
+    ctx, 
+    offset,
+    timerStart
 }) => {
     const navigate = useNavigate();
 
@@ -165,7 +167,7 @@ const Mixer = ({
                 <div id="mainMixerContainer">
                     {/* <Visualizer analyserNode={analyserNode.current} /> */}
                     <div>{`time.current = ${time.current}`}</div>
-                    <div>{`ctx.current.currentTime = ${ctx.current.currentTime}`}</div>
+                    <div>{`seekoffset = ${offset.current} timerstart = ${timerStart.current}`}</div>
                     <div>{`fx.speed.rate = ${fx.speed.rate}`}</div>
 
                     <div id="transportContainer">

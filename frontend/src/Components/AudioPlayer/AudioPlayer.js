@@ -24,7 +24,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
     const timer = useRef();
     const timerStart = useRef();
     const timerStop = useRef(0);
-    const seekOffset = useRef(0);
+    const offset = useRef(0);
     const newSeek = useRef(false);
 
     //Refs for audio node and decoded audio array
@@ -208,7 +208,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
         }
     }, [loading, fx]);
 
-    // stops and starts the timer to when speed is changed to prevent stale variables in interval
+    // stops and starts the timer when speed is changed to prevent stale variables in interval
     useEffect(() => {
         if (timer.current) {
             stopTimer();
@@ -228,7 +228,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
     //                 console.log(err);
     //             }
     //             createTrackNode(decodedAudio.current);
-    //             seekOffset.current = 0;
+    //             offset.current = 0;
     //             track.current.start();
     //         }
     //     }
@@ -241,7 +241,6 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
         if (!timer.current) {
             timerStart.current = Date.now();
             timer.current = setInterval(() => {
-                console.log(seekOffset.current);
                 if (newSeek.current) {
                     timerStart.current =  Date.now();
                     newSeek.current =  false;
@@ -250,7 +249,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
                     return {
                         ...prev,
                         current:
-                            ((Date.now() - timerStart.current) / 1000 * fx.speed.rate + (timerStop.current + seekOffset.current)),
+                            ((Date.now() - timerStart.current) / 1000 * fx.speed.rate + (timerStop.current + offset.current)),
                     };
                 });
             }, 50);
@@ -259,7 +258,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
 
     const stopTimer = () => {
         if (timer.current) {
-            timerStop.current = time.current;
+            offset.current = time.current;
             clearInterval(timer.current);
             timer.current = null;
         }
@@ -267,7 +266,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
 
     /**
      * handles onClick event from Play/Pause button
-     * refers to playState state to determine what actions needs to happen
+     * refers to playState state to determine what actions need to happen
      * also updates PlayPause state to flip play button icon between play/pause
      */
     const handlePlayPause = () => {
@@ -293,11 +292,11 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
      * @param {object} e
      */
     const handleSeek = (e) => {
-        seekOffset.current = Number(e.target.value); 
+        offset.current = Number(e.target.value); 
         newSeek.current = true;
 
         console.log(
-            `seekOffset = ${seekOffset.current}\n
+            `offset = ${offset.current}\n
             playSpeed = ${fx.speed.rate}\n
             duration = ${track.current.buffer.duration}\n
             timerStart = ${timerStart.current}\n
@@ -306,22 +305,19 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
 
         if (playState.state === "playing") {
             // wrapped this stop command in a try/catch because it was erroring out occasionally
+            console.log("1");
             try {
                 track.current.stop();
             } catch (err) {
                 console.log(err);
             }
             createTrackNode(decodedAudio.current);
-            track.current.start(0, seekOffset.current);
-            console.log(`playing from ${seekOffset.current}`);
-            setTime((prev) => {
-                return { ...prev, current: seekOffset.current };
-            });
-
+            track.current.start(0, offset.current);
+           
             //reset play speed
             track.current.playbackRate.value = fx.speed.rate;
         } else if (playState.state === "stopped") {
-            track.current.start(0, seekOffset.current);
+            track.current.start(0, offset.current);
             startTimer();
             setPlayState({ state: "playing" });
             setPlayPause(true);
@@ -358,6 +354,8 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
                     playPause={playPause}
                     todaysTrack={todaysTrack}
                     ctx={ctx}
+                    offset={offset}
+                    timerStart={timerStart}
                 />
             ) : (
                 <Mixes
