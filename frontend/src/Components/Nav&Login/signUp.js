@@ -19,7 +19,7 @@ function SignUp({ userDetails, setUserDetails }) {
         if (userDetails.user_id) {
             navigate("/");
         }
-    }, [userDetails.user_id, navigate]);
+    }, []);
 
     const handleChange = (event) => {
         setUser({ ...user, [event.target.id]: event.target.value });

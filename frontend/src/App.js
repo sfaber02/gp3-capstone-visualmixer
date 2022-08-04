@@ -1,6 +1,7 @@
 // DEPENDENCIES
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import jwtDecode from "./utils/jwtDecode";
 
 // COMPONENTS
 import SignUp from "./Components/Nav&Login/signUp";
@@ -10,21 +11,19 @@ import Login from "./Components/Nav&Login/login";
 import NavBar from "./Components/Nav&Login/navBar";
 import AboutPopUp from "./Components/Nav&Login/AboutPopUp";
 
+const API = process.env.REACT_APP_API_URL;
+
 function App() {
     const [popupBtn, setPopupBtn] = useState(false);
     const [userDetails, setUserDetails] = useState({
-        username: JSON.parse(localStorage.getItem("username")),
-        user_id: JSON.parse(localStorage.getItem("user_id")),
+        username: "",
+        user_id: "",
+        accessToken: "",
     });
-    const [todaysTrack, setTodaysTrack] = useState('buttes');
-    const [loading, setLoading] = useState(true)
+    const [todaysTrack, setTodaysTrack] = useState("buttes");
+    const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        setUserDetails({
-            username: JSON.parse(localStorage.getItem("username")),
-            user_id: JSON.parse(localStorage.getItem("user_id")),
-        });
-    }, []);
+    let navigate = useNavigate();
 
     useEffect(() => {
         fetch("https://mixle-be.herokuapp.com/audio/today")
@@ -36,10 +35,38 @@ function App() {
             .catch((err) => console.log(err));
     }, []);
 
+    useEffect(() => {
+        if (localStorage.getItem("active") && !userDetails.accessToken) {
+            fetch(`${API}/user/refresh_token`, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                mode: "cors",
+                credentials: "include",
+            })
+                .then((response) => response.json())
+                .then((tokens) => {
+                    // DECODE
+                    let decodedUser = jwtDecode(tokens.accessToken);
+
+                    // SET USER INFO IN STATE
+                    setUserDetails({
+                        username: decodedUser.username,
+                        user_id: decodedUser.user_id,
+                        accessToken: tokens.accessToken,
+                    });
+                })
+                .catch((error) => {
+                    return navigate("./login");
+                });
+        }
+    }, []);
+
     return (
         <main>
             <NavBar
                 user={userDetails}
+                setUserDetails={setUserDetails}
                 trigger={popupBtn}
                 setTrigger={setPopupBtn}
             />
@@ -49,7 +76,12 @@ function App() {
                     <Route
                         exact
                         path="/"
-                        element={<MixerWrapper todaysTrack={todaysTrack} />}
+                        element={
+                            <MixerWrapper
+                                todaysTrack={todaysTrack}
+                                userDetails={userDetails}
+                            />
+                        }
                     />
                     <Route
                         path="/audio"
@@ -57,6 +89,7 @@ function App() {
                             <AudioPlayer
                                 todaysTrack={todaysTrack}
                                 mixes={true}
+                                userDetails={userDetails}
                             />
                         }
                     />

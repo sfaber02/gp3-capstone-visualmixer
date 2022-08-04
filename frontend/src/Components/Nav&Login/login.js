@@ -1,8 +1,9 @@
+// DEPENDENCIES
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import jwtDecode from "../../utils/jwtDecode";
+import loginPostFetch from "../../utils/auth";
 import "../../Styles/Login.css";
-
-const API = process.env.REACT_APP_API_URL;
 
 /**
  *
@@ -15,15 +16,14 @@ function Login({ userDetails, setUserDetails }) {
     const [user, setUser] = useState({
         email: "",
         password: "",
-        user_id: userDetails.user_id,
     });
 
-    // redirect user from login if they are already logged in
+    // redirect user from login if they are already logged in ===> CHECK TOKEN?
     useEffect(() => {
-        if (user.user_id) {
+        if (userDetails.accessToken) {
             navigate("/");
         }
-    }, [user.user_id, navigate]);
+    }, []);
 
     // handleChange for input elements
     const handleChange = (event) => {
@@ -33,8 +33,7 @@ function Login({ userDetails, setUserDetails }) {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            // async function to get user data
-            async function postFetch() {
+            async function loginPostFetch(user) {
                 const response = await fetch(`${API}/user/login`, {
                     method: "POST",
                     headers: {
@@ -42,25 +41,33 @@ function Login({ userDetails, setUserDetails }) {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify(user),
+                    credentials: "include",
                 });
 
                 const data = await response.json();
                 return data;
             }
-            const data = await postFetch();
+            const data = await loginPostFetch(user);
 
             // conditionls check fetch data if incorrect password or email
             if (!data.error) {
-                localStorage.setItem("user_id", JSON.stringify(data.user_id));
-                localStorage.setItem("username", JSON.stringify(data.username));
+                // DECODE
+                let decodedUser = jwtDecode(data.accessToken);
+
+                // SET USER INFO IN STATE
                 setUserDetails({
-                    username: data.username,
-                    user_id: data.user_id,
+                    username: decodedUser.username,
+                    user_id: decodedUser.user_id,
+                    accessToken: data.accessToken,
                 });
+                localStorage.setItem("active", true);
                 return navigate("/");
             } else if (data.error === "password") {
                 setUser({ ...user, password: "" });
                 alert("Incorrect Password Please Try Again");
+            } else if (data.error === "verified") {
+                // REGISTERED BUT NOT VERIFIED
+                alert("Please verify your email.");
             } else if (data.error === "email") {
                 setUser({ ...user, email: "" });
                 alert("Incorrect Email Please Try Again");

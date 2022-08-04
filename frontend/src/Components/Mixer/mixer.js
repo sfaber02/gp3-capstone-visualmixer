@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import "../../Styles/mixer.css";
@@ -24,11 +24,12 @@ const Mixer = ({
     loading,
     analyserNode,
     time,
-    setTime, 
+    setTime,
     handleSeek,
     handlePlayPause,
     playPause,
-    todaysTrack
+    todaysTrack,
+    userDetails,
 }) => {
     const navigate = useNavigate();
 
@@ -46,12 +47,12 @@ const Mixer = ({
 
     useEffect(() => {
         if (track.current) {
-            setTime(prev => {
-                return ({
+            setTime((prev) => {
+                return {
                     ...prev,
-                    duration: track.current.buffer.duration / fx.speed.rate
-                })
-            })
+                    duration: track.current.buffer.duration / fx.speed.rate,
+                };
+            });
         }
     }, [fx.speed.rate]);
 
@@ -63,9 +64,12 @@ const Mixer = ({
      * @param {object} e
      */
     const handleSetFx = (e) => {
-        const effect = e.target.id.split('.')[0];
-        const param = e.target.id.split('.')[1];
-        const eqParam = e.target.id.split('.').length > 2 ? e.target.id.split('.')[2] : null;
+        const effect = e.target.id.split(".")[0];
+        const param = e.target.id.split(".")[1];
+        const eqParam =
+            e.target.id.split(".").length > 2
+                ? e.target.id.split(".")[2]
+                : null;
 
         setFx((prev) => {
             if (eqParam) {
@@ -89,7 +93,7 @@ const Mixer = ({
                 };
             }
         });
-    }; 
+    };
 
     /**
      * handles onChange event from master volume slider in transport controls
@@ -107,47 +111,43 @@ const Mixer = ({
      * If not logged in save user's mix to local storage and navigate to the REGISTER page
      */
     const handleSaveClick = async () => {
-        let user = JSON.parse(localStorage.getItem("user_id"));
-        console.log(user);
-        if (user) {
+        if (userDetails.accessToken) {
             try {
                 const data = {
                     effects: JSON.stringify(fx),
-                    user_id: user,
+                    user_id: userDetails.user_id,
                     audio_id: todaysTrack.audio_id,
                 };
-                console.log(data);
-                let method;
 
                 const existResponse = await fetch(
-                    `${API}/effects/exist/${todaysTrack.audio_id}/${user}`,
+                    `${API}/effects/exist/${todaysTrack.audio_id}/${userDetails.user_id}`,
                     {
                         method: "GET",
                         headers: {
                             Accept: "application/json",
                             "Content-Type": "application/json",
+                            Authorization: `Bearer ${userDetails.accessToken}`,
                         },
                     }
                 );
+                let method;
 
                 const existContent = await existResponse.json();
 
                 existContent ? (method = "PUT") : (method = "POST");
-
+                console.log(method);
                 const response = await fetch(`${API}/effects`, {
                     method: method,
                     headers: {
                         Accept: "application/json",
                         "Content-Type": "application/json",
+                        Authorization: `Bearer ${userDetails.accessToken}`,
                     },
                     body: JSON.stringify(data),
                 });
                 const content = await response.json();
+                console.log(content);
 
-                localStorage.setItem(
-                    "user_id",
-                    JSON.stringify(content.user_id)
-                );
                 if (playState.state === "playing") track.current.stop();
                 navigate("/audio");
             } catch (error) {
@@ -166,7 +166,7 @@ const Mixer = ({
             {loading ? (
                 <Loading />
             ) : (
-                // AFTER SONG FETCH DISPLAY MIXER / VISUALIZER 
+                // AFTER SONG FETCH DISPLAY MIXER / VISUALIZER
                 <div id="mainMixerContainer">
                     <Visualizer analyserNode={analyserNode.current} />
                     <div id="transportContainer">

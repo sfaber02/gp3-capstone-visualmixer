@@ -5,7 +5,7 @@ import { defaultfx } from "../../settings/defaultfx";
 import { Mixer } from "../Mixer/mixer";
 import { Mixes } from "../Mixes/Mixes";
 
-const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
+const AudioPlayer = ({ showSplash, todaysTrack, mixes, userDetails }) => {
     /**
      * play/pause - boolean state for play/pause toggling
      * playstate - object state for tracking the current play state (e.g. 'playing', 'paused')
@@ -61,7 +61,6 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
     //trigger song fetch after a user interaction has occurred
     useEffect(() => {
         if (!showSplash && todaysTrack.audio_key) {
-            
             //Create audio context
             ctx.current = new (window.AudioContext ||
                 window.webkitAudioContext)();
@@ -267,7 +266,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
     const handleSeek = (e) => {
         seekOffset.current = Number(e.target.value);
         seekTimeStamp.current = ctx.current.currentTime;
-        
+
         if (playState.state === "playing") {
             // wrapped this stop command in a try/catch because it was erroring out occasionally
             try {
@@ -317,6 +316,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
                     handlePlayPause={handlePlayPause}
                     playPause={playPause}
                     todaysTrack={todaysTrack}
+                    userDetails={userDetails}
                 />
             ) : (
                 <Mixes
@@ -330,6 +330,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
                     playPause={playPause}
                     handleSeek={handleSeek}
                     todaysTrack={todaysTrack}
+                    userDetails={userDetails}
                 />
             )}
         </>

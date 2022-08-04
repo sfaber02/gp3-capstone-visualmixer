@@ -71,9 +71,10 @@ const updateUser = async (user, password) => {
     }
 };
 
+// PATCH VALIDATION
+
 // UPDATE USER'S VOTES
 const updateUserVotes = async (votes, user_id) => {
-    console.log(votes, user_id);
     try {
         const updatedUser = await db.one(
             "UPDATE users SET avaliableVotes=$1 WHERE user_id=$2 RETURNING avaliableVotes;",
