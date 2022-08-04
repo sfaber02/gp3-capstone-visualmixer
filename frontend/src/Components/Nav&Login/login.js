@@ -2,8 +2,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import jwtDecode from "../../utils/jwtDecode";
-import loginPostFetch from "../../utils/auth";
 import "../../Styles/Login.css";
+
+const API = process.env.REACT_APP_API_URL;
 
 /**
  *
