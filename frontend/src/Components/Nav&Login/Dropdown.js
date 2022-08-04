@@ -23,7 +23,6 @@ export default function Dropdown({ user, setUserDetails }) {
                 method: "DELETE",
                 credentials: "include",
             });
-            console.log(removed);
         };
         removeCookie();
         return navigate("/");

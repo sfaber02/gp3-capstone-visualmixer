@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
 import MixCard from "./MixCard.js";
+import { Time } from "../Mixer/MixerSubComponents/Time.js";
 
 import { secondsTillMidnight } from "../../utils/countdown.js";
 
@@ -58,7 +59,6 @@ const Mixes = ({
                     return res.json();
                 })
                 .then((data) => {
-                    console.log(data);
                     setEffects(data);
                 })
                 .catch((err) => {
@@ -163,19 +163,7 @@ const Mixes = ({
                         onChange={setMasterVolume}
                     />
                 </div>
-                <div id="timer">
-                    {`${Math.floor(time.current / 60)}:${
-                        (time.current % 60).toFixed(0) < 10
-                            ? `0${(time.current % 60).toFixed(0)}`
-                            : (time.current % 60).toFixed(0)
-                    }`}{" "}
-                    / {"  "}
-                    {`${Math.floor(time.duration / 60)}:${
-                        (time.duration % 60).toFixed(0) < 10
-                            ? `0${(time.duration % 60).toFixed(0)}`
-                            : (time.duration % 60).toFixed(0)
-                    }`}
-                </div>
+                <Time time={time} id="timer" />
                 <div id="playPause">
                     {!loading && (
                         <button onClick={handlePlayPause}>
@@ -205,7 +193,7 @@ const Mixes = ({
                     <div id="availableVotes">
                         Votes Left: {user.avaliablevotes}
                     </div>
-                    <div id="countdown">New Mixle In: {countdown}</div>
+                    {/* <div id="countdown">New Mixle In: {countdown}</div> */}
                 </div>
             </div>
             <div className={"music-card-container"}>

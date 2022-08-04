@@ -3,6 +3,8 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const jwtTokens = require("../validations/jwt-helpers");
+const nodemailer = require("nodemailer");
+const nodemailerSendgrid = require("nodemailer-sendgrid");
 
 // ENVIRONMENTAL VARS
 require("dotenv").config();
@@ -33,32 +35,54 @@ user.post("/register", async (req, res) => {
             res.status(400).json({
                 error: "User with that email already exists.",
             });
-            return;
-        }
-        // CHECK IF USERNAME IS IN USE
-        dbUser = await getUserByUserName(username);
-
-        if (dbUser.user_id) {
-            res.status(400).json({
-                error: "User with that username already exists.",
-            });
-            return;
         }
 
-        // HASH PASSWORD
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashPassword = await bcrypt.hash(password, 10);
 
         try {
-            // CREATE NEW USER
-            const user = await addUser(username, email, hashedPassword);
+            const newUser = await addUser(username, email, hashPassword);
 
-            // SEND VERIFICATION EMAIL?
+            const sendConfirmationEmail = async (newUser) => {
+                let transporter = nodemailer.createTransport({
+                    host: "smtp.sendgrid.net",
+                    port: 587,
+                    auth: {
+                        user: "apikey",
+                        pass: process.env.SENDGRID_API_KEY,
+                    },
+                });
 
-            res.status(200).json({});
-        } catch (error) {
-            res.status(500).send(error, "Failed User creation Query");
+                const token = await jwt.sign(
+                    { id: newUser.user_id },
+                    process.env.SECRET_KEY
+                );
+
+                let sender = "hectorilarraza1414@gmail.com";
+                const url = `http://localhost:3000/verify/${token}`;
+                transporter.sendMail(
+                    {
+                        to: `${newUser.username} <${newUser.email}>`, // recipient email
+                        from: `Mixle Support <${sender}>`, // verified sender email
+                        subject: "Email Confirmation", // Subject line
+                        html: `Press <a href=${url}> here </a> to verify your email. Thanks`, // html body
+                    },
+                    function (error, info) {
+                        if (error) {
+                            console.log(error);
+                        } else {
+                            console.log("Email sent: " + info.response);
+                        }
+                    }
+                );
+            };
+
+            sendConfirmationEmail(newUser);
+
+            res.status(200).json({ userInfo: newUser, token: token });
+        } catch (err) {
+            res.status(500).send(err, "Failed User creation");
         }
-    } catch (error) {
+    } catch (err) {
         res.status(404).send("Post failed");
     }
 });

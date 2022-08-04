@@ -23,10 +23,8 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes, userDetails }) => {
     //Refs for time display
     const timer = useRef();
     const timerStart = useRef();
-    const timerOffset = useRef();
-    const loadStart = useRef();
-    const seekOffset = useRef(0);
-    const seekTimeStamp = useRef(0);
+    const offset = useRef(0);
+    const newSeek = useRef(false);
 
     //Refs for audio node and decoded audio array
     const track = useRef();
@@ -65,8 +63,6 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes, userDetails }) => {
             ctx.current = new (window.AudioContext ||
                 window.webkitAudioContext)();
 
-            loadStart.current = Date.now();
-
             //Create Delay Nodes
             delayNode.current = ctx.current.createDelay();
             feedbackNode.current = ctx.current.createGain();
@@ -97,17 +93,11 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes, userDetails }) => {
             // Create Master Out Node
             masterOutNode.current = ctx.current.createGain();
 
-            //
-
             //Fetch Song from Server and decode audio for playback
             fetch(todaysTrack.audio_key)
                 .then((data) => data.arrayBuffer())
                 .then((arrayBuffer) => ctx.current.decodeAudioData(arrayBuffer))
-                .then((decodedAudio) => {
-                    timerOffset.current =
-                        (Date.now() - loadStart.current) / 1000;
-                    createTrackNode(decodedAudio);
-                })
+                .then((decodedAudio) => createTrackNode(decodedAudio))
                 .catch((err) => console.log(err));
         }
     }, [showSplash, todaysTrack]);
@@ -125,9 +115,11 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes, userDetails }) => {
         track.current.buffer = decodedAudio.current;
 
         //intialize time state, set loading state
-        setTime({
-            current: 0,
-            duration: track.current.buffer.duration,
+        setTime((prev) => {
+            return {
+                ...prev,
+                duration: track.current.buffer.duration,
+            };
         });
         setLoading(false);
 
@@ -179,13 +171,14 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes, userDetails }) => {
 
     /**
      * Updates settings of audio nodes when FX state changes
-     * FX state will change from user inputs OR if there are fx in local storage from a save mix/no user scenario
+     * FX state will change from user inputs OR if there are fx
+     * in local storage from a save mix/no user scenario
      */
     useEffect(() => {
         if (!loading) {
             //Set play speed
             track.current.playbackRate.value = fx.speed.rate;
-
+            track.current.detune.value = fx.speed.detune;
             //Set Delay settings
             delayNode.current.delayTime.value = fx.delay.time;
             feedbackNode.current.gain.value = fx.delay.feedback;
@@ -213,45 +206,94 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes, userDetails }) => {
         }
     }, [loading, fx]);
 
+    // controls master volume
+    useEffect(() => {
+        if (todaysTrack) {
+            masterOutNode.current.gain.value = Number(volume);
+        }
+    }, [volume]);
+
+    // stops and starts the timer when speed is changed to prevent stale variables in interval
+    useEffect(() => {
+        if (timer.current) {
+            stopTimer();
+            startTimer();
+        }
+    }, [fx.speed.rate, fx.speed.detune]);
+
     /**
      * Creates an interval function to update the timer if song is playing
      */
     const startTimer = () => {
-        timerStart.current = Date.now();
         if (!timer.current) {
+            timerStart.current = Date.now();
             timer.current = setInterval(() => {
+                if (newSeek.current) {
+                    timerStart.current = Date.now();
+                    newSeek.current = false;
+                }
                 setTime((prev) => {
                     return {
                         ...prev,
                         current:
-                            seekOffset.current > 0
-                                ? seekOffset.current +
-                                  (ctx.current.currentTime -
-                                      seekTimeStamp.current)
-                                : ctx.current.currentTime -
-                                  (timerStart.current - loadStart.current) /
-                                      1000 +
-                                  seekOffset.current,
+                            ((Date.now() - timerStart.current) / 1000) *
+                                (fx.speed.rate *
+                                    2 ** (fx.speed.detune / 100 / 12)) +
+                            offset.current,
                     };
                 });
-            }, 50);
+            }, 100);
         }
     };
 
+    //stops timer and clears interval
+    const stopTimer = () => {
+        if (timer.current) {
+            offset.current = time.current;
+            clearInterval(timer.current);
+            timer.current = null;
+        }
+    };
+
+    // checks if track has ended, if so start it over
+    useEffect(() => {
+        if (track.current) {
+            if (time.current > track.current.buffer.duration) {
+                stopTimer();
+                try {
+                    track.current.stop();
+                } catch (err) {
+                    console.log(err);
+                }
+                createTrackNode(decodedAudio.current);
+                offset.current = 0;
+                track.current.start();
+
+                //reset play /detune
+                track.current.playbackRate.value = fx.speed.rate;
+                track.current.detune.value = fx.speed.detune;
+
+                startTimer();
+            }
+        }
+    }, [time.current]);
+
     /**
      * handles onClick event from Play/Pause button
-     * refers to playState state to determine what actions needs to happen
+     * refers to playState state to determine what actions need to happen
      * also updates PlayPause state to flip play button icon between play/pause
      */
     const handlePlayPause = () => {
         if (playState.state === "stopped") {
-            track.current.start(ctx.current.currentTime);
             startTimer();
+            track.current.start();
             setPlayState({ state: "playing" });
         } else if (playState.state === "playing") {
+            stopTimer();
             ctx.current.suspend();
             setPlayState({ state: "paused" });
         } else if (playState.state === "paused") {
+            startTimer();
             ctx.current.resume();
             setPlayState({ state: "playing" });
         }
@@ -264,8 +306,9 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes, userDetails }) => {
      * @param {object} e
      */
     const handleSeek = (e) => {
-        seekOffset.current = Number(e.target.value);
-        seekTimeStamp.current = ctx.current.currentTime;
+        // grab desired seek time from range slider and set seek flag
+        offset.current = Number(e.target.value);
+        newSeek.current = true;
 
         if (playState.state === "playing") {
             // wrapped this stop command in a try/catch because it was erroring out occasionally
@@ -275,12 +318,13 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes, userDetails }) => {
                 console.log(err);
             }
             createTrackNode(decodedAudio.current);
-            track.current.start(0.01, e.target.value);
-            //Set play speed
+            track.current.start(0, offset.current);
+
+            //reset play speed
             track.current.playbackRate.value = fx.speed.rate;
             track.current.detune.value = fx.speed.detune;
         } else if (playState.state === "stopped") {
-            track.current.start(0, e.target.value);
+            track.current.start(0, offset.current);
             startTimer();
             setPlayState({ state: "playing" });
             setPlayPause(true);
@@ -291,12 +335,6 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes, userDetails }) => {
             ctx.current.suspend();
         }
     };
-
-    useEffect(() => {
-        if (todaysTrack) {
-            masterOutNode.current.gain.value = Number(volume);
-        }
-    }, [volume]);
 
     return (
         <>
@@ -310,7 +348,6 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes, userDetails }) => {
                     track={track}
                     loading={loading}
                     analyserNode={analyserNode}
-                    setTime={setTime}
                     time={time}
                     handleSeek={handleSeek}
                     handlePlayPause={handlePlayPause}

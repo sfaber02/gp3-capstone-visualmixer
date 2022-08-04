@@ -7,6 +7,7 @@ import jwtDecode from "./utils/jwtDecode";
 import SignUp from "./Components/Nav&Login/signUp";
 import { MixerWrapper } from "./Components/mixersplashwrapper.js";
 import { AudioPlayer } from "./Components/AudioPlayer/AudioPlayer";
+import Loading from "./Components/Loading";
 import Login from "./Components/Nav&Login/login";
 import NavBar from "./Components/Nav&Login/navBar";
 import AboutPopUp from "./Components/Nav&Login/AboutPopUp";
@@ -71,7 +72,7 @@ function App() {
                 setTrigger={setPopupBtn}
             />
             <AboutPopUp trigger={popupBtn} setTrigger={setPopupBtn} />
-            {!loading && (
+            {!loading ? (
                 <Routes>
                     <Route
                         exact
@@ -112,6 +113,9 @@ function App() {
                         }
                     />
                 </Routes>
+            ) :
+            (
+                <Loading />
             )}
         </main>
     );

@@ -6,6 +6,7 @@ import "../../Styles/mixerSubComponentStyles/transport.css";
 
 //MIXER SUB COMPONENTS
 import { Visualizer } from "./MixerSubComponents/Visualizer";
+import { Time } from "./MixerSubComponents/Time";
 import { Delay } from "./MixerSubComponents/Delay";
 import { PlaySpeed } from "./MixerSubComponents/PlaySpeed";
 import { Compressor } from "./MixerSubComponents/Compressor";
@@ -24,7 +25,6 @@ const Mixer = ({
     loading,
     analyserNode,
     time,
-    setTime,
     handleSeek,
     handlePlayPause,
     playPause,
@@ -44,17 +44,6 @@ const Mixer = ({
             localStorage.setItem("temp_fx", null);
         }
     }, []);
-
-    useEffect(() => {
-        if (track.current) {
-            setTime((prev) => {
-                return {
-                    ...prev,
-                    duration: track.current.buffer.duration / fx.speed.rate,
-                };
-            });
-        }
-    }, [fx.speed.rate]);
 
     /**
      * handles onChange event from all inputs in the mixer
@@ -135,7 +124,7 @@ const Mixer = ({
                 const existContent = await existResponse.json();
 
                 existContent ? (method = "PUT") : (method = "POST");
-                console.log(method);
+
                 const response = await fetch(`${API}/effects`, {
                     method: method,
                     headers: {
@@ -146,7 +135,6 @@ const Mixer = ({
                     body: JSON.stringify(data),
                 });
                 const content = await response.json();
-                console.log(content);
 
                 if (playState.state === "playing") track.current.stop();
                 navigate("/audio");
@@ -169,6 +157,7 @@ const Mixer = ({
                 // AFTER SONG FETCH DISPLAY MIXER / VISUALIZER
                 <div id="mainMixerContainer">
                     <Visualizer analyserNode={analyserNode.current} />
+
                     <div id="transportContainer">
                         <div id="transportVolumeContainer">
                             <label htmlFor="volume">Volume</label>
@@ -183,18 +172,7 @@ const Mixer = ({
                                 onChange={setMasterVolume}
                             />
                         </div>
-                        <div id="transportTimeContainer">
-                            {/*PRETTIER keeps multilining the first .toFixed()! */}
-                            {/* prettier-ignore */}
-                            <p>{`${Math.floor(time.current / 60)}:${(time.current % 60).toFixed(0) < 10 ? 
-                                `0${(time.current % 60).toFixed(0)}`: 
-                                (time.current % 60).toFixed(0)}`} / 
-                            {`${Math.floor(time.duration / 60)}:
-                            ${(time.duration % 60).toFixed(0) < 10 ? 
-                                `0${(time.duration % 60).toFixed(0)}`: 
-                                (time.duration % 60).toFixed(0)}`}
-                            </p>
-                        </div>
+                        <Time time={time} id="transportTimeContainer" />
                         <div id="transportSeekBarContainer">
                             <input
                                 className="transportSlider"
@@ -204,6 +182,7 @@ const Mixer = ({
                                 max={time.duration}
                                 step="1"
                                 value={time.current}
+                                // onMouseUp={handleSeek}
                                 onChange={handleSeek}
                             />
                         </div>
