@@ -48,7 +48,6 @@ function SignUp({ userDetails, setUserDetails }) {
             } else {
                 // DECODE
                 let decodedUser = jwtDecode(content.accessToken);
-
                 // SET USER INFO IN STATE
                 setUserDetails({
                     username: decodedUser.username,
@@ -57,7 +56,7 @@ function SignUp({ userDetails, setUserDetails }) {
                 });
                 localStorage.setItem("active", true);
 
-                return navigate("/");
+                // return navigate("/");
             }
         } catch (error) {
             return error;

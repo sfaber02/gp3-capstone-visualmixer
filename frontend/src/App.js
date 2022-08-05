@@ -61,7 +61,7 @@ function App() {
                     });
                 })
                 .catch((error) => {
-                    return navigate("./login");
+                    return navigate("/login");
                 });
         }
     }, []);
