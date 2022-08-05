@@ -69,6 +69,7 @@ user.post("/register", async (req, res) => {
             });
 
             let sender = "hectorilarraza1414@gmail.com";
+
             const url = `${process.env.URL}/verify/${token}`;
 
             transporter.sendMail(
@@ -90,7 +91,16 @@ user.post("/register", async (req, res) => {
 
         sendConfirmationEmail(newUser, token);
 
-        res.status(200).json({ userInfo: newUser, token: token });
+        // JWT TOKEN
+        let tokens = jwtTokens(user);
+
+        res.cookie("refresh_token", tokens.refreshToken, {
+            httpOnly: true,
+            sameSite: "none",
+            secure: true,
+        });
+
+        res.status(200).json(tokens);
     } catch (err) {
         res.status(404).send("Post failed");
     }

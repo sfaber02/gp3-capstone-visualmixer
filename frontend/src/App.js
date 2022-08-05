@@ -22,19 +22,21 @@ function App() {
         user_id: "",
         accessToken: "",
     });
-    const [todaysTrack, setTodaysTrack] = useState("buttes");
+    const [todaysTrack, setTodaysTrack] = useState("");
     const [loading, setLoading] = useState(true);
 
     let navigate = useNavigate();
 
     useEffect(() => {
-        fetch("https://mixle-be.herokuapp.com/audio/today")
-            .then((response) => response.json())
-            .then((data) => {
-                setTodaysTrack(data);
-                setLoading(false);
-            })
-            .catch((err) => console.log(err));
+        if (!todaysTrack) {
+            fetch("https://mixle-be.herokuapp.com/audio/today")
+                .then((response) => response.json())
+                .then((data) => {
+                    setTodaysTrack(data);
+                    setLoading(false);
+                })
+                .catch((err) => console.log(err));
+        }
     }, []);
 
     useEffect(() => {

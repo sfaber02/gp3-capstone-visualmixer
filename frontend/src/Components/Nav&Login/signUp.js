@@ -45,10 +45,17 @@ function SignUp({ userDetails, setUserDetails }) {
                 window.alert(content.username);
                 setUser({ ...user, username: "" });
             } else {
+                // DECODE
+                let decodedUser = jwtDecode(content.accessToken);
+
+                // SET USER INFO IN STATE
                 setUserDetails({
-                    username: content.userInfo.username,
-                    user_id: content.userInfo.user_id,
+                    username: decodedUser.username,
+                    user_id: decodedUser.user_id,
+                    accessToken: content.accessToken,
                 });
+                localStorage.setItem("active", true);
+
                 return navigate("/");
             }
         } catch (error) {
