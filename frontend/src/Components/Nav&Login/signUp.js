@@ -36,6 +36,7 @@ function SignUp({ userDetails, setUserDetails }) {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(user),
+                credentials: "include",
             });
             const content = await response.json();
 
@@ -56,7 +57,7 @@ function SignUp({ userDetails, setUserDetails }) {
                 });
                 localStorage.setItem("active", true);
 
-                // return navigate("/");
+                return navigate("/");
             }
         } catch (error) {
             return error;
