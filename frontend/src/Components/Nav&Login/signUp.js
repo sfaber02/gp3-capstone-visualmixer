@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import jwtDecode from "../../utils/jwtDecode";
 import "../../Styles/SignUp.css";
 
 const API = process.env.REACT_APP_API_URL;
