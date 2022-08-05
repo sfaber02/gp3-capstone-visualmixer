@@ -4,20 +4,22 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const jwtTokens = require("../validations/jwt-helpers");
 const nodemailer = require("nodemailer");
-const nodemailerSendgrid = require("nodemailer-sendgrid");
+// const nodemailerSendgrid = require("nodemailer-sendgrid");
 
 // ENVIRONMENTAL VARS
 require("dotenv").config();
+
 // QUERIES
 const {
     addUser,
     deleteUser,
     getUserByEmail,
-    getUserByUserName,
     updateUser,
     getUserById,
     updateUserVotes,
     resetVotes,
+    updateUserValidation,
+    getUserByUserName,
 } = require("../queries/users.js");
 
 // CONFIGURATION
@@ -29,59 +31,66 @@ user.post("/register", async (req, res) => {
 
     try {
         // CHECK IF EMAIL IS IN USE
-        let dbUser = await getUserByEmail(email);
+        let dbUserEmail = await getUserByEmail(email);
 
-        if (dbUser.user_id) {
+        if (dbUserEmail.user_id) {
             res.status(400).json({
-                error: "User with that email already exists.",
+                email: "User with that email already exists.",
             });
         }
 
+        // CHECK IF USERNAME IS IN USE
+        let dbUser = await getUserByUserName(username);
+
+        if (dbUser.user_id) {
+            res.status(400).json({
+                username: "User with that username already exists.",
+            });
+        }
+
+        // HASH PASSOWRD
         const hashPassword = await bcrypt.hash(password, 10);
 
-        try {
-            const newUser = await addUser(username, email, hashPassword);
+        // TOKEN
+        const token = await (await bcrypt.hash(username, 2))
+            .replace("/", "")
+            .slice(0, 10);
 
-            const sendConfirmationEmail = async (newUser) => {
-                let transporter = nodemailer.createTransport({
-                    host: "smtp.sendgrid.net",
-                    port: 587,
-                    auth: {
-                        user: "apikey",
-                        pass: process.env.SENDGRID_API_KEY,
-                    },
-                });
+        const newUser = await addUser(username, email, hashPassword, token);
 
-                const token = await jwt.sign(
-                    { id: newUser.user_id },
-                    process.env.SECRET_KEY
-                );
+        const sendConfirmationEmail = async (newUser, token) => {
+            let transporter = nodemailer.createTransport({
+                host: "smtp.sendgrid.net",
+                port: 587,
+                auth: {
+                    user: "apikey",
+                    pass: process.env.SENDGRID_API_KEY,
+                },
+            });
 
-                let sender = "hectorilarraza1414@gmail.com";
-                const url = `http://localhost:3000/verify/${token}`;
-                transporter.sendMail(
-                    {
-                        to: `${newUser.username} <${newUser.email}>`, // recipient email
-                        from: `Mixle Support <${sender}>`, // verified sender email
-                        subject: "Email Confirmation", // Subject line
-                        html: `Press <a href=${url}> here </a> to verify your email. Thanks`, // html body
-                    },
-                    function (error, info) {
-                        if (error) {
-                            console.log(error);
-                        } else {
-                            console.log("Email sent: " + info.response);
-                        }
+            let sender = "hectorilarraza1414@gmail.com";
+            const url = `${process.env.URL}/verify/${token}`;
+
+            transporter.sendMail(
+                {
+                    to: `${newUser.username} <${newUser.email}>`, // recipient email
+                    from: `Mixle Support <${sender}>`, // verified sender email
+                    subject: "Email Confirmation", // Subject line
+                    html: `Press <a href=${url}> here </a> to verify your email. Thanks`, // html body
+                },
+                function (error, info) {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        console.log("Email sent: " + info.response);
                     }
-                );
-            };
+                }
+            );
+        };
 
-            sendConfirmationEmail(newUser);
+        sendConfirmationEmail(newUser, token);
 
-            res.status(200).json({ userInfo: newUser, token: token });
-        } catch (err) {
-            res.status(500).send(err, "Failed User creation");
-        }
+        res.status(200).json({ userInfo: newUser, token: token });
     } catch (err) {
         res.status(404).send("Post failed");
     }
@@ -210,13 +219,24 @@ user.put("/votes/:id/:votes", async (req, res) => {
     }
 });
 
+// PATCH USER VALIDATION
+user.patch("/verify/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+        let updated = await updateUserValidation(id);
+        res.status(200).json(updated);
+    } catch (error) {
+        res.status(400).json({ error: "Unable to update validation on user" });
+    }
+});
+
 // LOGOUT FUNCITONALITY
 user.delete("/refresh_token", (req, res) => {
     try {
         res.clearCookie("refresh_token");
         return res.status(200).json({ message: "refresh token deleted" });
     } catch (error) {
-        res.status().json({ error: error.message });
+        res.status(400).json({ error: error.message });
     }
 });
 

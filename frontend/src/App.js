@@ -11,6 +11,7 @@ import Loading from "./Components/Loading";
 import Login from "./Components/Nav&Login/login";
 import NavBar from "./Components/Nav&Login/navBar";
 import AboutPopUp from "./Components/Nav&Login/AboutPopUp";
+import Verification from "./Components/Nav&Login/Verification";
 
 const API = process.env.REACT_APP_API_URL;
 
@@ -112,9 +113,9 @@ function App() {
                             />
                         }
                     />
+                    <Route path="/verify/:id" element={<Verification />} />
                 </Routes>
-            ) :
-            (
+            ) : (
                 <Loading />
             )}
         </main>

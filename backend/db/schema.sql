@@ -10,7 +10,7 @@ CREATE TABLE users (
     password VARCHAR NOT NULL,
     avaliableVotes INTEGER DEFAULT 3,
     validated BOOLEAN DEFAULT FALSE,
-    confirmationCode VARCHAR UNIQUE
+    confirmationCode TEXT UNIQUE
 );
 
 CREATE TABLE audio (

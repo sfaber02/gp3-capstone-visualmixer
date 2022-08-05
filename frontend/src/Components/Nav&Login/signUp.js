@@ -38,18 +38,13 @@ function SignUp({ userDetails, setUserDetails }) {
             });
             const content = await response.json();
 
-            if (content.error) {
-                window.alert(content.error);
+            if (content.email) {
+                window.alert(content.email);
                 setUser({ ...user, email: "" });
+            } else if (content.username) {
+                window.alert(content.username);
+                setUser({ ...user, username: "" });
             } else {
-                localStorage.setItem(
-                    "user_id",
-                    JSON.stringify(content.userInfo.user_id)
-                );
-                localStorage.setItem(
-                    "username",
-                    JSON.stringify(content.userInfo.username)
-                );
                 setUserDetails({
                     username: content.userInfo.username,
                     user_id: content.userInfo.user_id,

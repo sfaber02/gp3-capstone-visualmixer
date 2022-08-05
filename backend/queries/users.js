@@ -40,11 +40,11 @@ const getUserById = async (id) => {
 };
 
 // CREATE A USER
-const addUser = async (name, email, password) => {
+const addUser = async (name, email, password, token) => {
     try {
         const newUser = await db.one(
-            "INSERT INTO users (username, email, password) VALUES ($1,$2,$3) RETURNING user_id, email, username",
-            [name, email, password]
+            "INSERT INTO users (username, email, password, confirmationCode) VALUES ($1,$2,$3,$4) RETURNING user_id, email, username",
+            [name, email, password, token]
         );
         return newUser;
     } catch (err) {
@@ -72,6 +72,17 @@ const updateUser = async (user, password) => {
 };
 
 // PATCH VALIDATION
+const updateUserValidation = async (token) => {
+    try {
+        const updatedUser = await db.one(
+            "UPDATE users SET validated=true WHERE confirmationCode=$1 RETURNING *",
+            token
+        );
+        return updatedUser;
+    } catch (error) {
+        return error;
+    }
+};
 
 // UPDATE USER'S VOTES
 const updateUserVotes = async (votes, user_id) => {
@@ -117,4 +128,5 @@ module.exports = {
     resetVotes,
     getUserByEmail,
     getUserByUserName,
+    updateUserValidation,
 };
