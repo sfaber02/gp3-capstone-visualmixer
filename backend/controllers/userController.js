@@ -51,7 +51,7 @@ user.post("/register", async (req, res) => {
         // HASH PASSOWRD
         const hashPassword = await bcrypt.hash(password, 10);
 
-        // TOKEN
+        // TOKEN FOR EMAIL AUTHORIZATION
         const token = await (await bcrypt.hash(username, 2))
             .replace("/", "")
             .slice(0, 10);
@@ -68,7 +68,7 @@ user.post("/register", async (req, res) => {
                 },
             });
 
-            let sender = "hectorilarraza1414@gmail.com";
+            let sender = "verifymixle@gmail.com";
 
             const url = `${process.env.URL}/verify/${token}`;
 
