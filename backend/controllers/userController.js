@@ -28,7 +28,7 @@ const user = express.Router();
 // REGISTER REQUEST
 user.post("/register", async (req, res) => {
     const { username, email, password } = req.body;
-
+    console.log("register endpoint");
     try {
         // CHECK IF EMAIL IS IN USE
         let dbUserEmail = await getUserByEmail(email);
@@ -150,8 +150,11 @@ user.post("/login", async (req, res) => {
         res.status(404).json({ error: error });
     }
 });
+
 user.get("/refresh_token", (req, res) => {
     try {
+        console.log("2");
+
         // USE REFRESH TOKEN TO GET NEW ACCESS TOKEN
         const refresh_token = req.cookies.refresh_token;
 

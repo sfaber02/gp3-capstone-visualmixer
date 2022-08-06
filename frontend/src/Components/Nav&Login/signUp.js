@@ -18,6 +18,7 @@ function SignUp({ userDetails, setUserDetails }) {
     //If user is already logged in redirect to '/'
     useEffect(() => {
         if (userDetails.user_id) {
+            console.log ('redirect to home from signup')
             navigate("/");
         }
     }, []);
