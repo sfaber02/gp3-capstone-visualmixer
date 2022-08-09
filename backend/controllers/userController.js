@@ -31,7 +31,6 @@ const user = express.Router();
 // REGISTER REQUEST
 user.post("/register", async (req, res) => {
     const { username, email, password } = req.body;
-    console.log("register endpoint");
     try {
         // CHECK IF EMAIL IS IN USE
         let dbUserEmail = await getUserByEmail(email);
@@ -91,7 +90,7 @@ user.post("/login", async (req, res) => {
                 errorMsg: "Incorrect email, please try again.",
             });
         } else if (!user.validated) {
-            res.status(400).json({
+            res.status(400).json({  
                 error: "verified",
                 errorMsg: "Please verify your email.",
             });
@@ -125,7 +124,7 @@ user.post("/login", async (req, res) => {
 
 user.get("/refresh_token", (req, res) => {
     try {
-        console.log("2");
+        console.log('1', req.cookies);
 
         // USE REFRESH TOKEN TO GET NEW ACCESS TOKEN
         const refresh_token = req.cookies.refresh_token;

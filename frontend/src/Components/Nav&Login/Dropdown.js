@@ -25,6 +25,9 @@ export default function Dropdown({ user, setUserDetails }) {
             });
         };
         removeCookie();
+        localStorage.clear("active");
+
+
         return navigate("/");
     };
 

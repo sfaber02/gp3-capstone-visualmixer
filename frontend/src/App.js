@@ -41,7 +41,6 @@ function App() {
 
     useEffect(() => {
         if (localStorage.getItem("active") && !userDetails.accessToken) {
-            console.log('1');
             fetch(`${API}/user/refresh_token`, {
                 headers: {
                     "Content-Type": "application/json",
