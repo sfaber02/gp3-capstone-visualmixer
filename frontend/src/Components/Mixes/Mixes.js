@@ -45,10 +45,6 @@ const Mixes = ({
 
     const [effects, setEffects] = useState([]);
 
-
-    console.log("MIXES RE RENDER");
-
-
     /**
      * LOAD ALL MIXES
      * FETCH SONG

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, Modal, Button } from "react-bootstrap";
+import { Card, Button, Container, Row, Col } from "react-bootstrap";
 
 // import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 // import Skeleton from "@mui/material/Skeleton";
@@ -29,8 +29,7 @@ export default function MixCard({
 
     // UPDATES FX IN DB WITH NEW VOTES COUNT
     useEffect(() => {
-        console.log("RENDER");
-
+       
         var requestOptions = {
             method: "PUT",
             redirect: "follow",
@@ -79,21 +78,28 @@ export default function MixCard({
             >
                 <Card.Img src={imageSource} alt={"mixelArt"}></Card.Img>
                 <Card.Body>
-                    <div className="mixCardInfo">
-                        {effect.username}
-                        <p>
-                            {votes}
-                            <i class="fa-solid fa-thumbs-up"></i>
-                        </p>
-                        <button
-                            className={`${effect.user_id} mixCardButton`}
-                            onClick={handlePlayClick}
-                        >
-                            <i
-                                className={`${effect.user_id} fa-solid fa-play`}
-                            ></i>
-                        </button>
-                    </div>
+                    <Container>
+                        <Row xs={3}>
+                            <Col className="mixCardUser">{effect.username}</Col>
+                            <Col >
+                                <p>
+                                    {votes}{"     "}
+                                    <i class="fa-solid fa-thumbs-up"></i>
+                                </p>
+                            </Col>
+                            <Col>
+                                {" "}
+                                <button
+                                    className={`${effect.user_id} mixCardButton`}
+                                    onClick={handlePlayClick}
+                                >
+                                    <i
+                                        className={`${effect.user_id} fa-solid fa-play`}
+                                    ></i>
+                                </button>
+                            </Col>
+                        </Row>
+                    </Container>
                 </Card.Body>
             </Card>
         </div>

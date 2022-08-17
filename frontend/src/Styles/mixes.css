@@ -52,6 +52,10 @@
 .transportButtons:hover {
         transition-duration: 0.5s;
         background-color: aqua;
-    }
+}
+
+.mixCardUser {
+    float: right;
+}
 
 
