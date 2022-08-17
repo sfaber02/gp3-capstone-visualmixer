@@ -1,46 +1,154 @@
+
+
 // DEPENDENCIES
 const express = require("express");
-require("dotenv").config();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const jwtTokens = require("../validations/jwt-helpers");
+const sendConfirmationEmail = require("../validations/sendEmail.js");
 
+
+
+// ENVIRONMENTAL VARS
+require("dotenv").config();
+
+// QUERIES
 const {
-    doesUserExist,
     addUser,
     deleteUser,
-    getUser,
+    getUserByEmail,
     updateUser,
     getUserById,
     updateUserVotes,
     resetVotes,
+    updateUserValidation,
+    getUserByUserName,
 } = require("../queries/users.js");
 
 // CONFIGURATION
 const user = express.Router();
 
-// REGISTER CREATE REQUEST
+// REGISTER REQUEST
 user.post("/register", async (req, res) => {
     const { username, email, password } = req.body;
     try {
-        if (await doesUserExist(email)) {
+        // CHECK IF EMAIL IS IN USE
+        let dbUserEmail = await getUserByEmail(email);
+
+        if (dbUserEmail.user_id) {
             res.status(400).json({
-                error: "User with that email already exists",
+                email: "User with that email already exists.",
             });
-            return;
         }
+
+        // CHECK IF USERNAME IS IN USE
+        let dbUser = await getUserByUserName(username);
+
+        if (dbUser.user_id) {
+            res.status(400).json({
+                username: "User with that username already exists.",
+            });
+        }
+
+        // HASH PASSOWRD
         const hashPassword = await bcrypt.hash(password, 10);
-        try {
-            const user = await addUser(username, email, hashPassword);
-            const token = jwt.sign(
-                { id: user.user_id },
-                process.env.SECRET_KEY
-            );
-            res.status(200).json({ userInfo: user, token: token });
-        } catch (err) {
-            res.status(500).send(err, "Failed User creation");
-        }
+
+        // TOKEN FOR EMAIL AUTHORIZATION
+        const token = await (await bcrypt.hash(username, 2))
+            .replace("/", "")
+            .slice(0, 10);
+
+        const newUser = await addUser(username, email, hashPassword, token);
+
+        sendConfirmationEmail(newUser, token);
+
+        // JWT TOKEN
+        let tokens = jwtTokens(newUser);
+        console.log(tokens);
+        res.cookie("refresh_token", tokens.refreshToken, {
+            httpOnly: true,
+            sameSite: "none",
+            secure: true,
+        });
+        
+        res.status(200).json(tokens);
     } catch (err) {
         res.status(404).send("Post failed");
+    }
+});
+
+// LOGIN REQUEST
+user.post("/login", async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        // GET USER DETAILS
+        const user = await getUserByEmail(email);
+
+        if (!user.email) {
+            res.status(400).json({
+                error: "email",
+                errorMsg: "Incorrect email, please try again.",
+            });
+        // } else if (!user.validated) {
+        //     res.status(400).json({  
+        //         error: "verified",
+        //         errorMsg: "Please verify your email.",
+        //     });
+        } else {
+            // DECRYPT PASSWORD
+            const isValidPassword = await bcrypt.compare(
+                password,
+                user.password
+            );
+            if (isValidPassword) {
+                // JWT TOKEN
+                let tokens = jwtTokens(user);
+
+                res.cookie("refresh_token", tokens.refreshToken, {
+                    httpOnly: true,
+                    sameSite: "none",
+                    secure: true,
+                });
+                res.status(200).json(tokens);
+            } else {
+                res.status(400).json({
+                    error: "password",
+                    errorMsg: "Incorrect Password, please try again.",
+                });
+            }
+        }
+    } catch (error) {
+        res.status(404).json({ error: error });
+    }
+});
+
+user.get("/refresh_token", (req, res) => {
+    try {
+        console.log('1', req.cookies);
+
+        // USE REFRESH TOKEN TO GET NEW ACCESS TOKEN
+        const refresh_token = req.cookies.refresh_token;
+
+        if (!refresh_token) {
+            return res.status(401).json({ error: "Null refresh token" });
+        }
+
+        jwt.verify(refresh_token, process.env.REFRESH_KEY, (error, user) => {
+            if (error) {
+                return res.status(403).json({ error: error.message });
+            }
+
+            let tokens = jwtTokens(user);
+            res.cookie("refresh_token", tokens.refreshToken, {
+                httpOnly: true,
+                sameSite: "none",
+                secure: true,
+            });
+
+            res.json(tokens);
+        });
+    } catch (error) {
+        res.status(401).json({ error: error.message });
     }
 });
 
@@ -67,43 +175,7 @@ user.get("/:id", async (req, res) => {
     }
 });
 
-// LOGIN CREATE REQUEST
-user.post("/login", async (req, res) => {
-    const { email, password } = req.body;
-    try {
-        const user = await getUser(email);
-        if (!user.email) {
-            res.status(400).json({
-                error: "email",
-                errorMsg: "Incorrect email, please try again.",
-            });
-        } else {
-            const isValidPassword = await bcrypt.compare(
-                password,
-                user.password
-            );
-            if (isValidPassword) {
-                const token = jwt.sign({ email }, process.env.SECRET_KEY);
-
-                res.status(200).json({
-                    message: `${user.username} signed in!`,
-                    username: user.username,
-                    user_id: user.user_id,
-                    token: token,
-                });
-            } else {
-                res.status(400).json({
-                    error: "password",
-                    errorMsg: "Incorrect Password, please try again.",
-                });
-            }
-        }
-    } catch (error) {
-        res.status(404).json({ error: error });
-    }
-});
-
-// UPDATE USER
+// UPDATE A USER
 user.put("/:id", async (req, res) => {
     const { id } = req.params;
     const { password } = req.body;
@@ -131,7 +203,30 @@ user.put("/votes/:id/:votes", async (req, res) => {
     }
 });
 
-// DELETE
+// PATCH USER VALIDATION
+user.patch("/verify/:id", async (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+    try {
+        let updated = await updateUserValidation(id);
+        console.log(updated);
+        res.status(200).json(updated);
+    } catch (error) {
+        res.status(400).json({ error: "Unable to update validation on user" });
+    }
+});
+
+// LOGOUT FUNCITONALITY
+user.delete("/refresh_token", (req, res) => {
+    try {
+        res.clearCookie("refresh_token");
+        return res.status(200).json({ message: "refresh token deleted" });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
+// DELETE A USER
 user.delete("/:id", async (req, res) => {
     const { id } = req.params;
     try {

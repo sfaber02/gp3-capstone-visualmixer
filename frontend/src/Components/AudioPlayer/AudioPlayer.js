@@ -5,7 +5,7 @@ import { defaultfx } from "../../settings/defaultfx";
 import { Mixer } from "../Mixer/mixer";
 import { Mixes } from "../Mixes/Mixes";
 
-const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
+const AudioPlayer = ({ showSplash, todaysTrack, mixes, userDetails }) => {
     /**
      * play/pause - boolean state for play/pause toggling
      * playstate - object state for tracking the current play state (e.g. 'playing', 'paused')
@@ -237,7 +237,8 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
                         ...prev,
                         current:
                             ((Date.now() - timerStart.current) / 1000) *
-                                (fx.speed.rate * (2 ** (fx.speed.detune / 100 / 12))) +
+                                (fx.speed.rate *
+                                    2 ** (fx.speed.detune / 100 / 12)) +
                             offset.current,
                     };
                 });
@@ -352,6 +353,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
                     handlePlayPause={handlePlayPause}
                     playPause={playPause}
                     todaysTrack={todaysTrack}
+                    userDetails={userDetails}
                 />
             ) : (
                 <Mixes
@@ -365,6 +367,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
                     playPause={playPause}
                     handleSeek={handleSeek}
                     todaysTrack={todaysTrack}
+                    userDetails={userDetails}
                 />
             )}
         </>

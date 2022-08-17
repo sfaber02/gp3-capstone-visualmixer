@@ -1,6 +1,8 @@
 // DEPENDENCIES
 const express = require("express");
 const effects = express.Router();
+const authenticateToken = require("../validations/authorization");
+
 const {
     getAllUserEffects,
     getAllAudioEffects,
@@ -34,7 +36,7 @@ effects.get("/allmixes/:id", async (req, res) => {
 });
 
 // GET ALL EFFECTS FOR ALL USERS SPECIFIC AUDIO
-effects.get("/allusers/:id", async (req, res) => {
+effects.get("/allusers/:id", authenticateToken, async (req, res) => {
     const { id } = req.params;
     try {
         const allEffects = await getAllAudioEffects(id);
@@ -56,7 +58,7 @@ effects.put("/:id/:votes", async (req, res) => {
 });
 
 // UPDATE AN EFFECT
-effects.put("/", async (req, res) => {
+effects.put("/", authenticateToken, async (req, res) => {
     const { effects, audio_id, user_id } = req.body;
     try {
         const updatedEffect = await updateEffect(effects, audio_id, user_id);
@@ -66,9 +68,8 @@ effects.put("/", async (req, res) => {
     }
 });
 
-
 // CREATE AN EFFECT
-effects.post("/", async (req, res) => {
+effects.post("/", authenticateToken, async (req, res) => {
     try {
         const { effects, audio_id, user_id } = req.body;
         const newEffect = await createEffect(effects, audio_id, user_id);
@@ -79,7 +80,7 @@ effects.post("/", async (req, res) => {
 });
 
 // DELETE AN EFFECT
-effects.delete("/:id", async (req, res) => {
+effects.delete("/:id", authenticateToken, async (req, res) => {
     const { id } = req.params;
     try {
         const deletedEffect = await deleteEffect(effects, audio_id, user_id);
@@ -90,15 +91,19 @@ effects.delete("/:id", async (req, res) => {
 });
 
 // CHECK AUDIO AND USER
-effects.get("/exist/:audio_id/:user_id", async (req, res) => {
-    const { audio_id, user_id } = req.params;
-    try {
-        const doesExist = await hasEffects(audio_id, user_id);
-        res.status(200).json(doesExist);
-    } catch (error) {
-        res.status(404).json({ error: error });
+effects.get(
+    "/exist/:audio_id/:user_id",
+    authenticateToken,
+    async (req, res) => {
+        const { audio_id, user_id } = req.params;
+        try {
+            const doesExist = await hasEffects(audio_id, user_id);
+            res.status(200).json(doesExist);
+        } catch (error) {
+            res.status(404).json({ error: error });
+        }
     }
-});
+);
 
 // EXPORT
 module.exports = effects;

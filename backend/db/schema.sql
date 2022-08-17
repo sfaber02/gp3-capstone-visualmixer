@@ -8,7 +8,10 @@ CREATE TABLE users (
     username VARCHAR UNIQUE NOT NULL,
     email VARCHAR UNIQUE NOT NULL,
     password VARCHAR NOT NULL,
-    avaliableVotes INTEGER DEFAULT 3
+    avaliableVotes INTEGER DEFAULT 3,
+    validated BOOLEAN DEFAULT FALSE,
+    confirmationCode TEXT UNIQUE,
+    date_created BIGINT
 );
 
 CREATE TABLE audio (
@@ -18,7 +21,8 @@ CREATE TABLE audio (
     artist VARCHAR,
     album VARCHAR,
     album_cover TEXT,
-    audio_key TEXT
+    audio_key TEXT,
+    date_created BIGINT
 );
 
 CREATE TABLE effects (

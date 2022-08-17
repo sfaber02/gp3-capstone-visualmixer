@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
+
 
 import MixCard from "./MixCard.js";
 import { Time } from "../Mixer/MixerSubComponents/Time.js";
@@ -31,6 +32,7 @@ const Mixes = ({
     handlePlayPause,
     playPause,
     handleSeek,
+    userDetails,
 }) => {
     const [countdown, setCountdown] = useState();
     const countdownTimer = useRef();
@@ -49,12 +51,15 @@ const Mixes = ({
     useEffect(() => {
         if (todaysTrack) {
             //FETCH ALL MIXES FOR SONG ID
-            fetch(`${API}/effects/allusers/${todaysTrack.audio_id}`)
+            fetch(`${API}/effects/allusers/${todaysTrack.audio_id}`, {
+                headers: {
+                    Authorization: `Bearer ${userDetails.accessToken}`,
+                },
+            })
                 .then((res) => {
                     return res.json();
                 })
                 .then((data) => {
-                    // console.log(data);
                     setEffects(data);
                 })
                 .catch((err) => {
@@ -62,14 +67,13 @@ const Mixes = ({
                 });
 
             //IF USER IS LOGGED IN FETCH USER INFO AND SET AVAILABLE VOTES
-            let user = JSON.parse(localStorage.getItem("user_id"));
-            if (user) {
-                var requestOptions = {
+            if (userDetails.accessToken) {
+                let requestOptions = {
                     method: "GET",
                     redirect: "follow",
                 };
 
-                fetch(`${API}/user/${user}`, requestOptions)
+                fetch(`${API}/user/${userDetails.user_id}`, requestOptions)
                     .then((response) => response.json())
                     .then((result) => {
                         setUser(result);
@@ -126,7 +130,9 @@ const Mixes = ({
             };
 
             fetch(
-                `${API}/user/votes/${user.user_id}/${user.avaliablevotes - 1}`,
+                `${API}/user/votes/${userDetails.user_id}/${
+                    user.avaliablevotes - 1
+                }`,
                 requestOptions
             )
                 .then((response) => response.json())
@@ -200,6 +206,7 @@ const Mixes = ({
                         avaliableVotes={user.avaliablevotes}
                         subtractVote={subtractVote}
                         random={randomArray[index]}
+                        userDetails={userDetails}
                     />
                 ))}
             </div>

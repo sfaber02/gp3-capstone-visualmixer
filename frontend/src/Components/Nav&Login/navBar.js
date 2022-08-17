@@ -1,8 +1,7 @@
 import Dropdown from "./Dropdown";
 import "../../Styles/Nav.css";
 
-
-export default function NavBar({ user, trigger, setTrigger }) {
+export default function NavBar({ user, trigger, setTrigger, setUserDetails }) {
     const handleIconClick = () => {
         setTrigger(!trigger);
     };
@@ -19,7 +18,7 @@ export default function NavBar({ user, trigger, setTrigger }) {
             <a className="navbar-brand" href="/">
                 <h1>MIXLE</h1>
             </a>
-            <Dropdown user={user} />
+            <Dropdown user={user} setUserDetails={setUserDetails} />
         </nav>
     );
 }

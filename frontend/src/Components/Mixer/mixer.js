@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import "../../Styles/mixer.css";
@@ -29,6 +29,7 @@ const Mixer = ({
     handlePlayPause,
     playPause,
     todaysTrack,
+    userDetails,
 }) => {
     const navigate = useNavigate();
 
@@ -44,7 +45,6 @@ const Mixer = ({
         }
     }, []);
 
-    
     /**
      * handles onChange event from all inputs in the mixer
      * dyanmically determines key based on <input> tags id property
@@ -100,28 +100,26 @@ const Mixer = ({
      * If not logged in save user's mix to local storage and navigate to the REGISTER page
      */
     const handleSaveClick = async () => {
-        let user = JSON.parse(localStorage.getItem("user_id"));
-        console.log(user);
-        if (user) {
+        if (userDetails.accessToken) {
             try {
                 const data = {
                     effects: JSON.stringify(fx),
-                    user_id: user,
+                    user_id: userDetails.user_id,
                     audio_id: todaysTrack.audio_id,
                 };
-                console.log(data);
-                let method;
 
                 const existResponse = await fetch(
-                    `${API}/effects/exist/${todaysTrack.audio_id}/${user}`,
+                    `${API}/effects/exist/${todaysTrack.audio_id}/${userDetails.user_id}`,
                     {
                         method: "GET",
                         headers: {
                             Accept: "application/json",
                             "Content-Type": "application/json",
+                            Authorization: `Bearer ${userDetails.accessToken}`,
                         },
                     }
                 );
+                let method;
 
                 const existContent = await existResponse.json();
 
@@ -132,15 +130,12 @@ const Mixer = ({
                     headers: {
                         Accept: "application/json",
                         "Content-Type": "application/json",
+                        Authorization: `Bearer ${userDetails.accessToken}`,
                     },
                     body: JSON.stringify(data),
                 });
                 const content = await response.json();
 
-                localStorage.setItem(
-                    "user_id",
-                    JSON.stringify(content.user_id)
-                );
                 if (playState.state === "playing") track.current.stop();
                 navigate("/audio");
             } catch (error) {
@@ -162,7 +157,7 @@ const Mixer = ({
                 // AFTER SONG FETCH DISPLAY MIXER / VISUALIZER
                 <div id="mainMixerContainer">
                     <Visualizer analyserNode={analyserNode.current} />
-                
+
                     <div id="transportContainer">
                         <div id="transportVolumeContainer">
                             <label htmlFor="volume">Volume</label>
@@ -177,7 +172,7 @@ const Mixer = ({
                                 onChange={setMasterVolume}
                             />
                         </div>
-                        <Time time={time} id="transportTimeContainer"/>
+                        <Time time={time} id="transportTimeContainer" />
                         <div id="transportSeekBarContainer">
                             <input
                                 className="transportSlider"
@@ -189,7 +184,6 @@ const Mixer = ({
                                 value={time.current}
                                 // onMouseUp={handleSeek}
                                 onChange={handleSeek}
-                                
                             />
                         </div>
                     </div>

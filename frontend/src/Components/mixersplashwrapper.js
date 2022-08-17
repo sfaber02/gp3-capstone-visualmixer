@@ -6,20 +6,25 @@ import { SplashPage } from "./splashpage.js";
  * A wrapper to hold mixer and splash pages
  * @returns Splash Page OR Mixer component depending on if "Start Mixing" button has been pressed
  */
-const MixerWrapper = ({ todaysTrack }) => {
-  const [showSplash, setShowSplash] = useState(true);
+const MixerWrapper = ({ todaysTrack, userDetails }) => {
+    const [showSplash, setShowSplash] = useState(true);
 
-  const handleStartClick = () => setShowSplash(false);
+    const handleStartClick = () => setShowSplash(false);
 
-  return (
-      <>
-          {showSplash ? (
-              <SplashPage handleStartClick={handleStartClick} />
-          ) : (
-              <AudioPlayer showSplash={showSplash} todaysTrack={todaysTrack} mixes={false} />
-          )}
-      </>
-  );
+    return (
+        <>
+            {showSplash ? (
+                <SplashPage handleStartClick={handleStartClick} />
+            ) : (
+                <AudioPlayer
+                    showSplash={showSplash}
+                    todaysTrack={todaysTrack}
+                    mixes={false}
+                    userDetails={userDetails}
+                />
+            )}
+        </>
+    );
 };
 
 export { MixerWrapper };

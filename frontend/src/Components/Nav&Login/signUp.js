@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import jwtDecode from "../../utils/jwtDecode";
 import "../../Styles/SignUp.css";
 
 const API = process.env.REACT_APP_API_URL;
@@ -17,9 +18,10 @@ function SignUp({ userDetails, setUserDetails }) {
     //If user is already logged in redirect to '/'
     useEffect(() => {
         if (userDetails.user_id) {
+            console.log ('redirect to home from signup')
             navigate("/");
         }
-    }, [userDetails.user_id, navigate]);
+    }, []);
 
     const handleChange = (event) => {
         setUser({ ...user, [event.target.id]: event.target.value });
@@ -35,25 +37,27 @@ function SignUp({ userDetails, setUserDetails }) {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(user),
+                credentials: "include",
             });
             const content = await response.json();
 
-            if (content.error) {
-                window.alert(content.error);
+            if (content.email) {
+                window.alert(content.email);
                 setUser({ ...user, email: "" });
+            } else if (content.username) {
+                window.alert(content.username);
+                setUser({ ...user, username: "" });
             } else {
-                localStorage.setItem(
-                    "user_id",
-                    JSON.stringify(content.userInfo.user_id)
-                );
-                localStorage.setItem(
-                    "username",
-                    JSON.stringify(content.userInfo.username)
-                );
+                // DECODE
+                let decodedUser = jwtDecode(content.accessToken);
+                // SET USER INFO IN STATE
                 setUserDetails({
-                    username: content.userInfo.username,
-                    user_id: content.userInfo.user_id,
+                    username: decodedUser.username,
+                    user_id: decodedUser.user_id,
+                    accessToken: content.accessToken,
                 });
+                localStorage.setItem("active", true);
+
                 return navigate("/");
             }
         } catch (error) {

@@ -1,32 +1,32 @@
 const db = require("../db/dbConfig.js");
 
-// VALIDATE USER EMAIL
-const doesUserExist = async (email) => {
+// GET USER BY EMAIL
+const getUserByEmail = async (email) => {
     try {
-        const exists = await db.query(
-            `SELECT EXISTS (SELECT 1 FROM users WHERE email=$1)`,
-            [email]
-        );
-        return exists[0].exists;
-    } catch (err) {
-        return error;
-    }
-};
-
-// SELECT SPECIFIC USER
-const getUser = async (email) => {
-    try {
-        const newUser = await db.one(
+        const user = await db.one(
             "SELECT * FROM users WHERE email = $1",
             email
         );
-        return newUser;
+        return user;
     } catch (error) {
         return error;
     }
 };
 
-// GET USER ROW BY USER ID
+// GET USER BY USERNAME
+const getUserByUserName = async (username) => {
+    try {
+        const user = await db.one(
+            "SELECT * FROM users WHERE username= $1",
+            username
+        );
+        return user;
+    } catch (error) {
+        return error;
+    }
+};
+
+// GET USER BY USER_ID
 const getUserById = async (id) => {
     try {
         const newUserId = await db.one(
@@ -40,11 +40,11 @@ const getUserById = async (id) => {
 };
 
 // CREATE A USER
-const addUser = async (name, email, password) => {
+const addUser = async (name, email, password, token) => {
     try {
         const newUser = await db.one(
-            "INSERT INTO users (username, email, password) VALUES ($1,$2,$3) RETURNING user_id, username",
-            [name, email, password]
+            "INSERT INTO users (username, email, password, confirmationCode, date_created) VALUES ($1,$2,$3,$4,$5) RETURNING user_id, email, username",
+            [name, email, password, token, Date.now()]
         );
         return newUser;
     } catch (err) {
@@ -52,7 +52,7 @@ const addUser = async (name, email, password) => {
     }
 };
 
-// UPDATE USER
+// UPDATE A USER
 const updateUser = async (user, password) => {
     try {
         const updatedUser = await db.one(
@@ -71,9 +71,21 @@ const updateUser = async (user, password) => {
     }
 };
 
+// PATCH VALIDATION
+const updateUserValidation = async (token) => {
+    try {
+        const updatedUser = await db.one(
+            "UPDATE users SET validated=true WHERE confirmationCode=$1 RETURNING *",
+            token
+        );
+        return updatedUser;
+    } catch (error) {
+        return error;
+    }
+};
+
 // UPDATE USER'S VOTES
 const updateUserVotes = async (votes, user_id) => {
-    console.log(votes, user_id);
     try {
         const updatedUser = await db.one(
             "UPDATE users SET avaliableVotes=$1 WHERE user_id=$2 RETURNING avaliableVotes;",
@@ -98,6 +110,7 @@ const deleteUser = async (id) => {
     }
 };
 
+// RESET USER VOTES
 const resetVotes = async () => {
     try {
         const reset = await db.query("UPDATE users SET avaliablevotes = 3");
@@ -107,12 +120,13 @@ const resetVotes = async () => {
 };
 
 module.exports = {
-    doesUserExist,
     addUser,
     deleteUser,
-    getUser,
     updateUser,
     getUserById,
     updateUserVotes,
     resetVotes,
+    getUserByEmail,
+    getUserByUserName,
+    updateUserValidation,
 };

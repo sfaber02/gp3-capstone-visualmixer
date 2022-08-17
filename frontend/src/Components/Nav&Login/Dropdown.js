@@ -8,18 +8,28 @@ import { useNavigate } from "react-router-dom";
 
 const API = process.env.REACT_APP_API_URL;
 
-export default function Dropdown({ user }) {
+export default function Dropdown({ user, setUserDetails }) {
     const navigate = useNavigate();
     const handleSignOut = () => {
-        localStorage.clear();
+        setUserDetails({
+            username: "",
+            user_id: "",
+            accessToken: "",
+        });
+
+        //FETCH
+        const removeCookie = async () => {
+            let removed = await fetch(`${API}/user/refresh_token`, {
+                method: "DELETE",
+                credentials: "include",
+            });
+        };
+        removeCookie();
+        localStorage.clear("active");
+
+
         return navigate("/");
     };
-
-    const deleteUser = (args) => {
-        fetch(API + "/user/" + user.user_id, {
-            method: "DELETE",
-        }).then(handleSignOut)
-    }
 
     if (user.username) {
         return (
@@ -47,11 +57,7 @@ export default function Dropdown({ user }) {
                     {/* <a className="dropdown-item" onClick={deleteUser} href="/">
                         Delete 
                     </a> */}
-                    <a
-                        className="dropdown-item"
-                        href="/"
-                        onClick={handleSignOut}
-                    >
+                    <a className="dropdown-item" onClick={handleSignOut}>
                         Signout
                     </a>
                 </div>
