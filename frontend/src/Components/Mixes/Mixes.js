@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Container, Navbar, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Modal, Button } from "react-bootstrap";
 
 import MixCard from "./MixCard.js";
 
@@ -37,6 +37,7 @@ const Mixes = ({
 }) => {
     const [countdown, setCountdown] = useState();
     const countdownTimer = useRef();
+    const [show, setShow] = useState(false);
 
     //states for vote tracking and updating
     // const [availableVotes, setAvailableVotes] = useState(0);
@@ -149,47 +150,60 @@ const Mixes = ({
         }
     };
 
+    // EVENT HANDLERS
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
     return (
-        <Container>
-            {/* <div id="transportControlsContainer">
-               
-                
+        <>
+            {/* MODAL FOR NO VOTES LEFT MESSAGE */}
+            <Modal show={show} onHide={handleClose} keyboard={false}></Modal>
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>
+                        Sorry! You have no votes left for today!
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Footer>
+                    <Button variant="danger" size="lg" onClick={handleClose}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
 
-               
-
-                
-                
-            </div> */}
             <Container>
-                <Row xs={1} s={1} md={3} lg={4}>
-                    {effects.map((effect, index) => (
-                        <Col>
-                            <MixCard
-                                key={effect.effects_id}
-                                effect={effect}
-                                handleUserChange={handleUserChange}
-                                avaliableVotes={user.avaliablevotes}
-                                subtractVote={subtractVote}
-                                random={randomArray[index]}
-                            />
-                        </Col>
-                    ))}
-                </Row>
-            </Container>
+                <Container className="mt-4">
+                    <Row xs={1} s={1} md={3} lg={4}>
+                        {effects.map((effect, index) => (
+                            <Col>
+                                <MixCard
+                                    key={effect.effects_id}
+                                    effect={effect}
+                                    handleUserChange={handleUserChange}
+                                    avaliableVotes={user.avaliablevotes}
+                                    subtractVote={subtractVote}
+                                    random={randomArray[index]}
+                                    handleShow={handleShow}
+                                />
+                            </Col>
+                        ))}
+                    </Row>
+                </Container>
 
-            <Transport
-                loading={loading}
-                playPause={playPause}
-                handlePlayPause={handlePlayPause}
-                volume={volume}
-                setVolume={setVolume}
-                time={time}
-                handleSeek={handleSeek}
-                user={user}
-                countdown={countdown}
-                setMasterVolume={setMasterVolume}
-            />
-        </Container>
+                <Transport
+                    loading={loading}
+                    playPause={playPause}
+                    handlePlayPause={handlePlayPause}
+                    volume={volume}
+                    setVolume={setVolume}
+                    time={time}
+                    handleSeek={handleSeek}
+                    user={user}
+                    countdown={countdown}
+                    setMasterVolume={setMasterVolume}
+                />
+            </Container>
+        </>
     );
 };
 

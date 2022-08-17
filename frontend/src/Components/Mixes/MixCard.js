@@ -19,11 +19,12 @@ export default function MixCard({
     avaliableVotes,
     subtractVote,
     random,
+    handleShow,
 }) {
     const [isHovered, setHovered] = useState(false);
     const [votes, setVotes] = useState(effect.totalvotes);
     const [imageSource, setImageSource] = useState(artDB[random]);
-    const [show, setShow] = useState(false);
+    
 
     const navigate = useNavigate();
 
@@ -58,9 +59,7 @@ export default function MixCard({
     }, [votes]);
     
 
-    // EVENT HANDLERS
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    
 
     const handleResponse = () => {
         setHovered(prev => !prev);
@@ -75,30 +74,7 @@ export default function MixCard({
 
     return (
         <div className={"music-card"}>
-            <>
-                {/* MODAL FOR NO VOTES LEFT MESSAGE */}
-                <Modal
-                    show={show}
-                    onHide={handleClose}
-                    keyboard={false}
-                ></Modal>
-                <Modal show={show} onHide={handleClose}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>
-                            Sorry! You have no votes left for today!
-                        </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Footer>
-                        <Button
-                            variant="danger"
-                            size="lg"
-                            onClick={handleClose}
-                        >
-                            Close
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-            </>
+            
 
             <Card
                 id={effect.user_id}
