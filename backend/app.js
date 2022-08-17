@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+require("dotenv").config();
 
 const userController = require("./controllers/userController.js");
 const audioController = require("./controllers/audioController.js");
@@ -11,7 +12,7 @@ const app = express();
 app.use(
     cors({
         credentials: true,
-        origin: "http://localhost:3000" || "*",
+        origin: process.env.URL || "*",
     })
 );
 app.use(express.json());
