@@ -35,7 +35,7 @@ const Mixes = ({
     handleSeek,
     userDetails,
 }) => {
-    const [countdown, setCountdown] = useState();
+    const [countdown, setCountdown] = useState(() => 0);
     const countdownTimer = useRef();
     const [show, setShow] = useState(false);
 
@@ -44,6 +44,10 @@ const Mixes = ({
     const [user, setUser] = useState({ avaliablevotes: 0 });
 
     const [effects, setEffects] = useState([]);
+
+
+    console.log("MIXES RE RENDER");
+
 
     /**
      * LOAD ALL MIXES
@@ -87,21 +91,24 @@ const Mixes = ({
 
     // countdown to next song timer
     useEffect(() => {
-        if (!countdownTimer.current) {
-            countdownTimer.current = setInterval(() => {
-                const secondsLeft = secondsTillMidnight();
-                const hoursLeft = Math.floor(secondsLeft / 60 / 60);
-                const minsLeft = Math.floor((secondsLeft / 60) % 60);
-                const secsLeft = Math.floor(
-                    secondsLeft - hoursLeft * 60 * 60 - minsLeft * 60
-                );
-                setCountdown(
-                    `${hoursLeft}:${
-                        minsLeft < 10 ? `0${minsLeft}` : `${minsLeft}`
-                    }:${secsLeft < 10 ? `0${secsLeft}` : `${secsLeft}`}`
-                );
-            }, 1000);
-        }
+
+        // THIS IS CAUSING LOTS OF RE RENDERS ??
+
+        // if (!countdownTimer.current) {
+        //     countdownTimer.current = setInterval(() => {
+        //         const secondsLeft = secondsTillMidnight();
+        //         const hoursLeft = Math.floor(secondsLeft / 60 / 60);
+        //         const minsLeft = Math.floor((secondsLeft / 60) % 60);
+        //         const secsLeft = Math.floor(
+        //             secondsLeft - hoursLeft * 60 * 60 - minsLeft * 60
+        //         );
+        //         setCountdown(
+        //             `${hoursLeft}:${
+        //                 minsLeft < 10 ? `0${minsLeft}` : `${minsLeft}`
+        //             }:${secsLeft < 10 ? `0${secsLeft}` : `${secsLeft}`}`
+        //         );
+        //     }, 1000);
+        // }
     }, []);
 
     const handleUserChange = (user) => {
@@ -175,7 +182,7 @@ const Mixes = ({
                 <Container className="mt-4">
                     <Row xs={1} s={1} md={3} lg={4}>
                         {effects.map((effect, index) => (
-                            <Col>
+                            <Col key={index}>
                                 <MixCard
                                     key={effect.effects_id}
                                     effect={effect}
@@ -184,6 +191,8 @@ const Mixes = ({
                                     subtractVote={subtractVote}
                                     random={randomArray[index]}
                                     handleShow={handleShow}
+                                    userDetails={userDetails}
+
                                 />
                             </Col>
                         ))}

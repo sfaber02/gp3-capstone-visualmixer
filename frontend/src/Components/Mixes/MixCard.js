@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "../../Styles/scss/MixCard.scss";
-import "../../Styles/mixCard.css";
 import { Card, Modal, Button } from "react-bootstrap";
-
 
 // import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 // import Skeleton from "@mui/material/Skeleton";
 // import Box from "@mui/material/Box";
 
+import "../../Styles/scss/MixCard.scss";
+import "../../Styles/mixCard.css";
 import artDB from "../../Actions/art";
 
 const API = process.env.REACT_APP_API_URL;
@@ -20,21 +19,33 @@ export default function MixCard({
     subtractVote,
     random,
     handleShow,
+    userDetails
 }) {
     const [isHovered, setHovered] = useState(false);
-    const [votes, setVotes] = useState(effect.totalvotes);
-    const [imageSource, setImageSource] = useState(artDB[random]);
-    
+    const [votes, setVotes] = useState(() => effect.totalvotes);
+    const [imageSource, setImageSource] = useState(() => artDB[random]);
 
     const navigate = useNavigate();
 
-    
+    // UPDATES FX IN DB WITH NEW VOTES COUNT
+    useEffect(() => {
+        console.log("RENDER");
+
+        var requestOptions = {
+            method: "PUT",
+            redirect: "follow",
+        };
+
+        fetch(`${API}/effects/${effect.effects_id}/${votes}`, requestOptions)
+            .then((response) => response.text())
+            .catch((error) => console.log("error", error));
+    }, [votes]);
+
     const handleClick = () => {
-        let user = JSON.parse(localStorage.getItem("user_id"));
-        
+
         // CHECK HERE IF USER IS VERIFIED
         
-        if (user) {
+        if (userDetails.user_id) {
             if (avaliableVotes > 0) {
                 setVotes((p) => (p += 1));
                 subtractVote();
@@ -45,24 +56,9 @@ export default function MixCard({
             navigate("/register");
         }
     };
-    
-    // UPDATES FX IN DB WITH NEW VOTES COUNT
-    useEffect(() => {
-        var requestOptions = {
-            method: "PUT",
-            redirect: "follow",
-        };
-        
-        fetch(`${API}/effects/${effect.effects_id}/${votes}`, requestOptions)
-        .then((response) => response.text())
-        .catch((error) => console.log("error", error));
-    }, [votes]);
-    
-
-    
 
     const handleResponse = () => {
-        setHovered(prev => !prev);
+        setHovered((prev) => !prev);
     };
     const handleMouseEnter = (e) => {
         handleUserChange(e.target.parentNode.id);
@@ -74,8 +70,6 @@ export default function MixCard({
 
     return (
         <div className={"music-card"}>
-            
-
             <Card
                 id={effect.user_id}
                 onClick={handleClick}

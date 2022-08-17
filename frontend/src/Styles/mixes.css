@@ -1,3 +1,31 @@
+.timerText {
+    color: white;
+    text-align: center;
+    font-size: 25px;
+}
+
+#seekBar {
+   width: 100%; 
+}
+
+.transportRow2 {
+    display: flex;
+    justify-content: space-around;
+    
+}
+
+.playPause {
+    float: right;
+}
+
+.volumeButton {
+    float: left;
+}
+
+
+
+
+
 #volumeMixes {
     -webkit-appearance: none;
     width: 95%;
@@ -16,7 +44,7 @@
     -webkit-appearance: none;
     appearance: none;
     width: 5px;
-    height: 10px;
+    height: 25px;
     background: #000;
     cursor: pointer;
     border: 5px solid rgb(21, 252, 0);
@@ -32,5 +60,37 @@
     border-radius: 4px;
 }
 
+#seekBar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 5px;
+    height: 25px;
+    background: #000;
+    cursor: pointer;
+    border: 5px solid rgb(21, 252, 0);
+    border-radius: 4px;
+}
+
+#seekBar::-moz-range-thumb {
+    width: 20px;
+    height: 60px;
+    background: #000;
+    cursor: pointer;
+    border: 5px solid lawngreen;
+    border-radius: 4px;
+}
+
+.transportButtons {
+        width: 40px;
+        height: 38px;
+        margin: 0px;
+        border: 3px solid white;
+        border-radius: 35%;
+        /* font-size: 35px; */
+        /* padding: 0px; */
+        background-color: rgb(252, 113, 0);
+        box-shadow: 0 8px 16px 0 rgba(255, 255, 255, 0.2),
+            0 6px 20px 0 rgba(255, 255, 255, 0.19);
+}
 
 
