@@ -41,7 +41,7 @@ const updateAudio = async (track, id) => {
 const createAudio = async (track) => {
     try {
         const newTrack = await db.one(
-            "INSERT INTO audio (deezer_id, title, artist, album, album_cover, audio_key) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *",
+            "INSERT INTO audio (deezer_id, title, artist, album, album_cover, audio_key, date_created) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *",
             [
                 track.deezerId,
                 track.title,
@@ -49,6 +49,7 @@ const createAudio = async (track) => {
                 track.album,
                 track.cover,
                 track.audioKey,
+                Date.now(),
             ]
         );
         return newTrack;
