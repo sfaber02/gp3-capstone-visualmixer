@@ -29,6 +29,7 @@ function SignUp({ userDetails, setUserDetails }) {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
         try {
             const response = await fetch(`${API}/user/register`, {
                 method: "POST",
@@ -39,8 +40,8 @@ function SignUp({ userDetails, setUserDetails }) {
                 body: JSON.stringify(user),
                 credentials: "include",
             });
-            const content = await response.json();
 
+            const content = await response.json();
             if (content.email) {
                 window.alert(content.email);
                 setUser({ ...user, email: "" });
