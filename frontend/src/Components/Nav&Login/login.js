@@ -66,9 +66,6 @@ function Login({ userDetails, setUserDetails }) {
             } else if (data.error === "password") {
                 setUser({ ...user, password: "" });
                 alert("Incorrect Password Please Try Again");
-            } else if (data.error === "verified") {
-                // REGISTERED BUT NOT VERIFIED
-                alert("Please verify your email.");
             } else if (data.error === "email") {
                 setUser({ ...user, email: "" });
                 alert("Incorrect Email Please Try Again");

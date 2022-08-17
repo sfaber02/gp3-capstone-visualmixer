@@ -19,3 +19,5 @@ May the best mix win!
     - make playback loop
     - re style using react bootstrap
     - add tooltips to mixer elements
+- if user makes new mix on same day reset votes on mix
+    - warn user before doing this

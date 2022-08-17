@@ -206,6 +206,7 @@ const Mixes = ({
                         avaliableVotes={user.avaliablevotes}
                         subtractVote={subtractVote}
                         random={randomArray[index]}
+                        userDetails={userDetails}
                     />
                 ))}
             </div>

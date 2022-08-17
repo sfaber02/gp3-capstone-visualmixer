@@ -89,11 +89,11 @@ user.post("/login", async (req, res) => {
                 error: "email",
                 errorMsg: "Incorrect email, please try again.",
             });
-        } else if (!user.validated) {
-            res.status(400).json({  
-                error: "verified",
-                errorMsg: "Please verify your email.",
-            });
+        // } else if (!user.validated) {
+        //     res.status(400).json({  
+        //         error: "verified",
+        //         errorMsg: "Please verify your email.",
+        //     });
         } else {
             // DECRYPT PASSWORD
             const isValidPassword = await bcrypt.compare(

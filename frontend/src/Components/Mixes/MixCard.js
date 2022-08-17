@@ -17,6 +17,7 @@ export default function MixCard({
     avaliableVotes,
     subtractVote,
     random,
+    userDetails,
 }) {
     const [isHovered, setHovered] = useState(false);
     const [votes, setVotes] = useState(effect.totalvotes);
@@ -25,37 +26,43 @@ export default function MixCard({
 
     const navigate = useNavigate();
 
-    
     const handleClick = () => {
-        let user = JSON.parse(localStorage.getItem("user_id"));
-        
+        // let user = JSON.parse(localStorage.getItem("user_id"));
+
         // CHECK HERE IF USER IS VERIFIED
-        
-        if (user) {
-            if (avaliableVotes > 0) {
-                setVotes((p) => (p += 1));
-                subtractVote();
-            } else {
-                handleShow();
-            }
+
+        if (userDetails.user_id) {
+            fetch(`${API}/user/${userDetails.user_id}`)
+                .then((res) => res.json())
+                .then((res) => {
+                    if (res.validated) {
+                        if (avaliableVotes > 0) {
+                            setVotes((p) => (p += 1));
+                            subtractVote();
+                        } else {
+                            handleShow();
+                        }
+                    } else {
+                        // REGISTERED BUT NOT VERIFIED
+                        alert("Please verify your email.");
+                    }
+                });
         } else {
             navigate("/register");
         }
     };
-    
-  
+
     // UPDATES FX IN DB WITH NEW VOTES COUNT
     useEffect(() => {
         var requestOptions = {
             method: "PUT",
             redirect: "follow",
         };
-        
+
         fetch(`${API}/effects/${effect.effects_id}/${votes}`, requestOptions)
-        .then((response) => response.text())
-        .catch((error) => console.log("error", error));
+            .then((response) => response.text())
+            .catch((error) => console.log("error", error));
     }, [votes]);
-    
 
     // EVENT HANDLERS
     const handleClose = () => setShow(false);
@@ -98,7 +105,6 @@ export default function MixCard({
                     </Modal.Footer>
                 </Modal>
             </>
-
 
             <div
                 id={effect.user_id}
