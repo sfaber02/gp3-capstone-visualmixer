@@ -62,7 +62,7 @@ const Mixes = ({
                     return res.json();
                 })
                 .then((data) => {
-                    setEffects(data);
+                    setEffects(data ? data : []);
                 })
                 .catch((err) => {
                     console.log(err);
