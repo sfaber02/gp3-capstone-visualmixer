@@ -160,19 +160,22 @@ const Mixes = ({
                 
                 
             </div> */}
-
-            {/* <div className={"music-card-container"}>
-                {effects.map((effect, index) => (
-                    <MixCard
-                        key={effect.effects_id}
-                        effect={effect}
-                        handleUserChange={handleUserChange}
-                        avaliableVotes={user.avaliablevotes}
-                        subtractVote={subtractVote}
-                        random={randomArray[index]}
-                    />
-                ))}
-            </div> */}
+            <Container>
+                <Row xs={1} s={1} md={3} lg={4}>
+                    {effects.map((effect, index) => (
+                        <Col>
+                            <MixCard
+                                key={effect.effects_id}
+                                effect={effect}
+                                handleUserChange={handleUserChange}
+                                avaliableVotes={user.avaliablevotes}
+                                subtractVote={subtractVote}
+                                random={randomArray[index]}
+                            />
+                        </Col>
+                    ))}
+                </Row>
+            </Container>
 
             <Transport
                 loading={loading}

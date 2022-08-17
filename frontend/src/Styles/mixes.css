@@ -10,6 +10,7 @@
     border: 2px solid rgb(255, 255, 255);
     border-radius: 8px;
 }
+
 /* for chrome/safari */
 #volumeMixes::-webkit-slider-thumb {
     -webkit-appearance: none;
@@ -30,3 +31,6 @@
     border: 5px solid lawngreen;
     border-radius: 4px;
 }
+
+
+
