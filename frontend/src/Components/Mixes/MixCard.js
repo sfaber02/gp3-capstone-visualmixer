@@ -62,7 +62,7 @@ export default function MixCard({
     const handleShow = () => setShow(true);
 
     const handleResponse = () => {
-        setHovered(!isHovered);
+        setHovered(prev => !prev);
     };
     const handleMouseEnter = (e) => {
         handleUserChange(e.target.parentNode.id);
@@ -98,7 +98,6 @@ export default function MixCard({
                     </Modal.Footer>
                 </Modal>
             </>
-
 
             <div
                 id={effect.user_id}

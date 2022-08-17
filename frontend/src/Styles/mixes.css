@@ -1,281 +1,32 @@
-#mixesContainer {
-    height: -moz-calc(100% - 64px);
-    height: -webkit-calc(100% - 64px);
+#volumeMixes {
+    -webkit-appearance: none;
+    width: 95%;
+    margin: auto;
+    margin-bottom: 10px;
+    height: 15px;
+    background: #000;
     background: linear-gradient(to right, rgb(33, 24, 152), rgb(76, 59, 172));
+    outline: none;
+    border: 2px solid rgb(255, 255, 255);
+    border-radius: 8px;
+}
+/* for chrome/safari */
+#volumeMixes::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 5px;
+    height: 10px;
+    background: #000;
+    cursor: pointer;
+    border: 5px solid rgb(21, 252, 0);
+    border-radius: 4px;
 }
 
-/******** DESKTOP LAYOUT **************/
-@media only screen and (min-device-width: 601px) {
-    #transportControlsContainer {
-        display: grid;
-        grid-template-columns: 20% 60% 20%;
-        grid-template-rows: 33% 25% 33%;
-    }
-
-    #transportVolumeContainerMixes {
-        grid-column: 2 / 3;
-        grid-row: 3 / 4;
-        display: flex;
-    }
-
-    #transportVolumeContainerMixes label {
-        position: relative;
-        top: 9px;
-        /* margin-right: 5px; */
-    }
-
-    #timer {
-        grid-column: 2 / 3;
-        text-align: center;
-        font-size: 28px;
-    }
-
-    #playPause {
-        grid-column: 1 / 2;
-        grid-row: 2 / 4;
-        text-align: center;
-    }
-
-    #seekbar {
-        grid-column: 1 / 4;
-        grid-row: 1 / 2;
-    }
-
-    #vote-time {
-        /* border: 1px solid white; */
-        grid-column: 3 / 4;
-        grid-row: 2 / 4;
-        text-align: center;
-        font-size: 25px;
-    }
-
-    #transportControlsContainer {
-        background-color: black;
-        color: white;
-        position: fixed;
-        z-index: 1;
-        width: -moz-calc(100% - 16px);
-        width: -webkit-calc(100% - 16px);
-        height: 125px;
-        bottom: 0px;
-        margin: 8px;
-        /* padding: 10px; */
-        border-radius: 5px;
-    }
-
-    #transportSeekBarContainer {
-        margin-top: 5px;
-    }
-
-    #playPause button {
-        width: 75px;
-        height: 75px;
-        margin: auto;
-        border: 5px solid white;
-        border-radius: 35%;
-        font-size: 35px;
-        padding: 0px;
-        background-color: rgb(252, 113, 0);
-        box-shadow: 0 8px 16px 0 rgba(255, 255, 255, 0.2),
-            0 6px 20px 0 rgba(255, 255, 255, 0.19);
-    }
-
-    #playPause button i {
-        position: relative;
-        bottom: 4px;
-    }
-
-    #playPause button:hover {
-        transition-duration: 0.5s;
-        background-color: aqua;
-    }
-
-    #volumeMixes {
-        -webkit-appearance: none;
-        width: 95%;
-        margin: auto;
-        margin-bottom: 10px;
-        height: 15px;
-        background: #000;
-        background: linear-gradient(
-            to right,
-            rgb(33, 24, 152),
-            rgb(76, 59, 172)
-        );
-        outline: none;
-        border: 2px solid rgb(255, 255, 255);
-        border-radius: 8px;
-    }
-
-    /* for chrome/safari */
-    #volumeMixes::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 5px;
-        height: 10px;
-        background: #000;
-        cursor: pointer;
-        border: 5px solid rgb(21, 252, 0);
-        border-radius: 4px;
-    }
-
-    #volumeMixes::-moz-range-thumb {
-        width: 20px;
-        height: 60px;
-        background: #000;
-        cursor: pointer;
-        border: 5px solid lawngreen;
-        border-radius: 4px;
-    }
-
-    .music-card-container {
-        /* border: 2px solid green; */
-        overflow: scroll;
-        height: -moz-calc(100% - 125px);
-        height: -webkit-calc(100% - 125px);
-        /* height: 500px; */
-    }
-}
-
-/**************MOBILE LAYOUT *****************/
-@media only screen and (max-device-width: 600px) {
-    #transportControlsContainer {
-        background-color: black;
-        color: white;
-        position: fixed;
-        z-index: 1;
-        width: -moz-calc(100% - 16px);
-        width: -webkit-calc(100% - 16px);
-        height: 250px;
-        bottom: 0px;
-        margin: 8px;
-        /* padding: 10px; */
-        border-radius: 5px;
-        /* border: 1px solid purple; */
-    }
-
-    #transportControlsContainer {
-        display: grid;
-        grid-template-columns: 50% 50%;
-        grid-template-rows: 20% 15% 45% 20%;
-    }
-
-    #transportVolumeContainerMixes {
-        grid-column: 1 / 3;
-        grid-row: 4 / 5;
-        display: flex;
-    }
-
-    #transportVolumeContainerMixes label {
-        position: relative;
-        top: 19px;
-        margin-right: 5px;
-        margin-left: 5px;
-    }
-
-    #transportVolumeContainerMixes input {
-        margin-right: 5px;
-    }
-
-    #timer {
-        grid-column: 1 / 2;
-        grid-row: 2 / 3;
-        text-align: center;
-        font-size: 28px;
-        margin: auto;
-    }
-
-    #playPause {
-        grid-column: 1 / 3;
-        grid-row: 3 / 4;
-        text-align: center;
-        margin: auto;
-        /* border: 1px solid yellow; */
-    }
-
-    #seekbar {
-        grid-column: 1 / 3;
-        grid-row: 1 / 2;
-    }
-
-    #availableVotes {
-        grid-column: 2 / 3;
-        grid-row: 2 / 3;
-        text-align: center;
-        font-size: 25px;
-    }
-
-    #transportSeekBarContainer {
-        margin-top: 5px;
-    }
-
-    #playPause button {
-        width: 75px;
-        height: 75px;
-        margin: auto;
-        border: 5px solid white;
-        border-radius: 35%;
-        font-size: 35px;
-        padding: 0px;
-        background-color: rgb(252, 113, 0);
-        box-shadow: 0 8px 16px 0 rgba(255, 255, 255, 0.2),
-            0 6px 20px 0 rgba(255, 255, 255, 0.19);
-    }
-
-    #playPause button i {
-        position: relative;
-        bottom: 4px;
-    }
-
-    #volumeMixes {
-        -webkit-appearance: none;
-        width: 95%;
-        margin: auto;
-        margin-bottom: 10px;
-        height: 15px;
-        background: #000;
-        background: linear-gradient(
-            to right,
-            rgb(33, 24, 152),
-            rgb(76, 59, 172)
-        );
-        outline: none;
-        border: 2px solid rgb(255, 255, 255);
-        border-radius: 8px;
-    }
-
-    /* for chrome/safari */
-    #volumeMixes::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 5px;
-        height: 10px;
-        background: #000;
-        cursor: pointer;
-        border: 5px solid rgb(21, 252, 0);
-        border-radius: 4px;
-    }
-
-    #volumeMixes::-moz-range-thumb {
-        width: 20px;
-        height: 60px;
-        background: #000;
-        cursor: pointer;
-        border: 5px solid lawngreen;
-        border-radius: 4px;
-    }
-
-    .music-card-container {
-        /* border: 2px solid green; */
-        overflow: scroll;
-        height: -moz-calc(100% - 250px);
-        height: -webkit-calc(100% - 250px);
-        /* height: 500px; */
-    }
-}
-
-.music-card-container {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: space-evenly;
+#volumeMixes::-moz-range-thumb {
+    width: 20px;
+    height: 60px;
+    background: #000;
+    cursor: pointer;
+    border: 5px solid lawngreen;
+    border-radius: 4px;
 }

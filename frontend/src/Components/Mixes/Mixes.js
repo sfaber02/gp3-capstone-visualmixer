@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-
+import { Container, Navbar, Row, Col } from "react-bootstrap";
 
 import MixCard from "./MixCard.js";
-import { Time } from "../Mixer/MixerSubComponents/Time.js";
+
+import { Transport } from "./Transport.js";
 
 import { secondsTillMidnight } from "../../utils/countdown.js";
 
@@ -149,55 +150,18 @@ const Mixes = ({
     };
 
     return (
-        <div id="mixesContainer">
-            <div id="transportControlsContainer">
-                <div id="transportVolumeContainerMixes">
-                    <label htmlFor="volumeMixes">Volume</label>
-                    <input
-                        type="range"
-                        id="volumeMixes"
-                        name="volume"
-                        min="0"
-                        max="1"
-                        step=".05"
-                        value={volume}
-                        onChange={setMasterVolume}
-                    />
-                </div>
-                <Time time={time} id="timer" />
-                <div id="playPause">
-                    {!loading && (
-                        <button onClick={handlePlayPause}>
-                            {playPause ? (
-                                <i className="fa-solid fa-pause"></i>
-                            ) : (
-                                <i className="fa-solid fa-play"></i>
-                            )}
-                        </button>
-                    )}
-                </div>
-                <div id="seekbar">
-                    <div id="transportSeekBarContainer">
-                        <input
-                            className="transportSlider"
-                            id="seekBar"
-                            type="range"
-                            min="0"
-                            max={time.duration}
-                            step="1"
-                            value={time.current}
-                            onChange={handleSeek}
-                        />
-                    </div>
-                </div>
-                <div id="vote-time">
-                    <div id="availableVotes">
-                        Votes Left: {user.avaliablevotes}
-                    </div>
-                    {/* <div id="countdown">New Mixle In: {countdown}</div> */}
-                </div>
-            </div>
-            <div className={"music-card-container"}>
+        <Container>
+            {/* <div id="transportControlsContainer">
+               
+                
+
+               
+
+                
+                
+            </div> */}
+
+            {/* <div className={"music-card-container"}>
                 {effects.map((effect, index) => (
                     <MixCard
                         key={effect.effects_id}
@@ -208,8 +172,21 @@ const Mixes = ({
                         random={randomArray[index]}
                     />
                 ))}
-            </div>
-        </div>
+            </div> */}
+
+            <Transport
+                loading={loading}
+                playPause={playPause}
+                handlePlayPause={handlePlayPause}
+                volume={volume}
+                setVolume={setVolume}
+                time={time}
+                handleSeek={handleSeek}
+                user={user}
+                countdown={countdown}
+                setMasterVolume={setMasterVolume}
+            />
+        </Container>
     );
 };
 
