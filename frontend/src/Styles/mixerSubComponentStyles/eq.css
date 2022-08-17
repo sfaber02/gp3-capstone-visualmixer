@@ -106,44 +106,6 @@
     text-align: center;
 }
 
-/********** RANGE SLIDERS **************/
-
-.eqFrequencySlider {
-    -webkit-appearance: none;
-    width: 90%;
-    margin: auto;
-    height: 20px;
-    background: #000;
-    outline: none;
-    border: 5px solid rgb(252, 113, 0);
-    border-radius: 8px;
-}
-
-.eqGain {
-    -webkit-appearance: none;
-    display: inline-block;
-    /* width: 200px; */
-    height: 20px;
-    margin: 0px;
-    background: #000;
-    outline: none;
-    border: 5px solid rgb(252, 113, 0);
-    border-radius: 8px;
-}
-
-.eqGain::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 5px;
-    height: 50px;
-    background: #000;
-    cursor: pointer;
-    border: 5px solid rgb(59, 252, 0);
-    border-radius: 4px;
-}
-
-
-
 /* BUTTONS */
 
 #playButton {

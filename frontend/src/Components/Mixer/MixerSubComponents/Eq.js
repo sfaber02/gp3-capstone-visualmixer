@@ -22,7 +22,7 @@ const Eq = (props) => {
                 <input
                     id="eq.band1.gain"
                     name="eq.band1.gain"
-                    className="eqGain"
+                    className="eqGain orangeFader"
                     type="range"
                     min="-30"
                     max="30"
@@ -37,7 +37,7 @@ const Eq = (props) => {
                     <input
                         id="eq.band1.frequency"
                         name="eq.band1.frequency"
-                        className="eqFrequencySlider"
+                        className="orangeFader-no-thumb"
                         type="range"
                         min="20"
                         max="500"
@@ -54,7 +54,7 @@ const Eq = (props) => {
                 <input
                     id="eq.band2.gain"
                     name="eq.band2.gain"
-                    className="eqGain"
+                    className="eqGain orangeFader"
                     type="range"
                     min="-30"
                     max="30"
@@ -68,7 +68,7 @@ const Eq = (props) => {
                     </label>
                     <input
                         id="eq.band2.frequency"
-                        className="eqFrequencySlider"
+                        className="orangeFader-no-thumb"
                         name="eq.band2.frequency"
                         type="range"
                         min="100"
@@ -86,7 +86,7 @@ const Eq = (props) => {
                 <input
                     id="eq.band3.gain"
                     name="eq.band3.gain"
-                    className="eqGain"
+                    className="eqGain orangeFader"
                     type="range"
                     min="-30"
                     max="30"
@@ -100,7 +100,7 @@ const Eq = (props) => {
                     </label>
                     <input
                         id="eq.band3.frequency"
-                        className="eqFrequencySlider"
+                        className="orangeFader-no-thumb"
                         name="eq.band3.frequency"
                         type="range"
                         min="600"
@@ -118,7 +118,7 @@ const Eq = (props) => {
                 <input
                     id="eq.band4.gain"
                     name="eq.band4.gain"
-                    className="eqGain"
+                    className="eqGain orangeFader"
                     type="range"
                     min="-30"
                     max="30"
@@ -132,7 +132,7 @@ const Eq = (props) => {
                     </label>
                     <input
                         id="eq.band4.frequency"
-                        className="eqFrequencySlider"
+                        className="orangeFader-no-thumb"
                         name="eq.band4.frequency"
                         type="range"
                         min="1500"
@@ -150,7 +150,7 @@ const Eq = (props) => {
                 <input
                     id="eq.band5.gain"
                     name="eq.band5.gain"
-                    className="eqGain"
+                    className="eqGain orangeFader"
                     type="range"
                     min="-30"
                     max="30"
@@ -164,7 +164,7 @@ const Eq = (props) => {
                     </label>
                     <input
                         id="eq.band5.frequency"
-                        className="eqFrequencySlider"
+                        className="orangeFader-no-thumb"
                         name="eq.band5.frequency"
                         type="range"
                         min="4000"

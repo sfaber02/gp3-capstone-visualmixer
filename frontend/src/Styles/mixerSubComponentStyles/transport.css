@@ -58,40 +58,10 @@
 
 
 
-/* TRANSPORT SLIDERS*/
-.transportSlider {
-    -webkit-appearance: none;
-    width: 95%;
-    margin: auto;
-    margin-top: 8px;
-    height: 15px;
-    background: #000;
-    background: linear-gradient(to right, rgb(33, 24, 152), rgb(76, 59, 172));
-    outline: none;
-    border: 2px solid rgb(255, 255, 255);
-    border-radius: 8px;
-}
 
-/* for chrome/safari */
-.transportSlider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 5px;
-    height: 10px;
-    background: #000;
-    cursor: pointer;
-    border: 5px solid rgb(21, 252, 0);
-    border-radius: 4px;
-}
 
-.transportSlider::-moz-range-thumb {
-    width: 20px;
-    height: 60px;
-    background: #000;
-    cursor: pointer;
-    border: 5px solid lawngreen;
-    border-radius: 4px;
-}
+/*
+
 
 #volume {
     -webkit-appearance: none;
@@ -106,7 +76,6 @@
     border-radius: 8px;
 }
 
-/* for chrome/safari */
 #volume::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -126,3 +95,14 @@
     border: 5px solid lawngreen;
     border-radius: 4px;
 }
+
+
+
+
+
+
+
+
+
+
+*/

@@ -28,7 +28,7 @@ export const Transport = ({
             <Popover.Body>
                 <input
                     type="range"
-                    id="volumeMixes"
+                    className="volumeMixes"
                     name="volume"
                     min="0"
                     max="1"
@@ -37,16 +37,16 @@ export const Transport = ({
                     onChange={setMasterVolume}
                 />
             </Popover.Body>
-           
         </Popover>
     );
 
     return (
-        <Container fluid className="mt-5">
+        // 81.5 pixels tall!!
+        <Container fluid className="mixesTransportContainer">
             <Row xs={1} className="">
                 <Col xs={100} className="">
                     <input
-                        className="transportSlider"
+                        className="mixleFader"
                         id="seekBar"
                         type="range"
                         min="0"
@@ -79,8 +79,9 @@ export const Transport = ({
                     <Container>
                         <OverlayTrigger
                             trigger="click"
-                            placement="right"
+                            placement="right-end"
                             overlay={volumePopover}
+                            rootClose={true}
                         >
                             <button className="volumeButton transportButtons">
                                 <i class="fa-solid fa-volume-high"></i>

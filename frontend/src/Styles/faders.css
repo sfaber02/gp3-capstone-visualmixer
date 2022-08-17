@@ -1,0 +1,203 @@
+/* BLUE FADERS */
+
+.blueFaders {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 15px;
+    margin-top: 5px;
+    background: #000;
+    outline: none;
+    border: 5px solid rgb(0, 193, 252);
+    border-radius: 8px;
+}
+
+/* for chrome/safari */
+.blueFaders::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 5px;
+    height: 25px;
+    background: #000;
+    cursor: pointer;
+    border: 5px solid rgb(8, 0, 252);
+    border-radius: 4px;
+}
+
+/* for firefox */
+.blueFaders::-moz-range-thumb {
+    width: 20px;
+    height: 60px;
+    background: #000;
+    cursor: pointer;
+    border: 5px solid lawngreen;
+    border-radius: 4px;
+}
+
+/* YELLOW FADERS */
+.yellowFaders {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 15px;
+    margin-top: 5px;
+    background: #000;
+    outline: none;
+    border: 5px solid rgb(244, 252, 0);
+    border-radius: 8px;
+}
+
+/* for chrome/safari */
+.yellowFaders::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 5px;
+    height: 25px;
+    background: #000;
+    cursor: pointer;
+    border: 5px solid rgb(252, 0, 0);
+    border-radius: 4px;
+}
+
+/* for firefox */
+.yellowFaders::-moz-range-thumb {
+    width: 20px;
+    height: 60px;
+    background: #000;
+    cursor: pointer;
+    border: 5px solid lawngreen;
+    border-radius: 4px;
+}
+
+/* ORANGE FADERS */
+.orangeFader-no-thumb {
+    -webkit-appearance: none;
+    width: 90%;
+    margin: auto;
+    height: 20px;
+    background: #000;
+    outline: none;
+    border: 5px solid rgb(252, 113, 0);
+    border-radius: 8px;
+}
+
+.orangeFader {
+    -webkit-appearance: none;
+    display: inline-block;
+    /* width: 200px; */
+    height: 20px;
+    margin: 0px;
+    background: #000;
+    outline: none;
+    border: 5px solid rgb(252, 113, 0);
+    border-radius: 8px;
+}
+
+.orangeFader::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 5px;
+    height: 50px;
+    background: #000;
+    cursor: pointer;
+    border: 5px solid rgb(59, 252, 0);
+    border-radius: 4px;
+}
+
+/* PURPLE FADERS  */
+.purpleFaders {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 15px;
+    margin-top: 3px;
+    background: #000;
+    outline: none;
+    border: 5px solid rgb(252, 0, 231);
+    border-radius: 8px;
+}
+
+/* for chrome/safari */
+.purpleFaders::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 5px;
+    height: 25px;
+    background: #000;
+    cursor: pointer;
+    border: 5px solid rgb(105, 0, 252);
+    border-radius: 4px;
+}
+
+/* for firefox */
+.purpleFaders::-moz-range-thumb {
+    width: 20px;
+    height: 60px;
+    background: #000;
+    cursor: pointer;
+    border: 5px solid lawngreen;
+    border-radius: 4px;
+}
+
+/* MIXLE GRADIENT FADERS */
+.mixleFader {
+    -webkit-appearance: none;
+    width: 95%;
+    margin: auto;
+    margin-top: 8px;
+    height: 15px;
+    background: #000;
+    background: linear-gradient(to right, rgb(33, 24, 152), rgb(76, 59, 172));
+    outline: none;
+    border: 2px solid rgb(255, 255, 255);
+    border-radius: 8px;
+}
+
+/* for chrome/safari */
+.mixleFader::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 5px;
+    height: 20px;
+    background: #000;
+    cursor: pointer;
+    border: 5px solid rgb(21, 252, 0);
+    border-radius: 4px;
+}
+
+.mixleFader::-moz-range-thumb {
+    width: 20px;
+    height: 60px;
+    background: #000;
+    cursor: pointer;
+    border: 5px solid lawngreen;
+    border-radius: 4px;
+}
+
+
+/* MODIFIED MIXLE FADER FOR POPOVER */
+.volumeMixes {
+    -webkit-appearance: none;
+    width: 100%;
+    margin: auto;
+    background: linear-gradient(to right, rgb(33, 24, 152), rgb(76, 59, 172));
+    border-radius: 8px;
+}
+
+
+.volumeMixes::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 5px;
+    height: 20px;
+    background: #000;
+    cursor: pointer;
+    border: 5px solid rgb(21, 252, 0);
+    border-radius: 4px;
+}
+
+.volumeMixes::-moz-range-thumb {
+    width: 20px;
+    height: 60px;
+    background: #000;
+    cursor: pointer;
+    border: 5px solid lawngreen;
+    border-radius: 4px;
+}

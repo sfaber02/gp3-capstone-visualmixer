@@ -164,6 +164,7 @@ const Mixer = ({
                             <input
                                 type="range"
                                 id="volume"
+                                className="mixleFader"
                                 name="volume"
                                 min="0"
                                 max="1"
@@ -175,7 +176,7 @@ const Mixer = ({
                         <Time time={time} id="transportTimeContainer" />
                         <div id="transportSeekBarContainer">
                             <input
-                                className="transportSlider"
+                                className="mixleFader"
                                 id="seekBar"
                                 type="range"
                                 min="0"

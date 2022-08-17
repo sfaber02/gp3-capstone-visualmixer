@@ -5,6 +5,8 @@ import { defaultfx } from "../../settings/defaultfx";
 import { Mixer } from "../Mixer/mixer";
 import { Mixes } from "../Mixes/Mixes";
 
+import "../../Styles/faders.css"
+
 const AudioPlayer = ({ showSplash, todaysTrack, mixes, userDetails }) => {
     /**
      * play/pause - boolean state for play/pause toggling

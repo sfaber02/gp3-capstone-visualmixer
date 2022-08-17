@@ -1,3 +1,9 @@
+.mixesTransportContainer {
+   position: fixed;
+   bottom: 0;
+   left: 0; 
+}
+
 .timerText {
     color: white;
     text-align: center;
@@ -22,62 +28,12 @@
     float: left;
 }
 
-
-
-
-
-#volumeMixes {
-    -webkit-appearance: none;
-    width: 95%;
-    margin: auto;
-    margin-bottom: 10px;
-    height: 15px;
-    background: #000;
-    background: linear-gradient(to right, rgb(33, 24, 152), rgb(76, 59, 172));
-    outline: none;
-    border: 2px solid rgb(255, 255, 255);
-    border-radius: 8px;
+.volumeMixes {
+    padding: 0px;
 }
 
-/* for chrome/safari */
-#volumeMixes::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 5px;
-    height: 25px;
-    background: #000;
-    cursor: pointer;
-    border: 5px solid rgb(21, 252, 0);
-    border-radius: 4px;
-}
-
-#volumeMixes::-moz-range-thumb {
-    width: 20px;
-    height: 60px;
-    background: #000;
-    cursor: pointer;
-    border: 5px solid lawngreen;
-    border-radius: 4px;
-}
-
-#seekBar::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 5px;
-    height: 25px;
-    background: #000;
-    cursor: pointer;
-    border: 5px solid rgb(21, 252, 0);
-    border-radius: 4px;
-}
-
-#seekBar::-moz-range-thumb {
-    width: 20px;
-    height: 60px;
-    background: #000;
-    cursor: pointer;
-    border: 5px solid lawngreen;
-    border-radius: 4px;
+.popover-body {
+    padding: 5px;
 }
 
 .transportButtons {
@@ -92,5 +48,10 @@
         box-shadow: 0 8px 16px 0 rgba(255, 255, 255, 0.2),
             0 6px 20px 0 rgba(255, 255, 255, 0.19);
 }
+
+.transportButtons:hover {
+        transition-duration: 0.5s;
+        background-color: aqua;
+    }
 
 

@@ -15,7 +15,8 @@ May the best mix win!
 
 ### ToDo
 - refactor mixer / mixes page
-    - fix timer
-    - make playback loop
     - re style using react bootstrap
-    - add tooltips to mixer elements
+        - refactor range slider styling into a more centralized place
+        - fix popover alignment issue
+- move remaining votes and next song countdown to navbar     
+- add tooltips to mixer elements
