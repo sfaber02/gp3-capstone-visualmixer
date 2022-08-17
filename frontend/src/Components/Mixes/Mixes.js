@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 
-
 import MixCard from "./MixCard.js";
 import { Time } from "../Mixer/MixerSubComponents/Time.js";
 
@@ -35,6 +34,7 @@ const Mixes = ({
     userDetails,
 }) => {
     const [countdown, setCountdown] = useState();
+
     const countdownTimer = useRef();
 
     //states for vote tracking and updating
@@ -60,7 +60,8 @@ const Mixes = ({
                     return res.json();
                 })
                 .then((data) => {
-                    setEffects(data ? data : []);
+                    setEffects(data);
+                    
                 })
                 .catch((err) => {
                     console.log(err);
@@ -198,17 +199,18 @@ const Mixes = ({
                 </div>
             </div>
             <div className={"music-card-container"}>
-                {effects.map((effect, index) => (
-                    <MixCard
-                        key={effect.effects_id}
-                        effect={effect}
-                        handleUserChange={handleUserChange}
-                        avaliableVotes={user.avaliablevotes}
-                        subtractVote={subtractVote}
-                        random={randomArray[index]}
-                        userDetails={userDetails}
-                    />
-                ))}
+                {
+                    effects.map((effect, index) => (
+                        <MixCard
+                            key={effect.effects_id}
+                            effect={effect}
+                            handleUserChange={handleUserChange}
+                            avaliableVotes={user.avaliablevotes}
+                            subtractVote={subtractVote}
+                            random={randomArray[index]}
+                            userDetails={userDetails}
+                        />
+                    ))}
             </div>
         </div>
     );

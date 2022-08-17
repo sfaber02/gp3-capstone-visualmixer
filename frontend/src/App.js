@@ -29,7 +29,7 @@ function App() {
 
     useEffect(() => {
         if (!todaysTrack) {
-            fetch("https://mixle-be.herokuapp.com/audio/today")
+            fetch(`${API}/audio/today`)
                 .then((response) => response.json())
                 .then((data) => {
                     setTodaysTrack(data);
