@@ -69,6 +69,7 @@ user.post("/register", async (req, res) => {
             httpOnly: true,
             sameSite: "none",
             secure: true,
+            expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         });
         
         res.status(200).json(tokens);
@@ -108,6 +109,7 @@ user.post("/login", async (req, res) => {
                     httpOnly: true,
                     sameSite: "none",
                     secure: true,
+                    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
                 });
                 res.status(200).json(tokens);
             } else {
@@ -143,6 +145,7 @@ user.get("/refresh_token", (req, res) => {
                 httpOnly: true,
                 sameSite: "none",
                 secure: true,
+                expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
             });
 
             res.json(tokens);
