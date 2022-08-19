@@ -1,6 +1,6 @@
 // DEPENDENCIES
 import { Routes, Route, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext } from "react";
 import jwtDecode from "./utils/jwtDecode";
 
 // COMPONENTS
@@ -16,6 +16,8 @@ import Verification from "./Components/Nav&Login/Verification";
 const API = process.env.REACT_APP_API_URL;
 
 function App() {
+    const UserContext = createContext();
+
     const [popupBtn, setPopupBtn] = useState(false);
     const [userDetails, setUserDetails] = useState({
         username: "",
@@ -67,60 +69,62 @@ function App() {
     }, []);
 
     return (
-        <main>
-            <NavBar
-                user={userDetails}
-                setUserDetails={setUserDetails}
-                trigger={popupBtn}
-                setTrigger={setPopupBtn}
-            />
-            <AboutPopUp trigger={popupBtn} setTrigger={setPopupBtn} />
-            {!loading ? (
-                <Routes>
-                    <Route
-                        exact
-                        path="/"
-                        element={
-                            <MixerWrapper
-                                todaysTrack={todaysTrack}
-                                userDetails={userDetails}
-                            />
-                        }
-                    />
-                    <Route
-                        path="/audio"
-                        element={
-                            <AudioPlayer
-                                todaysTrack={todaysTrack}
-                                mixes={true}
-                                userDetails={userDetails}
-                            />
-                        }
-                    />
-                    <Route
-                        path="/register"
-                        element={
-                            <SignUp
-                                userDetails={userDetails}
-                                setUserDetails={setUserDetails}
-                            />
-                        }
-                    />
-                    <Route
-                        path="/login"
-                        element={
-                            <Login
-                                userDetails={userDetails}
-                                setUserDetails={setUserDetails}
-                            />
-                        }
-                    />
-                    <Route path="/verify/:id" element={<Verification />} />
-                </Routes>
-            ) : (
-                <Loading />
-            )}
-        </main>
+        <UserContext.Provider value={userDetails}>
+            <main>
+                <NavBar
+                    user={userDetails}
+                    setUserDetails={setUserDetails}
+                    trigger={popupBtn}
+                    setTrigger={setPopupBtn}
+                />
+                <AboutPopUp trigger={popupBtn} setTrigger={setPopupBtn} />
+                {!loading ? (
+                    <Routes>
+                        <Route
+                            exact
+                            path="/"
+                            element={
+                                <MixerWrapper
+                                    todaysTrack={todaysTrack}
+                                    userDetails={userDetails}
+                                />
+                            }
+                        />
+                        <Route
+                            path="/audio"
+                            element={
+                                <AudioPlayer
+                                    todaysTrack={todaysTrack}
+                                    mixes={true}
+                                    userDetails={userDetails}
+                                />
+                            }
+                        />
+                        <Route
+                            path="/register"
+                            element={
+                                <SignUp
+                                    userDetails={userDetails}
+                                    setUserDetails={setUserDetails}
+                                />
+                            }
+                        />
+                        <Route
+                            path="/login"
+                            element={
+                                <Login
+                                    userDetails={userDetails}
+                                    setUserDetails={setUserDetails}
+                                />
+                            }
+                        />
+                        <Route path="/verify/:id" element={<Verification />} />
+                    </Routes>
+                ) : (
+                    <Loading />
+                )}
+            </main>
+        </UserContext.Provider>
     );
 }
 
