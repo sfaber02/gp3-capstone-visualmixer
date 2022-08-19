@@ -26,6 +26,8 @@ May the best mix win!
 - authorization route on /effects/allusers/:id was crashing page due to authorization not resolving
 before React attempted to perform a .map on the effects array
     - authorization is disbaled on this route for now
+- existing users are not getting accurate votes from DB
+
 
 ### ToDo
 - refactor mixer / mixes page
