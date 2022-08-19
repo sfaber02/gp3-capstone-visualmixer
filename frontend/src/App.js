@@ -14,10 +14,9 @@ import AboutPopUp from "./Components/Nav&Login/AboutPopUp";
 import Verification from "./Components/Nav&Login/Verification";
 
 const API = process.env.REACT_APP_API_URL;
+export const UserContext = createContext();
 
 function App() {
-    const UserContext = createContext();
-
     const [popupBtn, setPopupBtn] = useState(false);
     const [userDetails, setUserDetails] = useState({
         username: "",

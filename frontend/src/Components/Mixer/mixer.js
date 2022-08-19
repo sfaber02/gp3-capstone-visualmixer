@@ -1,5 +1,6 @@
 import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../App";
 
 import "../../Styles/mixer.css";
 import "../../Styles/mixerSubComponentStyles/transport.css";
@@ -34,6 +35,7 @@ const Mixer = ({
     
     const userDetails = useContext(UserContext);
     console.log(userDetails);
+
     /**
      * On page load checks if there are FX settings stored in local storage.
      * This is used in the case that a user has created a mix without an account or being logged in.
