@@ -77,7 +77,7 @@ const MixCard = ({
                 onMouseLeave={handleMouseLeave}
             >
                 <Card.Img
-                    className={`card-img`}
+                    className="card-img"
                     onClick={handleClick}
                     src={imageSource}
                     alt={"mixelArt"}
