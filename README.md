@@ -21,6 +21,21 @@ May the best mix win!
 - Implemented validation emails
     - a user can no longer cast votes unless they have validated the email they used to create their Mixle account.
 
+### UPDATE 8/19/22
+- Fixed issue with cookie having an expiration of "session" causing users to not auto login if they close the browser
+    - cookie now expires in 1 week
+- Refactored userDetails into a global context 
+    - user details can now be access from any component by importing the "useUser" custom hook. It returns userDetails and a set user details function
+    - the UserProvider context now executes the auto login useEffect if there is a refresh token cookie
+- Refactored todaysTrack into a global context which can be accessed using the "useTrack" custom hook. It returns todays track and function to set todays track
+    - the TrackProvider context now fetches track details from Deezer API on page load. 
+- Eliminated the "mixersplashwrapper" component.  This was not needed as the audio will still play even though there's an audio context warning about lack of user interaction
+- Eliminated all unecessary props and references to userDetails and todaysTrack
+- Renamed the /audio route to /mixes
+- Created a /mixer route which goes straight to the mixer
+- The "/" route now goes to the splash page which will redirect to /mixer when the button is hit
+
+
 
 ### Bugs
 - authorization route on /effects/allusers/:id was crashing page due to authorization not resolving
