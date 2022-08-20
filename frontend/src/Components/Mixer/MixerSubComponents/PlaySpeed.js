@@ -22,7 +22,7 @@ const PlaySpeed = (props) => {
                 <input
                     id="speed.rate"
                     name="speed.rate"
-                    className="playSpeedSliders"
+                    className="purpleFaders"
                     type="range"
                     min=".1"
                     max="4"
@@ -39,7 +39,7 @@ const PlaySpeed = (props) => {
                 <input
                     id="speed.detune"
                     name="speed.detune"
-                    className="playSpeedSliders"
+                    className="purpleFaders"
                     type="range"
                     min="-2400"
                     max="2400"

@@ -23,7 +23,7 @@ const Compressor = (props) => {
                 <input
                     id="compressor.threshold"
                     name="compressor.threshhold"
-                    className="compressorSliders"
+                    className="blueFaders"
                     type="range"
                     min="-60"
                     max="0"
@@ -40,7 +40,7 @@ const Compressor = (props) => {
                 <input
                     id="compressor.ratio"
                     name="compressor.ratio"
-                    className="compressorSliders"
+                    className="blueFaders"
                     type="range"
                     min="1"
                     max="20"
@@ -57,7 +57,7 @@ const Compressor = (props) => {
                 <input
                     id="compressor.attack"
                     name="compressor.attack"
-                    className="compressorSliders"
+                    className="blueFaders"
                     type="range"
                     min="0"
                     max="1"
@@ -74,7 +74,7 @@ const Compressor = (props) => {
                 <input
                     id="compressor.release"
                     name="compressor.release"
-                    className="compressorSliders"
+                    className="blueFaders"
                     type="range"
                     min="0"
                     max="1"

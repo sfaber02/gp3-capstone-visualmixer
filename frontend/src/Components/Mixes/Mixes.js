@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from "react";
+import { Container, Row, Col, Modal, Button } from "react-bootstrap";
 
 import MixCard from "./MixCard.js";
-import { Time } from "../Mixer/MixerSubComponents/Time.js";
+
+import { Transport } from "./Transport.js";
 
 import { secondsTillMidnight } from "../../utils/countdown.js";
 
@@ -33,9 +35,9 @@ const Mixes = ({
     handleSeek,
     userDetails,
 }) => {
-    const [countdown, setCountdown] = useState();
-
+    const [countdown, setCountdown] = useState(() => 0);
     const countdownTimer = useRef();
+    const [show, setShow] = useState(false);
 
     //states for vote tracking and updating
     // const [availableVotes, setAvailableVotes] = useState(0);
@@ -86,21 +88,24 @@ const Mixes = ({
 
     // countdown to next song timer
     useEffect(() => {
-        if (!countdownTimer.current) {
-            countdownTimer.current = setInterval(() => {
-                const secondsLeft = secondsTillMidnight();
-                const hoursLeft = Math.floor(secondsLeft / 60 / 60);
-                const minsLeft = Math.floor((secondsLeft / 60) % 60);
-                const secsLeft = Math.floor(
-                    secondsLeft - hoursLeft * 60 * 60 - minsLeft * 60
-                );
-                setCountdown(
-                    `${hoursLeft}:${
-                        minsLeft < 10 ? `0${minsLeft}` : `${minsLeft}`
-                    }:${secsLeft < 10 ? `0${secsLeft}` : `${secsLeft}`}`
-                );
-            }, 1000);
-        }
+
+        // THIS IS CAUSING LOTS OF RE RENDERS ??
+
+        // if (!countdownTimer.current) {
+        //     countdownTimer.current = setInterval(() => {
+        //         const secondsLeft = secondsTillMidnight();
+        //         const hoursLeft = Math.floor(secondsLeft / 60 / 60);
+        //         const minsLeft = Math.floor((secondsLeft / 60) % 60);
+        //         const secsLeft = Math.floor(
+        //             secondsLeft - hoursLeft * 60 * 60 - minsLeft * 60
+        //         );
+        //         setCountdown(
+        //             `${hoursLeft}:${
+        //                 minsLeft < 10 ? `0${minsLeft}` : `${minsLeft}`
+        //             }:${secsLeft < 10 ? `0${secsLeft}` : `${secsLeft}`}`
+        //         );
+        //     }, 1000);
+        // }
     }, []);
 
     const handleUserChange = (user) => {
@@ -149,70 +154,62 @@ const Mixes = ({
         }
     };
 
+    // EVENT HANDLERS
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
     return (
-        <div id="mixesContainer">
-            <div id="transportControlsContainer">
-                <div id="transportVolumeContainerMixes">
-                    <label htmlFor="volumeMixes">Volume</label>
-                    <input
-                        type="range"
-                        id="volumeMixes"
-                        name="volume"
-                        min="0"
-                        max="1"
-                        step=".05"
-                        value={volume}
-                        onChange={setMasterVolume}
-                    />
-                </div>
-                <Time time={time} id="timer" />
-                <div id="playPause">
-                    {!loading && (
-                        <button onClick={handlePlayPause}>
-                            {playPause ? (
-                                <i className="fa-solid fa-pause"></i>
-                            ) : (
-                                <i className="fa-solid fa-play"></i>
-                            )}
-                        </button>
-                    )}
-                </div>
-                <div id="seekbar">
-                    <div id="transportSeekBarContainer">
-                        <input
-                            className="transportSlider"
-                            id="seekBar"
-                            type="range"
-                            min="0"
-                            max={time.duration}
-                            step="1"
-                            value={time.current}
-                            onChange={handleSeek}
-                        />
-                    </div>
-                </div>
-                <div id="vote-time">
-                    <div id="availableVotes">
-                        Votes Left: {user.avaliablevotes}
-                    </div>
-                    {/* <div id="countdown">New Mixle In: {countdown}</div> */}
-                </div>
-            </div>
-            <div className={"music-card-container"}>
-                {
-                    effects.map((effect, index) => (
-                        <MixCard
-                            key={effect.effects_id}
-                            effect={effect}
-                            handleUserChange={handleUserChange}
-                            avaliableVotes={user.avaliablevotes}
-                            subtractVote={subtractVote}
-                            random={randomArray[index]}
-                            userDetails={userDetails}
-                        />
-                    ))}
-            </div>
-        </div>
+        <>
+            {/* MODAL FOR NO VOTES LEFT MESSAGE */}
+            <Modal show={show} onHide={handleClose} keyboard={false}></Modal>
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>
+                        Sorry! You have no votes left for today!
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Footer>
+                    <Button variant="danger" size="lg" onClick={handleClose}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Container>
+                <Container className="mt-4">
+                    <Row xs={1} s={1} md={3} lg={4}>
+                        {effects.map((effect, index) => (
+                            <Col key={index}>
+                                <MixCard
+                                    key={effect.effects_id}
+                                    effect={effect}
+                                    handleUserChange={handleUserChange}
+                                    avaliableVotes={user.avaliablevotes}
+                                    subtractVote={subtractVote}
+                                    random={randomArray[index]}
+                                    handleShow={handleShow}
+                                    userDetails={userDetails}
+
+                                />
+                            </Col>
+                        ))}
+                    </Row>
+                </Container>
+
+                <Transport
+                    loading={loading}
+                    playPause={playPause}
+                    handlePlayPause={handlePlayPause}
+                    volume={volume}
+                    setVolume={setVolume}
+                    time={time}
+                    handleSeek={handleSeek}
+                    user={user}
+                    countdown={countdown}
+                    setMasterVolume={setMasterVolume}
+                />
+            </Container>
+        </>
     );
 };
 

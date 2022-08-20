@@ -21,7 +21,7 @@ const Delay = (props) => {
                 <input
                     id="delay.time"
                     name="delay.time"
-                    className="delaySliders"
+                    className="yellowFaders"
                     type="range"
                     min="0"
                     max="1"
@@ -36,7 +36,7 @@ const Delay = (props) => {
                 <input
                     id="delay.feedback"
                     name="delay.feedback"
-                    className="delaySliders"
+                    className="yellowFaders"
                     type="range"
                     min="0"
                     max="1"
@@ -52,7 +52,7 @@ const Delay = (props) => {
                     id="delay.dry"
                     name="delay.dry"
                     type="range"
-                    className="delaySliders"
+                    className="yellowFaders"
                     min="0"
                     max="1"
                     step=".05"
@@ -66,7 +66,7 @@ const Delay = (props) => {
                 <input
                     id="delay.wet" 
                     name="delay.wet" 
-                    className="delaySliders"
+                    className="yellowFaders"
                     type="range"
                     min="0"
                     max="1"

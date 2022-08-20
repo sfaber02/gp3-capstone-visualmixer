@@ -1,0 +1,32 @@
+.music-card {
+    padding-top: 30px;
+    padding-left: 30px;
+    padding-right: 30px;
+    background: black;
+    border-radius: 5px;
+    box-shadow: 0 8px 16px 0 rgba(255, 53, 114, 0.2),
+        0 6px 20px 0 rgba(255, 255, 0, 0.19);
+}
+
+.mixCardInfo {
+    display: flex;
+    position: relative;
+    top: 5px;
+    justify-content: space-around;
+    height: 30px;
+    color: white;
+}
+
+.mixCardButton {
+    border: 1px solid white;
+    border-radius: 35%;
+    background-color: rgb(252, 113, 0);
+    box-shadow: 0 8px 16px 0 rgba(255, 255, 255, 0.2),
+        0 6px 20px 0 rgba(255, 255, 255, 0.19);
+}
+
+.mixCardButton i {
+    position: relative;
+    bottom: 1px;
+    left: 1px;
+}
