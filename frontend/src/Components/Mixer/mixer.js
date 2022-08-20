@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../Contexts/UserContext";
 
 import "../../Styles/mixer.css";
 import "../../Styles/mixerSubComponentStyles/transport.css";
@@ -29,10 +30,9 @@ const Mixer = ({
     handlePlayPause,
     playPause,
     todaysTrack,
-    userDetails,
 }) => {
     const navigate = useNavigate();
-
+    const [userDetails] = useUser();
     /**
      * On page load checks if there are FX settings stored in local storage.
      * This is used in the case that a user has created a mix without an account or being logged in.

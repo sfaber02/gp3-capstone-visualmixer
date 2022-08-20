@@ -81,9 +81,9 @@ export default function MixCard({
             <Card
                 id={effect.user_id}
                 onClick={handleClick}
-                className={"music-card-cover"}
+                className={"music-card-cover m-3"}
                 onMouseOver={handleResponse}
-                onMouseEnter={handleMouseEnter}
+                onMouseEnter={handleMouseEnter}  
             >
                 <Card.Img src={imageSource} alt={"mixelArt"}></Card.Img>
                 <Card.Body>

@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../Contexts/UserContext";
 
 /**
  *
@@ -8,8 +9,10 @@ import { useNavigate } from "react-router-dom";
 
 const API = process.env.REACT_APP_API_URL;
 
-export default function Dropdown({ user, setUserDetails }) {
+export default function Dropdown() {
     const navigate = useNavigate();
+    const [userDetails, setUserDetails] = useUser();
+
     const handleSignOut = () => {
         setUserDetails({
             username: "",
@@ -31,7 +34,7 @@ export default function Dropdown({ user, setUserDetails }) {
         return navigate("/");
     };
 
-    if (user.username) {
+    if (userDetails.username) {
         return (
             <div className="dropdown">
                 <button
@@ -42,7 +45,7 @@ export default function Dropdown({ user, setUserDetails }) {
                     aria-haspopup="true"
                     aria-expanded="false"
                 >
-                    {user.username + " "}
+                    {userDetails.username + " "}
                 </button>
                 <div
                     className="dropdown-menu"

@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from "react";
+import { useUser } from "../../Contexts/UserContext.js";
+
 import { Container, Row, Col, Modal, Button } from "react-bootstrap";
+
 
 import MixCard from "./MixCard.js";
 
@@ -33,11 +36,11 @@ const Mixes = ({
     handlePlayPause,
     playPause,
     handleSeek,
-    userDetails,
 }) => {
     const [countdown, setCountdown] = useState(() => 0);
     const countdownTimer = useRef();
     const [show, setShow] = useState(false);
+    const [userDetails] = useUser();
 
     //states for vote tracking and updating
     // const [availableVotes, setAvailableVotes] = useState(0);

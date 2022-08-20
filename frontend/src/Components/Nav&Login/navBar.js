@@ -1,10 +1,11 @@
 import Dropdown from "./Dropdown";
 import "../../Styles/Nav.css";
 
-export default function NavBar({ user, trigger, setTrigger, setUserDetails }) {
+export default function NavBar({ trigger, setTrigger}) {
     const handleIconClick = () => {
         setTrigger(!trigger);
     };
+
     return (
         <nav
             className="navbar navbar-expand-lg navbar-light"
@@ -18,7 +19,7 @@ export default function NavBar({ user, trigger, setTrigger, setUserDetails }) {
             <a className="navbar-brand" href="/">
                 <h1>MIXLE</h1>
             </a>
-            <Dropdown user={user} setUserDetails={setUserDetails} />
+            <Dropdown />
         </nav>
     );
 }

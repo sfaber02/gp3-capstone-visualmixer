@@ -1,23 +1,19 @@
 // DEPENDENCIES ll
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../Contexts/UserContext";
 import jwtDecode from "../../utils/jwtDecode";
 import "../../Styles/Login.css";
 
 const API = process.env.REACT_APP_API_URL;
 
-/**
- *
- * @param {object} userDetails - useState passed from app.js containing user information if logged in
- * @param {function} setUserDetails - useState passed down from parent component to set username and userid from api call
- * @returns JSX for login page
- */
-function Login({ userDetails, setUserDetails }) {
+function Login() {
     let navigate = useNavigate();
     const [user, setUser] = useState({
         email: "",
         password: "",
     });
+    const [userDetails, setUserDetails] = useUser();
 
     // redirect user from login if they are already logged in ===> CHECK TOKEN?
     useEffect(() => {

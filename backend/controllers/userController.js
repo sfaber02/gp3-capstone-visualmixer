@@ -64,7 +64,6 @@ user.post("/register", async (req, res) => {
 
         // JWT TOKEN
         let tokens = jwtTokens(newUser);
-        console.log(tokens);
         res.cookie("refresh_token", tokens.refreshToken, {
             httpOnly: true,
             sameSite: "none",
@@ -126,8 +125,6 @@ user.post("/login", async (req, res) => {
 
 user.get("/refresh_token", (req, res) => {
     try {
-        console.log('1', req.cookies);
-
         // USE REFRESH TOKEN TO GET NEW ACCESS TOKEN
         const refresh_token = req.cookies.refresh_token;
 
@@ -209,10 +206,8 @@ user.put("/votes/:id/:votes", async (req, res) => {
 // PATCH USER VALIDATION
 user.patch("/verify/:id", async (req, res) => {
     const { id } = req.params;
-    console.log(id);
     try {
         let updated = await updateUserValidation(id);
-        console.log(updated);
         res.status(200).json(updated);
     } catch (error) {
         res.status(400).json({ error: "Unable to update validation on user" });

@@ -7,7 +7,7 @@ import { Mixes } from "../Mixes/Mixes";
 
 import "../../Styles/faders.css"
 
-const AudioPlayer = ({ showSplash, todaysTrack, mixes, userDetails }) => {
+const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
     /**
      * play/pause - boolean state for play/pause toggling
      * playstate - object state for tracking the current play state (e.g. 'playing', 'paused')
@@ -355,7 +355,6 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes, userDetails }) => {
                     handlePlayPause={handlePlayPause}
                     playPause={playPause}
                     todaysTrack={todaysTrack}
-                    userDetails={userDetails}
                 />
             ) : (
                 <Mixes
@@ -369,7 +368,6 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes, userDetails }) => {
                     playPause={playPause}
                     handleSeek={handleSeek}
                     todaysTrack={todaysTrack}
-                    userDetails={userDetails}
                 />
             )}
         </>
