@@ -6,13 +6,11 @@ const API = process.env.REACT_APP_API_URL;
 
 
 const UserContext = createContext();
-const UserUpdateContext = createContext();
+// const UserUpdateContext = createContext();
 
 const useUser = () => {
-    return [useContext(UserContext), useContext(UserUpdateContext)];
+    return useContext(UserContext);
 };
-
-
 
 const UserProvider = ({ children }) => {
     const [userDetails, setUserDetails] = useState({
@@ -23,6 +21,7 @@ const UserProvider = ({ children }) => {
 
      let navigate = useNavigate();
 
+     //AUTO LOGIN IF THERE'S A LEGIT REFRESH TOKEN COOKIE
      useEffect(() => {
          if (localStorage.getItem("active") && !userDetails.accessToken) {
              fetch(`${API}/user/refresh_token`, {
@@ -50,11 +49,11 @@ const UserProvider = ({ children }) => {
          }
      }, []);
 
+     
+
     return (
-        <UserContext.Provider value={userDetails}>
-            <UserUpdateContext.Provider value={setUserDetails}>
+        <UserContext.Provider value={[userDetails, setUserDetails]}>
                 {children}
-            </UserUpdateContext.Provider>
         </UserContext.Provider>
     );
 };
