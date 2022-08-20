@@ -78,14 +78,16 @@ const MixCard = ({
             >
                 <Card.Img
                     className="card-img"
-                    onClick={handleClick}
                     src={imageSource}
                     alt={"mixelArt"}
                 ></Card.Img>
                 {hovered && (
                     <>
                         <div className="thumbs-up-overlay-container"></div>
-                        <div className="overlay-thumbs-up">
+                        <div
+                            className="overlay-thumbs-up"
+                            onClick={handleClick}
+                        >
                             <i class="fa-solid fa-thumbs-up thumbs-up"></i>
                         </div>
                     </>
