@@ -16,7 +16,6 @@ export const Transport = ({
     playPause,
     handlePlayPause,
     volume,
-    setVolume,
     time,
     handleSeek,
     votes,

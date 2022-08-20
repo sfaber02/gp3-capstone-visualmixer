@@ -60,7 +60,6 @@ before React attempted to perform a .map on the effects array
 - if user makes new mix on same day reset votes on mix
     - warn user before doing this
         - fix popover alignment issue
-        - add thumbs overlay to mix cards
         - mobile styling of mixer
 - move remaining votes and next song countdown to navbar?
 - add tooltips to mixer elements

@@ -74,4 +74,8 @@
     float: right;
 }
 
+.popover-arrow {
+    display: none !important;
+}
+
 
