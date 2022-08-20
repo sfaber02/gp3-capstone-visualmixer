@@ -19,6 +19,7 @@ const UserProvider = ({ children }) => {
         accessToken: "",
     });
 
+
      let navigate = useNavigate();
 
      //AUTO LOGIN IF THERE'S A LEGIT REFRESH TOKEN COOKIE

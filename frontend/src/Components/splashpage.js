@@ -1,12 +1,13 @@
+import { useNavigate } from "react-router-dom";
+
 import Image from "../Assets/Mixle_Icon-Nobg.png";
 import "../Styles/Splash.css";
 
-/**
- * @param {object} props
- * @param {function} handleStartClick function from mixer/splash wrapper component
- * @returns splash page JSX
- */
-function SplashPage(props) {
+
+// LANDING PAGE
+function SplashPage() {
+    const navigate = useNavigate();
+
     return (
         <section id="splashPageContainer">
             <div className="top_row">
@@ -14,7 +15,7 @@ function SplashPage(props) {
             </div>
             <div className="mid_row">
                 <div id="splashButtonContainer">
-                    <button id="splashButton" onClick={props.handleStartClick}>
+                    <button id="splashButton" onClick={() => navigate('/mixer')}>
                         Start Mixing
                     </button>
                 </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-
+import { useTrack } from "../../Contexts/SongContext";
 import { defaultfx } from "../../settings/defaultfx";
 
 import { Mixer } from "../Mixer/mixer";
@@ -7,7 +7,7 @@ import { Mixes } from "../Mixes/Mixes";
 
 import "../../Styles/faders.css"
 
-const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
+const AudioPlayer = ({ showSplash, mixes }) => {
     /**
      * play/pause - boolean state for play/pause toggling
      * playstate - object state for tracking the current play state (e.g. 'playing', 'paused')
@@ -21,6 +21,7 @@ const AudioPlayer = ({ showSplash, todaysTrack, mixes }) => {
     const [loading, setLoading] = useState(true);
     const [fx, setFx] = useState(defaultfx);
     const [volume, setVolume] = useState(0.5);
+    const [todaysTrack] = useTrack();
 
     //Refs for time display
     const timer = useRef();

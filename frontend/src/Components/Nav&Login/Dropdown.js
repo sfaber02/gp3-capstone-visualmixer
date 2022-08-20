@@ -51,15 +51,12 @@ export default function Dropdown() {
                     className="dropdown-menu"
                     aria-labelledby="dropdownMenuButton"
                 >
-                    <a className="dropdown-item" href="/audio">
+                    <a className="dropdown-item" href="/mixes">
                         View Today's Mixes
                     </a>
-                    <a className="dropdown-item" href="/">
-                        My Mixes
+                    <a className="dropdown-item" href="/mixer">
+                        Make a Mix
                     </a>
-                    {/* <a className="dropdown-item" onClick={deleteUser} href="/">
-                        Delete 
-                    </a> */}
                     <a className="dropdown-item" onClick={handleSignOut}>
                         Signout
                     </a>

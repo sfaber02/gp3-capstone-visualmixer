@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../Contexts/UserContext";
+import { useTrack } from "../../Contexts/SongContext";
 
 import "../../Styles/mixer.css";
 import "../../Styles/mixerSubComponentStyles/transport.css";
@@ -29,10 +30,10 @@ const Mixer = ({
     handleSeek,
     handlePlayPause,
     playPause,
-    todaysTrack,
 }) => {
     const navigate = useNavigate();
     const [userDetails] = useUser();
+    const [todaysTrack] = useTrack();
     /**
      * On page load checks if there are FX settings stored in local storage.
      * This is used in the case that a user has created a mix without an account or being logged in.
@@ -137,7 +138,7 @@ const Mixer = ({
                 const content = await response.json();
 
                 if (playState.state === "playing") track.current.stop();
-                navigate("/audio");
+                navigate("/mixes");
             } catch (error) {
                 console.log(error);
             }

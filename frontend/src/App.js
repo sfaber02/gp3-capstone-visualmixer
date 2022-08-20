@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 
 // COMPONENTS
 import SignUp from "./Components/Nav&Login/signUp";
-import { MixerWrapper } from "./Components/mixersplashwrapper.js";
+import { SplashPage } from "./Components/splashpage";
 import { AudioPlayer } from "./Components/AudioPlayer/AudioPlayer";
 import Loading from "./Components/Loading";
 import Login from "./Components/Nav&Login/login";
@@ -14,55 +14,38 @@ import Verification from "./Components/Nav&Login/Verification";
 
 //CONTEXT
 import { UserProvider } from "./Contexts/UserContext";
-
-const API = process.env.REACT_APP_API_URL;
+import { TrackProvider } from "./Contexts/SongContext";
 
 function App() {
     const [popupBtn, setPopupBtn] = useState(false);
-    const [todaysTrack, setTodaysTrack] = useState("");
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        if (!todaysTrack) {
-            fetch(`${API}/audio/today`)
-                .then((response) => response.json())
-                .then((data) => {
-                    setTodaysTrack(data);
-                    setLoading(false);
-                })
-                .catch((err) => console.log(err));
-        }
-    }, []);
+    const [loading, setLoading] = useState(false);
 
     return (
         <UserProvider>
-            <main>
-                <NavBar trigger={popupBtn} setTrigger={setPopupBtn} />
-                <AboutPopUp trigger={popupBtn} setTrigger={setPopupBtn} />
-                {!loading ? (
-                    <Routes>
-                        <Route
-                            exact
-                            path="/"
-                            element={<MixerWrapper todaysTrack={todaysTrack} />}
-                        />
-                        <Route
-                            path="/audio"
-                            element={
-                                <AudioPlayer
-                                    todaysTrack={todaysTrack}
-                                    mixes={true}
-                                />
-                            }
-                        />
-                        <Route path="/register" element={<SignUp />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/verify/:id" element={<Verification />} />
-                    </Routes>
-                ) : (
-                    <Loading />
-                )}
-            </main>
+            <TrackProvider>
+                <main>
+                    <NavBar trigger={popupBtn} setTrigger={setPopupBtn} />
+                    <AboutPopUp trigger={popupBtn} setTrigger={setPopupBtn} />
+                    {!loading ? (
+                        <Routes>
+                            <Route exact path="/" element={<SplashPage />} />
+                            <Route path="mixer" element={<AudioPlayer mixes={false} />} />
+                            <Route
+                                path="/mixes"
+                                element={<AudioPlayer mixes={true} />}
+                            />
+                            <Route path="/register" element={<SignUp />} />
+                            <Route path="/login" element={<Login />} />
+                            <Route
+                                path="/verify/:id"
+                                element={<Verification />}
+                            />
+                        </Routes>
+                    ) : (
+                        <Loading />
+                    )}
+                </main>
+            </TrackProvider>
         </UserProvider>
     );
 }
