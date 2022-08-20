@@ -83,7 +83,6 @@ user.post("/login", async (req, res) => {
     try {
         // GET USER DETAILS
         const user = await getUserByEmail(email);
-
         if (!user.email) {
             res.status(400).json({
                 error: "email",

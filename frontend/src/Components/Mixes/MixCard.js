@@ -2,28 +2,25 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, Button, Container, Row, Col } from "react-bootstrap";
 
-// import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
-// import Skeleton from "@mui/material/Skeleton";
-// import Box from "@mui/material/Box";
 
 import "../../Styles/scss/MixCard.scss";
 import "../../Styles/mixCard.css";
-import artDB from "../../Actions/art";
+
 
 const API = process.env.REACT_APP_API_URL;
 
-export default function MixCard({
+const MixCard = ({
     effect,
     handleUserChange,
     avaliableVotes,
     subtractVote,
-    random,
+    albumArt,
     handleShow,
     userDetails
-}) {
+}) => {
     const [isHovered, setHovered] = useState(false);
     const [votes, setVotes] = useState(() => effect.totalvotes);
-    const [imageSource, setImageSource] = useState(() => artDB[random]);
+    const [imageSource, setImageSource] = useState(() => albumArt);
 
     const navigate = useNavigate();
 
@@ -114,3 +111,5 @@ export default function MixCard({
         </div>
     );
 }
+
+export {MixCard};

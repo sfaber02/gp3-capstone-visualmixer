@@ -19,8 +19,7 @@ export const Transport = ({
     setVolume,
     time,
     handleSeek,
-    user,
-    countdown,
+    votes,
     setMasterVolume,
 }) => {
     const volumePopover = (
@@ -41,8 +40,10 @@ export const Transport = ({
     );
 
     return (
+        
         // 81.5 pixels tall!!
         <Container fluid className="mixesTransportContainer">
+            <h1>{votes}</h1>
             <Row xs={1} className="">
                 <Col xs={100} className="">
                     <input

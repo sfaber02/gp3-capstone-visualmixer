@@ -4,26 +4,14 @@ import { useUser } from "../../Contexts/UserContext.js";
 import { Container, Row, Col, Modal, Button } from "react-bootstrap";
 
 
-import MixCard from "./MixCard.js";
-
+import { MixCard }  from "./MixCard.js";
 import { Transport } from "./Transport.js";
-
 import { secondsTillMidnight } from "../../utils/countdown.js";
+import { generatePhotoArray } from "../../utils/randomizeArtwork"
 
-import artDB from "../../Actions/art.js";
 import "../../Styles/mixes.css";
 
 const API = process.env.REACT_APP_API_URL;
-
-let randomArray = [];
-while (randomArray.length < artDB.length) {
-    let newRandom = Math.floor(Math.random() * artDB.length);
-    if (randomArray.includes(newRandom)) {
-        continue;
-    } else {
-        randomArray.push(newRandom);
-    }
-}
 
 const Mixes = ({
     todaysTrack,
@@ -41,16 +29,16 @@ const Mixes = ({
     const countdownTimer = useRef();
     const [show, setShow] = useState(false);
     const [userDetails] = useUser();
+    const [albumArt, setAlbumArt] = useState(() => generatePhotoArray());
 
     //states for vote tracking and updating
     // const [availableVotes, setAvailableVotes] = useState(0);
-    const [user, setUser] = useState({ avaliablevotes: 0 });
+    const [votes, setVotes] = useState(0);
 
     const [effects, setEffects] = useState([]);
 
     /**
      * LOAD ALL MIXES
-     * FETCH SONG
      * FETCH USERS VOTES
      */
     useEffect(() => {
@@ -73,7 +61,7 @@ const Mixes = ({
                 });
 
             //IF USER IS LOGGED IN FETCH USER INFO AND SET AVAILABLE VOTES
-            if (userDetails.accessToken) {
+            if (userDetails.user_id) {
                 let requestOptions = {
                     method: "GET",
                     redirect: "follow",
@@ -82,7 +70,7 @@ const Mixes = ({
                 fetch(`${API}/user/${userDetails.user_id}`, requestOptions)
                     .then((response) => response.json())
                     .then((result) => {
-                        setUser(result);
+                        setVotes(result.availableVotes);
                     })
                     .catch((error) => console.log("error", error));
             }
@@ -132,7 +120,7 @@ const Mixes = ({
     };
 
     const subtractVote = () => {
-        if (user.avaliablevotes > 0) {
+        if (votes > 0) {
             var requestOptions = {
                 method: "PUT",
                 redirect: "follow",
@@ -140,18 +128,13 @@ const Mixes = ({
 
             fetch(
                 `${API}/user/votes/${userDetails.user_id}/${
-                    user.avaliablevotes - 1
+                    votes - 1
                 }`,
                 requestOptions
             )
                 .then((response) => response.json())
                 .then((result) => {
-                    setUser((prev) => {
-                        return {
-                            ...prev,
-                            avaliablevotes: result.avaliablevotes,
-                        };
-                    });
+                    setVotes(result.avaliablevotes);
                 })
                 .catch((error) => console.log("error", error));
         }
@@ -187,9 +170,9 @@ const Mixes = ({
                                     key={effect.effects_id}
                                     effect={effect}
                                     handleUserChange={handleUserChange}
-                                    avaliableVotes={user.avaliablevotes}
+                                    avaliableVotes={votes}
                                     subtractVote={subtractVote}
-                                    random={randomArray[index]}
+                                    albumArt={albumArt[index]}
                                     handleShow={handleShow}
                                     userDetails={userDetails}
 
@@ -207,7 +190,7 @@ const Mixes = ({
                     setVolume={setVolume}
                     time={time}
                     handleSeek={handleSeek}
-                    user={user}
+                    votes={votes}
                     countdown={countdown}
                     setMasterVolume={setMasterVolume}
                 />
