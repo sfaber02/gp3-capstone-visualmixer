@@ -43,7 +43,6 @@ export const Transport = ({
         
         // 81.5 pixels tall!!
         <Container fluid className="mixesTransportContainer">
-            <h1>{votes}</h1>
             <Row xs={1} className="">
                 <Col xs={100} className="">
                     <input

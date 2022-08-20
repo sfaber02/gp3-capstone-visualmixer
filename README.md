@@ -39,6 +39,9 @@ May the best mix win!
 
 ##### UPDATE 8/20/22
 - Refactored random album generator into helper function
+- Fixed sizing on cards container div so it doesn't display under transport.
+- Fixed issue with auto login not functioning after user details / context refactor
+
 
 
 > ## Bugs

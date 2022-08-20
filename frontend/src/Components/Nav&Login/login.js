@@ -20,7 +20,7 @@ function Login() {
         if (userDetails.accessToken) {
             navigate("/");
         }
-    }, []);
+    }, [userDetails]);
 
     // handleChange for input elements
     const handleChange = (event) => {

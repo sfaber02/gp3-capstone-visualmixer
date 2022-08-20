@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, Button, Container, Row, Col } from "react-bootstrap";
+import { Card, Container, Row, Col, OverlayTrigger } from "react-bootstrap";
 
-
-import "../../Styles/scss/MixCard.scss";
 import "../../Styles/mixCard.css";
-
 
 const API = process.env.REACT_APP_API_URL;
 
@@ -16,9 +13,9 @@ const MixCard = ({
     subtractVote,
     albumArt,
     handleShow,
-    userDetails
+    userDetails,
 }) => {
-    const [isHovered, setHovered] = useState(false);
+    const [hovered, setHovered] = useState(false);
     const [votes, setVotes] = useState(() => effect.totalvotes);
     const [imageSource, setImageSource] = useState(() => albumArt);
 
@@ -26,7 +23,6 @@ const MixCard = ({
 
     // UPDATES FX IN DB WITH NEW VOTES COUNT
     useEffect(() => {
-       
         var requestOptions = {
             method: "PUT",
             redirect: "follow",
@@ -38,9 +34,6 @@ const MixCard = ({
     }, [votes]);
 
     const handleClick = () => {
-
-        // CHECK HERE IF USER IS VERIFIED
-
         if (userDetails.user_id) {
             fetch(`${API}/user/${userDetails.user_id}`)
                 .then((res) => res.json())
@@ -62,11 +55,13 @@ const MixCard = ({
         }
     };
 
-    const handleResponse = () => {
-        setHovered((prev) => !prev);
-    };
     const handleMouseEnter = (e) => {
+        setHovered(true);
         handleUserChange(e.target.parentNode.id);
+    };
+
+    const handleMouseLeave = () => {
+        setHovered(false);
     };
 
     const handlePlayClick = (e) => {
@@ -77,26 +72,39 @@ const MixCard = ({
         <div className={"music-card"}>
             <Card
                 id={effect.user_id}
-                onClick={handleClick}
                 className={"music-card-cover m-2"}
-                onMouseOver={handleResponse}
-                onMouseEnter={handleMouseEnter}  
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
             >
-                <Card.Img src={imageSource} alt={"mixelArt"}></Card.Img>
-                <Card.Body>
-                    <Container>
+                <Card.Img
+                    className={`card-img`}
+                    onClick={handleClick}
+                    src={imageSource}
+                    alt={"mixelArt"}
+                ></Card.Img>
+                {hovered && (
+                    <>
+                        <div className="thumbs-up-overlay-container"></div>
+                        <div className="overlay-thumbs-up">
+                            <i class="fa-solid fa-thumbs-up thumbs-up"></i>
+                        </div>
+                    </>
+                )}
+                <Card.Body className="mt-1 p-0">
+                    <Container className="mixCardInfo">
                         <Row xs={3}>
                             <Col className="mixCardUser">{effect.username}</Col>
-                            <Col >
+                            <Col className="mixCardVotes">
                                 <p>
-                                    {votes}{"     "}
+                                    {votes}
+                                    {"     "}
                                     <i class="fa-solid fa-thumbs-up"></i>
                                 </p>
                             </Col>
-                            <Col>
+                            <Col className="mixCardPlay">
                                 {" "}
                                 <button
-                                    className={`${effect.user_id} mixCardButton`}
+                                    className={`${effect.user_id} transportButtons`}
                                     onClick={handlePlayClick}
                                 >
                                     <i
@@ -110,6 +118,6 @@ const MixCard = ({
             </Card>
         </div>
     );
-}
+};
 
-export {MixCard};
+export { MixCard };

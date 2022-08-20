@@ -1,1 +1,41 @@
+.mixCardUser {
+    text-align: left;
+}
+
+.mixCardVotes {
+    text-align: center;
+}
+
+.mixCardPlay button {
+    float: right;
+}
+
+.card-img {
+    z-index: 0;
+}
+
+.thumbs-up-overlay-container {
+   position: absolute;
+   height: 100%;
+   width: 100%;
+   background-color: black;
+   opacity: .8;
+   z-index: 1;
+}
+
+.overlay-thumbs-up {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    height:100%;
+    width: 100%;
+    color: gray;
+    z-index: 2;
+    opacity: 1;
+    padding: 0px;
+    font-size: 10rem;
+    text-align: center;
+}
+
 
