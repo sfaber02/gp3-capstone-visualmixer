@@ -78,7 +78,7 @@ const MixCard = ({
             <Card
                 id={effect.user_id}
                 onClick={handleClick}
-                className={"music-card-cover m-3"}
+                className={"music-card-cover m-2"}
                 onMouseOver={handleResponse}
                 onMouseEnter={handleMouseEnter}  
             >

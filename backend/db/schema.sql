@@ -8,7 +8,7 @@ CREATE TABLE users (
     username VARCHAR UNIQUE NOT NULL,
     email VARCHAR UNIQUE NOT NULL,
     password VARCHAR NOT NULL,
-    avaliableVotes INTEGER DEFAULT 3,
+    availableVotes INTEGER DEFAULT 3,
     validated BOOLEAN DEFAULT FALSE,
     confirmationCode TEXT UNIQUE,
     date_created BIGINT

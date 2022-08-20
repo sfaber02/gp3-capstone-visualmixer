@@ -1,3 +1,18 @@
+.cardsContainer {
+    height: calc(100vh - 137px);
+    overflow: scroll;
+
+}
+.cardsContainer::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.cardsContainer {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
 .mixesTransportContainer {
    position: fixed;
    bottom: 0;

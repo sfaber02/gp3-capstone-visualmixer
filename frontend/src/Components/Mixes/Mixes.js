@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useUser } from "../../Contexts/UserContext.js";
-
+import { useTrack } from "../../Contexts/SongContext.js";
 import { Container, Row, Col, Modal, Button } from "react-bootstrap";
 
 
@@ -14,7 +14,6 @@ import "../../Styles/mixes.css";
 const API = process.env.REACT_APP_API_URL;
 
 const Mixes = ({
-    todaysTrack,
     setFx,
     fx,
     setVolume,
@@ -28,13 +27,13 @@ const Mixes = ({
     const [countdown, setCountdown] = useState(() => 0);
     const countdownTimer = useRef();
     const [show, setShow] = useState(false);
-    const [userDetails] = useUser();
     const [albumArt, setAlbumArt] = useState(() => generatePhotoArray());
+    const [userDetails] = useUser();
+    const [todaysTrack] = useTrack();
 
     //states for vote tracking and updating
     // const [availableVotes, setAvailableVotes] = useState(0);
-    const [votes, setVotes] = useState(0);
-
+    const [votes, setVotes] = useState(() => 0);
     const [effects, setEffects] = useState([]);
 
     /**
@@ -70,7 +69,8 @@ const Mixes = ({
                 fetch(`${API}/user/${userDetails.user_id}`, requestOptions)
                     .then((response) => response.json())
                     .then((result) => {
-                        setVotes(result.availableVotes);
+                        console.log(result);
+                        setVotes(result.avaliablevotes);
                     })
                     .catch((error) => console.log("error", error));
             }
@@ -100,11 +100,8 @@ const Mixes = ({
     }, []);
 
     const handleUserChange = (user) => {
-        //   console.log(user);
         for (let mix of effects) {
-            // console.log (mix.user_id);
             if (mix.user_id == user) {
-                //   console.log(mix.effects_data);
                 setFx(mix.effects_data);
             }
         }
@@ -162,8 +159,8 @@ const Mixes = ({
             </Modal>
 
             <Container>
-                <Container className="mt-4">
-                    <Row xs={1} s={1} md={3} lg={4}>
+                <Container className="cardsContainer mt-1">
+                    <Row xs={1} s={1} md={2} lg={3} xl={4}>
                         {effects.map((effect, index) => (
                             <Col key={index}>
                                 <MixCard

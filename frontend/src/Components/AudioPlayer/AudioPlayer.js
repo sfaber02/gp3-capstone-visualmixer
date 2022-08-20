@@ -355,7 +355,6 @@ const AudioPlayer = ({ showSplash, mixes }) => {
                     handleSeek={handleSeek}
                     handlePlayPause={handlePlayPause}
                     playPause={playPause}
-                    todaysTrack={todaysTrack}
                 />
             ) : (
                 <Mixes
@@ -368,7 +367,6 @@ const AudioPlayer = ({ showSplash, mixes }) => {
                     handlePlayPause={handlePlayPause}
                     playPause={playPause}
                     handleSeek={handleSeek}
-                    todaysTrack={todaysTrack}
                 />
             )}
         </>

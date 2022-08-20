@@ -37,6 +37,8 @@ May the best mix win!
 - Created a /mixer route which goes straight to the mixer
 - The "/" route now goes to the splash page which will redirect to /mixer when the button is hit
 
+##### UPDATE 8/20/22
+- Refactored random album generator into helper function
 
 
 > ## Bugs
@@ -44,6 +46,7 @@ May the best mix win!
 before React attempted to perform a .map on the effects array
     - authorization is disbaled on this route for now
 - existing users are not getting accurate votes from DB
+- availablevotes is spelled wrong on the backend 
 
 
 > ## ToDo

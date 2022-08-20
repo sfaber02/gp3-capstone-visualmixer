@@ -12,7 +12,6 @@ const generatePhotoArray = (args) => {
             albumArt.push(artDB[newRandom]);
         }
     }
-    console.log(albumArt);
     return albumArt;
 };
 
