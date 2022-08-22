@@ -39,13 +39,11 @@ export const Transport = ({
     );
 
     return (
-        
-        // 81.5 pixels tall!!
         <Container fluid className="mixesTransportContainer">
             <Row xs={1} className="">
-                <Col xs={100} className="">
+                <Col xs={100} className="mixesSeekBarContainer mb-1">
                     <input
-                        className="mixleFader"
+                        className="mixleFader  mixesSeekBar"
                         id="seekBar"
                         type="range"
                         min="0"
