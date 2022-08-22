@@ -42,6 +42,9 @@ May the best mix win!
 - Fixed sizing on cards container div so it doesn't display under transport.
 - Fixed issue with auto login not functioning after user details / context refactor
 
+##### UPDATE 8/22/22
+- fixed transport sizing issue with timer text splling onto 2 lines on smaller screens
+
 
 
 > ## Bugs

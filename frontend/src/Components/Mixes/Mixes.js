@@ -25,16 +25,29 @@ const Mixes = ({
     handleSeek,
 }) => {
     const [countdown, setCountdown] = useState(() => 0);
-    const countdownTimer = useRef();
     const [show, setShow] = useState(false);
     const [albumArt, setAlbumArt] = useState(() => generatePhotoArray());
     const [userDetails] = useUser();
     const [todaysTrack] = useTrack();
 
+
     //states for vote tracking and updating
     // const [availableVotes, setAvailableVotes] = useState(0);
     const [votes, setVotes] = useState(() => 0);
     const [effects, setEffects] = useState([]);
+
+    // sets a custom VH height unit based on window size (used for mobile)
+    useEffect(() => {
+        const handleResize = () => {
+            const vH = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty("--vh", `${vH}px`);
+        };
+
+        window.addEventListener("resize", handleResize);
+        handleResize();
+
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     /**
      * LOAD ALL MIXES
@@ -69,7 +82,6 @@ const Mixes = ({
                 fetch(`${API}/user/${userDetails.user_id}`, requestOptions)
                     .then((response) => response.json())
                     .then((result) => {
-                        console.log(result);
                         setVotes(result.avaliablevotes);
                     })
                     .catch((error) => console.log("error", error));
