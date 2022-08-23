@@ -3,11 +3,10 @@ import { useUser } from "../../Contexts/UserContext.js";
 import { useTrack } from "../../Contexts/SongContext.js";
 import { Container, Row, Col, Modal, Button } from "react-bootstrap";
 
-
-import { MixCard }  from "./MixCard.js";
+import { MixCard } from "./MixCard.js";
 import { Transport } from "./Transport.js";
 import { secondsTillMidnight } from "../../utils/countdown.js";
-import { generatePhotoArray } from "../../utils/randomizeArtwork"
+import { generatePhotoArray } from "../../utils/randomizeArtwork";
 
 import "../../Styles/mixes.css";
 
@@ -29,7 +28,6 @@ const Mixes = ({
     const [albumArt, setAlbumArt] = useState(() => generatePhotoArray());
     const [userDetails] = useUser();
     const [todaysTrack] = useTrack();
-
 
     //states for vote tracking and updating
     // const [availableVotes, setAvailableVotes] = useState(0);
@@ -66,7 +64,6 @@ const Mixes = ({
                 })
                 .then((data) => {
                     setEffects(data);
-                    
                 })
                 .catch((err) => {
                     console.log(err);
@@ -82,7 +79,7 @@ const Mixes = ({
                 fetch(`${API}/user/${userDetails.user_id}`, requestOptions)
                     .then((response) => response.json())
                     .then((result) => {
-                        setVotes(result.avaliablevotes);
+                        setVotes(result.availableVotes);
                     })
                     .catch((error) => console.log("error", error));
             }
@@ -91,9 +88,7 @@ const Mixes = ({
 
     // countdown to next song timer
     useEffect(() => {
-
         // THIS IS CAUSING LOTS OF RE RENDERS ??
-
         // if (!countdownTimer.current) {
         //     countdownTimer.current = setInterval(() => {
         //         const secondsLeft = secondsTillMidnight();
@@ -136,14 +131,12 @@ const Mixes = ({
             };
 
             fetch(
-                `${API}/user/votes/${userDetails.user_id}/${
-                    votes - 1
-                }`,
+                `${API}/user/votes/${userDetails.user_id}/${votes - 1}`,
                 requestOptions
             )
                 .then((response) => response.json())
                 .then((result) => {
-                    setVotes(result.avaliablevotes);
+                    setVotes(result.availableVotes);
                 })
                 .catch((error) => console.log("error", error));
         }
@@ -179,12 +172,11 @@ const Mixes = ({
                                     key={effect.effects_id}
                                     effect={effect}
                                     handleUserChange={handleUserChange}
-                                    avaliableVotes={votes}
+                                    availableVotes={votes}
                                     subtractVote={subtractVote}
                                     albumArt={albumArt[index]}
                                     handleShow={handleShow}
                                     userDetails={userDetails}
-
                                 />
                             </Col>
                         ))}

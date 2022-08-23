@@ -9,7 +9,7 @@ const API = process.env.REACT_APP_API_URL;
 const MixCard = ({
     effect,
     handleUserChange,
-    avaliableVotes,
+    availableVotes,
     subtractVote,
     albumArt,
     handleShow,
@@ -39,7 +39,7 @@ const MixCard = ({
                 .then((res) => res.json())
                 .then((res) => {
                     if (res.validated) {
-                        if (avaliableVotes > 0) {
+                        if (availableVotes > 0) {
                             setVotes((p) => (p += 1));
                             subtractVote();
                         } else {

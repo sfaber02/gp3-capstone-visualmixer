@@ -98,7 +98,7 @@ export const Transport = ({
                 <Col className="border border-warning">
                     <div id="vote-time">
                         <div id="availableVotes">
-                            Votes Left: {user.avaliablevotes}
+                            Votes Left: {user.availableVotes}
                         </div>
                         <div id="countdown">New Mixle In: {countdown}</div>
                     </div>

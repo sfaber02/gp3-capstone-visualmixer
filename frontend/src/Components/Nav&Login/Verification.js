@@ -15,7 +15,7 @@ export default function Verification() {
         };
         try {
             userVerificationPost(id);
-            navigate("/");
+            return navigate("/");
         } catch (error) {
             console.log(error);
         }
