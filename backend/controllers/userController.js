@@ -1,13 +1,10 @@
-
-
 // DEPENDENCIES
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const jwtTokens = require("../validations/jwt-helpers");
 const sendConfirmationEmail = require("../validations/sendEmail.js");
-
-
+const refreshCookie = require("../validations/refreshCookie");
 
 // ENVIRONMENTAL VARS
 require("dotenv").config();
@@ -60,17 +57,13 @@ user.post("/register", async (req, res) => {
 
         const newUser = await addUser(username, email, hashPassword, token);
 
+        // NODEMAILER FUNCTION TO SEND OUT EMAIL
         sendConfirmationEmail(newUser, token);
 
         // JWT TOKEN
         let tokens = jwtTokens(newUser);
-        res.cookie("refresh_token", tokens.refreshToken, {
-            httpOnly: true,
-            sameSite: "none",
-            secure: true,
-            expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-        });
-        
+        refreshCookie(tokens);
+
         res.status(200).json(tokens);
     } catch (err) {
         res.status(404).send("Post failed");
@@ -97,13 +90,8 @@ user.post("/login", async (req, res) => {
             if (isValidPassword) {
                 // JWT TOKEN
                 let tokens = jwtTokens(user);
+                refreshCookie(tokens);
 
-                res.cookie("refresh_token", tokens.refreshToken, {
-                    httpOnly: true,
-                    sameSite: "none",
-                    secure: true,
-                    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-                });
                 res.status(200).json(tokens);
             } else {
                 res.status(400).json({
@@ -132,12 +120,7 @@ user.get("/refresh_token", (req, res) => {
             }
 
             let tokens = jwtTokens(user);
-            res.cookie("refresh_token", tokens.refreshToken, {
-                httpOnly: true,
-                sameSite: "none",
-                secure: true,
-                expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-            });
+            refreshCookie(tokens);
 
             res.json(tokens);
         });
