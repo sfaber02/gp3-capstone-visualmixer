@@ -44,6 +44,7 @@ May the best mix win!
 
 ##### UPDATE 8/22/22
 - fixed transport sizing issue with timer text splling onto 2 lines on smaller screens
+- added custom vh units for mixes page to compensate for address/ navbars on mobile
 
 
 
