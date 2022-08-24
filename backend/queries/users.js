@@ -56,12 +56,12 @@ const addUser = async (name, email, password, token) => {
 const updateUser = async (user, password) => {
     try {
         const updatedUser = await db.one(
-            "UPDATE users SET username=$1, email=$2, password=$3, availableVotes=$4 WHERE user_id=$5 RETURNING username",
+            "UPDATE users SET username=$1, email=$2, password=$3, available_votes=$4 WHERE user_id=$5 RETURNING username",
             [
                 user.username,
                 user.email,
                 password,
-                user.availableVotes,
+                user.available_votes,
                 user.user_id,
             ]
         );
@@ -88,7 +88,7 @@ const updateUserValidation = async (token) => {
 const updateUserVotes = async (votes, user_id) => {
     try {
         const updatedUser = await db.one(
-            "UPDATE users SET availableVotes=$1 WHERE user_id=$2 RETURNING availableVotes;",
+            "UPDATE users SET available_votes=$1 WHERE user_id=$2 RETURNING available_votes;",
             [votes, user_id]
         );
         return updatedUser;
@@ -113,7 +113,7 @@ const deleteUser = async (id) => {
 // RESET USER VOTES
 const resetVotes = async () => {
     try {
-        const reset = await db.query("UPDATE users SET availableVotes = 3");
+        const reset = await db.query("UPDATE users SET available_votes = 3");
     } catch (error) {
         return error;
     }

@@ -30,7 +30,7 @@ const Mixes = ({
     const [todaysTrack] = useTrack();
 
     //states for vote tracking and updating
-    // const [availableVotes, setAvailableVotes] = useState(0);
+    // const [available_votes, setAvailable_votes] = useState(0);
     const [votes, setVotes] = useState(() => 0);
     const [effects, setEffects] = useState([]);
 
@@ -79,7 +79,8 @@ const Mixes = ({
                 fetch(`${API}/user/${userDetails.user_id}`, requestOptions)
                     .then((response) => response.json())
                     .then((result) => {
-                        setVotes(result.availableVotes);
+                        console.log(result.available_votes);
+                        setVotes(result.available_votes);
                     })
                     .catch((error) => console.log("error", error));
             }
@@ -136,7 +137,7 @@ const Mixes = ({
             )
                 .then((response) => response.json())
                 .then((result) => {
-                    setVotes(result.availableVotes);
+                    setVotes(result.available_votes);
                 })
                 .catch((error) => console.log("error", error));
         }
@@ -172,7 +173,7 @@ const Mixes = ({
                                     key={effect.effects_id}
                                     effect={effect}
                                     handleUserChange={handleUserChange}
-                                    availableVotes={votes}
+                                    available_votes={votes}
                                     subtractVote={subtractVote}
                                     albumArt={albumArt[index]}
                                     handleShow={handleShow}
