@@ -33,7 +33,7 @@ user.post("/register", async (req, res, next) => {
         let dbUserEmail = await getUserByEmail(email);
 
         if (dbUserEmail.user_id) {
-            res.status(400).json({
+            return res.status(400).json({
                 email: "User with that email already exists.",
             });
         }
@@ -42,7 +42,7 @@ user.post("/register", async (req, res, next) => {
         let dbUser = await getUserByUserName(username);
 
         if (dbUser.user_id) {
-            res.status(400).json({
+            return res.status(400).json({
                 username: "User with that username already exists.",
             });
         }
@@ -61,7 +61,7 @@ user.post("/register", async (req, res, next) => {
         sendConfirmationEmail(newUser, token);
 
         // JWT TOKEN
-        res.locals.tokens = jwtTokens(user);
+        res.locals.tokens = jwtTokens(newUser);
         next();
 
     } catch (err) {

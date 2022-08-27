@@ -42,7 +42,6 @@ function SignUp() {
                 body: JSON.stringify(user),
                 credentials: "include",
             });
-
             const content = await response.json();
             if (content.email) {
                 window.alert(content.email);
