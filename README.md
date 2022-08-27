@@ -50,5 +50,5 @@ May the best mix win!
 - adjusted some css that was causing unecessary scrollbars to display all the time.
 - added 5px margin to bottom of transport controls in mixes view
 - Fixed issue with dropdown menu going off the right side of screen on mobile. The dropdown menu is now right justified.
-
+- Fixed issue with volume popover pushing transport controls off the screen on mobile
 

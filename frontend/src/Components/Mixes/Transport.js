@@ -76,7 +76,7 @@ export const Transport = ({
                     <Container>
                         <OverlayTrigger
                             trigger="click"
-                            placement="right-end"
+                            placement="top-end"
                             overlay={volumePopover}
                             rootClose={true}
                         >
