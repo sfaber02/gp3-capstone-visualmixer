@@ -1,11 +1,8 @@
 function refreshCookie(req, res, next) {
-    console.log("refresh cookie");
-    // console.log(res.locals.tokens);
     
     try {
         let tokens = res.locals.tokens;
-        console.log(tokens.refreshToken);
-    
+
         res.cookie("refresh_token", tokens.refreshToken, {
             httpOnly: true,
             sameSite: "none",
