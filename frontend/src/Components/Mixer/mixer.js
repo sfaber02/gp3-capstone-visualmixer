@@ -139,7 +139,6 @@ const Mixer = ({
                 const content = await response.json();
 
                 if (playState.state === "playing") {
-                    console.log("STOP COMMAND");
                     stopTimerandReset();
                 }
                 navigate("/mixes");

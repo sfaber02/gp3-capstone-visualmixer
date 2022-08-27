@@ -81,7 +81,7 @@ export const Transport = ({
                             rootClose={true}
                         >
                             <button className="volumeButton transportButtons">
-                                <i class="fa-solid fa-volume-high"></i>
+                                <i className="fa-solid fa-volume-high"></i>
                             </button>
                         </OverlayTrigger>
                     </Container>

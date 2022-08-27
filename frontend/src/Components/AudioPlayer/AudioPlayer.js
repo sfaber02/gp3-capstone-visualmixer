@@ -258,9 +258,10 @@ const AudioPlayer = ({ showSplash, mixes }) => {
         }
     };
 
-    // stops timer and reset time (used for when save is clicked on mixer)
+    // stops timer and reset all relevant variables (used for when save is clicked on mixer)
     const stopTimerandReset = () => {
         track.current.stop();
+        createTrackNode(decodedAudio.current);
         stopTimer();
         offset.current = 0;
         setTime((prev) => {
