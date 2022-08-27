@@ -1,6 +1,6 @@
 .cardsContainer {
-    height: calc(100vh - 125px);
-    height: calc(var(--vh, 1vh) * 100 - 125px);
+    height: calc(100vh - 130px);
+    height: calc(var(--vh, 1vh) * 100 - 130px);
     overflow: scroll;
 
 }
@@ -18,7 +18,8 @@
 .mixesTransportContainer {
    position: fixed;
    bottom: 0;
-   left: 0; 
+   left: 0;
+   margin-bottom: 5px; 
 }
 
 .mixesSeekBar {
