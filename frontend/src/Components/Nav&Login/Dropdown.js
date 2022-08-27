@@ -78,7 +78,7 @@ export default function Dropdown() {
                     Welcome
                 </button>
                 <div
-                    className="dropdown-menu"
+                    className="dropdown-menu dropdown-menu-right"
                     aria-labelledby="dropdownMenuButton"
                 >
                     <a className="dropdown-item" href="/login">
