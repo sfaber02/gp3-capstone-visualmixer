@@ -26,7 +26,7 @@ const {
 const user = express.Router();
 
 // REGISTER REQUEST
-user.post("/register", async (req, res) => {
+user.post("/register", async (req, res, next) => {
     const { username, email, password } = req.body;
     try {
         // CHECK IF EMAIL IS IN USE
@@ -61,17 +61,16 @@ user.post("/register", async (req, res) => {
         sendConfirmationEmail(newUser, token);
 
         // JWT TOKEN
-        let tokens = jwtTokens(newUser);
-        refreshCookie(tokens);
+        res.locals.tokens = jwtTokens(user);
+        next();
 
-        res.status(200).json(tokens);
     } catch (err) {
         res.status(404).send("Post failed");
     }
-});
+}, refreshCookie);
 
 // LOGIN REQUEST
-user.post("/login", async (req, res) => {
+user.post("/login", async (req, res, next) => {
     const { email, password } = req.body;
     try {
         // GET USER DETAILS
@@ -89,10 +88,8 @@ user.post("/login", async (req, res) => {
             );
             if (isValidPassword) {
                 // JWT TOKEN
-                let tokens = jwtTokens(user);
-                refreshCookie(tokens);
-
-                res.status(200).json(tokens);
+                res.locals.tokens = jwtTokens(user);
+                next(); 
             } else {
                 res.status(400).json({
                     error: "password",
@@ -103,9 +100,9 @@ user.post("/login", async (req, res) => {
     } catch (error) {
         res.status(404).json({ error: error });
     }
-});
+}, refreshCookie);
 
-user.get("/refresh_token", (req, res) => {
+user.get("/refresh_token", (req, res, next) => {
     try {
         // USE REFRESH TOKEN TO GET NEW ACCESS TOKEN
         const refresh_token = req.cookies.refresh_token;
@@ -119,15 +116,14 @@ user.get("/refresh_token", (req, res) => {
                 return res.status(403).json({ error: error.message });
             }
 
-            let tokens = jwtTokens(user);
-            refreshCookie(tokens);
-
-            res.json(tokens);
+            // JWT TOKEN
+            res.locals.tokens = jwtTokens(user);
+            next();
         });
     } catch (error) {
         res.status(401).json({ error: error.message });
     }
-});
+}, refreshCookie);
 
 // RESET VOTES
 user.get("/reset", async (req, res) => {
