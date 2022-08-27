@@ -50,7 +50,7 @@ const UserProvider = ({ children }) => {
          }
      }, []);
 
-     
+      
 
     return (
         <UserContext.Provider value={[userDetails, setUserDetails]}>
@@ -58,5 +58,8 @@ const UserProvider = ({ children }) => {
         </UserContext.Provider>
     );
 };
+
+
+     
 
 export {  UserProvider, useUser };

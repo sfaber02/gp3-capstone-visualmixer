@@ -2,7 +2,6 @@
     height: calc(100vh - 130px);
     height: calc(var(--vh, 1vh) * 100 - 130px);
     overflow: scroll;
-
 }
 
 /* THESE WILL HIDE SCROLLBAR */

@@ -8,7 +8,6 @@ All users are given 3 votes to vote on their favorite mixes.
 May the best mix win!
 
 > ## Release Notes
-<hr>
 
 ##### UPDATE 8/1/22 - 
 - Changed audio sourcing from local files to streaming from Deezer
@@ -48,35 +47,8 @@ May the best mix win!
 
 ##### UPDATE 8/26/22
 - changed refresh cookies middleware to be called after login / register/ get refresh token and send the final result from server with an attached cookie
+- adjusted some css that was causing unecessary scrollbars to display all the time.
+- added 5px margin to bottom of transport controls in mixes view
+- Fixed issue with dropdown menu going off the right side of screen on mobile. The dropdown menu is now right justified.
 
-
-
-> ## Bugs
-- authorization route on /effects/allusers/:id was crashing page due to authorization not resolving
-before React attempted to perform a .map on the effects array
-    - authorization is disbaled on this route for now
-- existing users are not getting accurate votes from DB
-- availablevotes is spelled wrong on the backend 
-
-
-> ## ToDo
-- refactor mixer / mixes page
-    - re style using react bootstrap
-
-    - add tooltips to mixer elements
-- if user makes new mix on same day reset votes on mix
-    - warn user before doing this
-        - fix popover alignment issue
-        - mobile styling of mixer
-- move remaining votes and next song countdown to navbar?
-- add tooltips to mixer elements
-
-> ## Future Features
-- leaderboard
-- see all your own mixes
-- see stats like how many votes you've recieve over certain time periods (week, month, year)
-
-> ## Brainstorming
-- mash up mode
-- winner of the day picks a future song (jukebox mode!)
 

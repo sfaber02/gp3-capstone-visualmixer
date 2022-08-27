@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../Contexts/UserContext";
 
+
 /**
  *
  * @param {Object} user -  user object used to manipulate dropdown element
@@ -48,7 +49,7 @@ export default function Dropdown() {
                     {userDetails.username + " "}
                 </button>
                 <div
-                    className="dropdown-menu"
+                    className="dropdown-menu dropdown-menu-right"
                     aria-labelledby="dropdownMenuButton"
                 >
                     <a className="dropdown-item" href="/mixes">
