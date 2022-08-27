@@ -301,7 +301,6 @@ const AudioPlayer = ({ showSplash, mixes }) => {
      */
     const handlePlayPause = () => {
         if (playState.state === "stopped") {
-            console.log("Start from stop");
             startTimer();
             track.current.start();
             setPlayState({ state: "playing" });

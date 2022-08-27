@@ -51,5 +51,5 @@ May the best mix win!
 - added 5px margin to bottom of transport controls in mixes view
 - Fixed issue with dropdown menu going off the right side of screen on mobile. The dropdown menu is now right justified.
 - Fixed issue with volume popover pushing transport controls off the screen on mobile
-
+- Fixed bug with play when switching from mixer to mixes.  Should not be able to play right away. 
 
