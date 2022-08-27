@@ -52,3 +52,4 @@ May the best mix win!
 - Fixed issue with dropdown menu going off the right side of screen on mobile. The dropdown menu is now right justified.
 - Fixed issue with volume popover pushing transport controls off the screen on mobile
 
+

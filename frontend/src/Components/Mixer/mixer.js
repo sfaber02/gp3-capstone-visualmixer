@@ -30,6 +30,7 @@ const Mixer = ({
     handleSeek,
     handlePlayPause,
     playPause,
+    stopTimerandReset,
 }) => {
     const navigate = useNavigate();
     const [userDetails] = useUser();
@@ -137,7 +138,10 @@ const Mixer = ({
                 });
                 const content = await response.json();
 
-                if (playState.state === "playing") track.current.stop();
+                if (playState.state === "playing") {
+                    console.log("STOP COMMAND");
+                    stopTimerandReset();
+                }
                 navigate("/mixes");
             } catch (error) {
                 console.log(error);

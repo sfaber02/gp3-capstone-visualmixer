@@ -5,7 +5,7 @@ import { defaultfx } from "../../settings/defaultfx";
 import { Mixer } from "../Mixer/mixer";
 import { Mixes } from "../Mixes/Mixes";
 
-import "../../Styles/faders.css"
+import "../../Styles/faders.css";
 
 const AudioPlayer = ({ showSplash, mixes }) => {
     /**
@@ -258,6 +258,18 @@ const AudioPlayer = ({ showSplash, mixes }) => {
         }
     };
 
+    // stops timer and reset time (used for when save is clicked on mixer)
+    const stopTimerandReset = () => {
+        track.current.stop();
+        stopTimer();
+        offset.current = 0;
+        setTime((prev) => {
+            return { ...prev, current: 0 };
+        });
+        setPlayState({ state: "stopped" });
+        setPlayPause(false);
+    };
+
     // checks if track has ended, if so start it over
     useEffect(() => {
         if (track.current) {
@@ -288,6 +300,7 @@ const AudioPlayer = ({ showSplash, mixes }) => {
      */
     const handlePlayPause = () => {
         if (playState.state === "stopped") {
+            console.log("Start from stop");
             startTimer();
             track.current.start();
             setPlayState({ state: "playing" });
@@ -355,6 +368,7 @@ const AudioPlayer = ({ showSplash, mixes }) => {
                     handleSeek={handleSeek}
                     handlePlayPause={handlePlayPause}
                     playPause={playPause}
+                    stopTimerandReset={stopTimerandReset}
                 />
             ) : (
                 <Mixes
