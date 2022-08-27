@@ -46,6 +46,9 @@ May the best mix win!
 - fixed transport sizing issue with timer text splling onto 2 lines on smaller screens
 - added custom vh units for mixes page to compensate for address/ navbars on mobile
 
+##### UPDATE 8/26/22
+- changed refresh cookies middleware to be called after login / register/ get refresh token and send the final result from server with an attached cookie
+
 
 
 > ## Bugs
