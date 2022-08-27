@@ -7,7 +7,7 @@ main {
 
 main {
     background: linear-gradient(to right, rgb(33, 24, 152), rgb(76, 59, 172));
-    overflow: scroll;
+    /* overflow: scroll; */
     /* min-width: 1500px; */
 }
 
